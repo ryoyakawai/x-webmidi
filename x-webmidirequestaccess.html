@@ -1,0 +1,111 @@
+<!--
+Copyright (c) 2014 Ryoya Kawai. All rights reserved.
+Distributed under the MIT License (license terms are at http://opensource.org/licenses/MIT).
+-->
+<script type="text/javascript" src="../bower_components/polymer/polymer.js"></script>
+<polymer-element name="x-webmidirequestaccess" attributes="sysex input output">
+  <template>
+    <style type="text/css"></style>
+  </template>
+  <script type="text/javascript">
+  Polymer({
+      midi:{"inputs":false, "outputs":false},
+      defSysex:false, // default sysex
+      spSysex:false,  // user specified sysex
+      itnl2Key: [],
+      key2Itnl: [],
+      ready: function() {
+          key={
+              "note": ["C", "D", "E", "F", "G", "A", "B"],
+              "order": ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+          };
+          for(var i=24, j=0, number=1; i<=108; i++) {
+              this.itnl2Key[key["order"][j]+number]=i;
+              this.key2Itnl[i]=key["order"][j]+number;
+              j++;
+              if(j==key["order"].length) {
+                  j=0; number++;
+              }
+          }
+          this.itnl2Key["A0"]=21,  this.key2Itnl[21]="A0";
+          this.itnl2Key["A#0"]=22, this.key2Itnl[22]="A#0";
+          this.itnl2Key["B0"]=23,  this.key2Itnl[23]="B0";
+
+          this.requestMIDIAccess(this.sysex);
+          if(this.input=="true") {
+              this.appendFileImport("input");
+          }
+          if(this.output=="true") {
+              this.appendFileImport("output");
+          }
+      },
+      convertKey2Itnl: function(keyno) {
+          return this.key2Itnl[parseInt(keyno)];
+      },
+      convertItnl2Key: function(itnl) {
+          return this.itnl2Key[itnl];
+      },
+      requestMIDIAccess: function(sysex) {
+          if(typeof sysex==="undefined") {
+              sysex=this.defSysex;
+         }
+         spSysEx=sysex;
+         navigator.requestMIDIAccess({"sysex":sysex}).then(successCallback.bind(this), errorCallback.bind(this));
+         function successCallback(access) {
+             if(typeof access.inputs==="function") {
+                 this.midi.inputs=access.inputs();
+                 this.midi.outputs=access.outputs();
+             } else {
+                 var inputIterator=access.inputs.values();
+                 for(var o=inputIterator.next(); !o.done; o=inputIterator.next()) {
+                     if(this.midi.inputs===false) this.midi.inputs=[];
+                     this.midi.inputs.push(o.value);
+                 }
+                 
+                 var outputIterator=access.outputs.values();
+                 for(var o=outputIterator.next(); !o.done; o=outputIterator.next()) {
+                     if(this.midi.outputs===false) this.midi.outputs=[];
+                     this.midi.outputs.push(o.value);
+                 }
+             }
+             this.ready.input=true;
+             this.ready.output=true;
+         }
+         function errorCallback(msg) {
+             console.log("[ERROR] ", msg);
+             this.midi=false;
+         }
+     },
+     appendFileImport: function(type) {
+         var href;
+         switch(type) {
+             case "input":
+                 href="x-webmidiinput.html";
+                 break;
+             case "output":
+                 href="x-webmidioutput.html";
+                 break;
+         }
+         var elem=document.createElement("link");
+         elem.rel="import";
+         elem.href=href;
+         document.body.appendChild(elem);
+     },
+     addOptions: function(type, selectElem) {
+         var ports;
+         switch(type) {
+             case "output":
+                 ports=this.midi.outputs;
+                 break;
+             case "input":
+                 ports=this.midi.inputs;
+                 break;
+         }
+         for(var i=0; i<ports.length; i++) {
+             var item=new Option(ports[i].name, i);
+             selectElem.appendChild(item);
+         }
+     }
+  });
+  </script>
+</polymer-element>

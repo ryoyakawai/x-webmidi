@@ -1,0 +1,8 @@
+{
+  "name": "midi-event",
+  "private": "false",
+  "version": "0.0.1",
+  "dependencies": {
+    "polymer": "Polymer/polymer#~0.5.1"
+  }
+}
