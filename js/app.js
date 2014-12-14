@@ -46,7 +46,7 @@ window.addEventListener("polymer-ready", function(){
             fkey.setMidiDevice(midiout.getOutputDevice());
         }
         document.getElementById("changeChValue").addEventListener("change", function(event){
-            var ch=(parseInt(event.target.value)-1).toString(16);
+            var ch=(parseInt(event.target.value)).toString(16);
             fkey.setChannel(ch);
             document.getElementById("prgChange").value=voice[parseInt("0x"+ch)];
             updateProgramChange();
