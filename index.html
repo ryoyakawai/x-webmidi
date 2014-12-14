@@ -71,9 +71,9 @@
     <script type="text/javascript">
     window.addEventListener('midi-input-event', function(event) {
         var output=document.getElementById("output-port1");
-        var ch=document.getElementById("changeChValue").value;
+        var ch=document.getElementById("changeChValue").value-1;
         if(document.getElementById("through-message").checked===true) {
-            event.detail.data[0]="0x"+event.detail.data[0].toString(16).substr(0,1)+(parseInt(ch)-1).toString(16);
+            event.detail.data[0]="0x"+event.detail.data[0].toString(16).substr(0,1)+(parseInt(ch)).toString(16);
             output.sendRawMessage(event.detail.data);
         }
 
