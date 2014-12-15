@@ -74,6 +74,7 @@
 
     <script type="text/javascript">
     window.addEventListener('midi-input-event', function(event) {
+        console.log(event.detail);
         var output=document.getElementById("output-port1");
         var ch=document.getElementById("changeChValue").value-1;
         if(document.getElementById("through-message").checked===true) {

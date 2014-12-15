@@ -69,6 +69,7 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
           if(typeof timestamp==="undefined") {
               timestamp=0;
           }
+          type=type.toLowerCase();
           switch(type) {
               case "noteon":
                   if(typeof param!="object") {
