@@ -46,9 +46,9 @@ $ git clone https://github.com/ryoyakawai/x-webmidi.git;
 ```
 > **Parameters in x-webmidirequestaccess tag:**
 >
->  -  **`sysex`**: Specify whether sysex is required or not. [`true / false`]
->  - **`input`**: Specify whether to use MIDI input or not. [`true / false`]
->  - **`output`**: Specify whether to use MIDI input or not. [`true / false`]
+>  -  **`sysex`**: Specify whether sysex is required or not. [true / false]
+>  - **`input`**: Specify whether to use MIDI input or not. [true / false]
+>  - **`output`**: Specify whether to use MIDI input or not. [true / false]
 >
 > **Note:**
 >
@@ -99,8 +99,7 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 >
 > **Parameters in `sendHRMessage()` method:**
 >
->  -  *(string)* **`type`**: Specify type of channel message of desiring to send. 
-> [`noteon/noteoff/programchange/setpitchbendrange/pitchbend/sustain/modulation/allsoundoff/resetallcontroller/allnoteoff`]
+>  -  *(string)* **`type`**: Specify type of channel message of desiring to send. (For more detail is in table below.)
 >  - *(number)* **`ch`**: Specify which channel to send.
 >  - *(array/string)* **`param`**: Specify data of desiring to send.
 >
@@ -108,10 +107,10 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 >
 >| type               | param                                                                             |
 | :------------------| :-------------------------------------------------------------------------------- |
-| noteon             | *(array)* [*(string)note number / (string)int'l key format*, *(number)velocity*] |
-| noteof             | *(array)* [*(string)note number / (string)int'l key format*, *(number)velocity*] |
+| noteon             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
+| noteof             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
 | programchange      | *(number)*                                                                        |
-| setpitchbendrange  | *(array)* [*(number)minimum value*, *(number)max value*]                          |
+| setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                          |
 | pitchbend          | *(number)*                                                                        |
 | sustain            | *(string)* [`on / off`]                                                             |
 | modulation         | *(number)*                                                                        |
