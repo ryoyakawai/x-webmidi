@@ -29,21 +29,20 @@ Google Chrome to use this component. [Chrome](http://www.google.co.jp/intl/ja/ch
 ## Preparation
 ### Get component
 #### bower
-```                                                                                                                                                                 
-// bower                                                                                                                                                            
-$ bower install x-webmidi;                                                                                                                                          
+```
+// bower
+$ bower install x-webmidi;
 ```
 #### git
-```                                                                                                                                                                 
-// git                                                                                                                                                              
-git clone https://github.com/ryoyakawai/x-webmidi.git;                                                                                                              
+```
+// git
+git clone https://github.com/ryoyakawai/x-webmidi.git;
 ```
 ### include and import
-
-```                                                                                                                                                                 
-<script src="path/to/webcomponents.js"></script>                                                                                                                    
-<link rel="import" href="x-webmidirequestaccess.html">                                                                                                              
-<x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>                                                                           
+```
+<script src="path/to/webcomponents.js"></script>
+<link rel="import" href="x-webmidirequestaccess.html">
+<x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
 ```
 > **Parameters in x-webmidirequestaccess tag:**
 >
@@ -57,8 +56,8 @@ git clone https://github.com/ryoyakawai/x-webmidi.git;
 > - Import x-webmidi component.
 
 ### Set MIDI input dropdown list
-```                                                                                                                                                                 
-<x-webmidiinput id="foo"></x-webmidiinput>                                                                                                                          
+```
+<x-webmidiinput id="foo"></x-webmidiinput>
 ```
 #### Add eventlistener to obtain MIDI message form selected MIDI input device.
 ```
@@ -71,8 +70,8 @@ window.addEventListener('midi-input-event', function(event) {
  - Human readable format, which is parsed from Raw MIDI message, is in `event.detail.property`.
 
 ### Set MIDI output dropdown list
-```                                                                                                                                                                 
-<x-webmidioutput id="bar"></x-webmidioutput>                                                                                                                        
+```
+<x-webmidioutput id="bar"></x-webmidioutput>
 ```
 #### To send MIDI message to selected MIDI device.
 **Send by Array format (same format as Web MIDI API):**
