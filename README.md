@@ -46,9 +46,9 @@ $ git clone https://github.com/ryoyakawai/x-webmidi.git;
 ```
 > **Parameters in x-webmidirequestaccess tag:**
 >
->  -  **`sysex`**: Specify whether sysex is required or not. [`true/false`]
->  - **`input`**: Specify whether to use MIDI input or not. [`true/false`]
->  - **`output`**: Specify whether to use MIDI input or not. [`true/false`]
+>  -  **`sysex`**: Specify whether sysex is required or not. [`true / false`]
+>  - **`input`**: Specify whether to use MIDI input or not. [`true / false`]
+>  - **`output`**: Specify whether to use MIDI input or not. [`true / false`]
 >
 > **Note:**
 >
@@ -82,10 +82,16 @@ midiout.sendRawMessage([0x90, 0x45, 0x7f]);
 **Send by Human-Readable format:**
 
 ```
-// example to send
+// using int'l format
 var midiout=document.getElementById("output-port1");
 midiout.sendHRMessage("noteon", 0, ["D4", 127], 0);
-midiout.sendHRMessage("noteon", 0, ["D4", 127], 1000);
+midiout.sendHRMessage("noteoff", 0, ["D4", 127], 1000);
+```
+```
+// using note number format
+var midiout=document.getElementById("output-port1");
+midiout.sendHRMessage("noteon", 0, [62, 127], 0);
+midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 ```
 
 > **Basic format:**
@@ -97,19 +103,22 @@ midiout.sendHRMessage("noteon", 0, ["D4", 127], 1000);
 > [`noteon/noteoff/programchange/setpitchbendrange/pitchbend/sustain/modulation/allsoundoff/resetallcontroller/allnoteoff`]
 >  - *(number)* **`ch`**: Specify which channel to send.
 >  - *(array/string)* **`param`**: Specify data of desiring to send.
->> **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.
-> | type               | param                                                                             |
-> | :------------------| :-------------------------------------------------------------------------------- |
-> | noteon             | *(array)* [*(string)note number/(string)intern'l key letter*, *(number)velocity*] |
-> | noteof             | *(array)* [*(string)note number/(string)intern'l key letter*, *(number)velocity*] |
-> | programchange      | *(number)*                                                                        |
-> | setpitchbendrange  | *(array)* [*(number)minimum value*, *(number)max value*]                          |
-> | pitchbend          | *(number)*                                                                        |
-> | sustain            | *(string)* [`on/off`]                                                             |
-> | modulation         | *(number)*                                                                        |
-> | allsoundoff        | `null`                                                                            |
-> | resetallcontroller | `null`                                                                            |
-> | allnoteoff         | `null`                                                                            |
+>
+> **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.
+>
+>| type               | param                                                                             |
+| :------------------| :-------------------------------------------------------------------------------- |
+| noteon             | *(array)* [*(string)note number / (string)int'l key format*, *(number)velocity*] |
+| noteof             | *(array)* [*(string)note number / (string)int'l key format*, *(number)velocity*] |
+| programchange      | *(number)*                                                                        |
+| setpitchbendrange  | *(array)* [*(number)minimum value*, *(number)max value*]                          |
+| pitchbend          | *(number)*                                                                        |
+| sustain            | *(string)* [`on / off`]                                                             |
+| modulation         | *(number)*                                                                        |
+| allsoundoff        | `null`                                                                            |
+| resetallcontroller | `null`                                                                            |
+| allnoteoff         | `null`                                                                            |
+
 
 ## License
 [MIT](http://opensource.org/licenses/MIT)
