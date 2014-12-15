@@ -61,7 +61,7 @@ $ git clone https://github.com/ryoyakawai/x-webmidi.git;
 
 ### Set MIDI input dropdown list
 ```
-<x-webmidiinput id="foo"></x-webmidiinput>
+<x-webmidiinput id="foo-input"></x-webmidiinput>
 ```
 #### Add eventlistener to obtain MIDI message form selected MIDI input device.
 ```
@@ -75,25 +75,25 @@ window.addEventListener('midi-input-event', function(event) {
 
 ### Set MIDI output dropdown list
 ```
-<x-webmidioutput id="bar"></x-webmidioutput>
+<x-webmidioutput id="foo-output"></x-webmidioutput>
 ```
 #### To send MIDI message to selected MIDI device.
 **Send by Array format (same format as Web MIDI API):**
 ```
-var midiout=document.getElementById("output-port1");
+var midiout=document.getElementById("foo-output");
 midiout.sendRawMessage([0x90, 0x45, 0x7f]);
 ```
 **Send by Human-Readable format:**
 
 ```
 // using int'l format
-var midiout=document.getElementById("output-port1");
+var midiout=document.getElementById("foo-output");
 midiout.sendHRMessage("noteon", 0, ["D4", 127], 0);
 midiout.sendHRMessage("noteoff", 0, ["D4", 127], 1000);
 ```
 ```
 // using note number format
-var midiout=document.getElementById("output-port1");
+var midiout=document.getElementById("foo-output");
 midiout.sendHRMessage("noteon", 0, [62, 127], 0);
 midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 ```
