@@ -1,7 +1,7 @@
 {
-  "name": "midi-event",
+  "name": "x-webmidi",
   "private": "false",
-  "version": "0.0.1",
+  "version": "0.9.0",
   "dependencies": {
     "polymer": "Polymer/polymer#~0.5.1"
   }
