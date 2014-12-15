@@ -30,13 +30,11 @@ Google Chrome to use this component. [Chrome](http://www.google.co.jp/intl/ja/ch
 ### Get component
 #### bower
 ```
-// bower
 $ bower install x-webmidi;
 ```
 #### git
 ```
-// git
-git clone https://github.com/ryoyakawai/x-webmidi.git;
+$ git clone https://github.com/ryoyakawai/x-webmidi.git;
 ```
 ### include and import
 ```
@@ -98,18 +96,18 @@ midiout.sendHRMessage("noteon", 0, ["D4", 127], 1000);
 >  - *(number)* **`ch`**: Specify which channel to send.
 >  - *(array/string)* **`param`**: Specify data of desiring to send.
 >> **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.
-> | type               | param                                                                             ||
-> | :------------------| :-------------------------------------------------------------------------------- ||
-> | noteon             | *(array)* [*(string)note number/(string)intern'l key letter*, *(number)velocity*] ||
-> | noteof             | *(array)* [*(string)note number/(string)intern'l key letter*, *(number)velocity*] ||
-> | programchange      | *(number)*                                                                        ||
-> | setpitchbendrange  | *(array)* [*(number)minimum value*, *(number)max value*]                          ||
-> | pitchbend          | *(number)*                                                                        ||
-> | sustain            | *(string)* [`on/off`]                                                             ||
-> | modulation         | *(number)*                                                                        ||
-> | allsoundoff        | `null`                                                                            ||
-> | resetallcontroller | `null`                                                                            ||
-> | allnoteoff         | `null`                                                                            ||
+> | type               | param                                                                             |
+> | :------------------| :-------------------------------------------------------------------------------- |
+> | noteon             | *(array)* [*(string)note number/(string)intern'l key letter*, *(number)velocity*] |
+> | noteof             | *(array)* [*(string)note number/(string)intern'l key letter*, *(number)velocity*] |
+> | programchange      | *(number)*                                                                        |
+> | setpitchbendrange  | *(array)* [*(number)minimum value*, *(number)max value*]                          |
+> | pitchbend          | *(number)*                                                                        |
+> | sustain            | *(string)* [`on/off`]                                                             |
+> | modulation         | *(number)*                                                                        |
+> | allsoundoff        | `null`                                                                            |
+> | resetallcontroller | `null`                                                                            |
+> | allnoteoff         | `null`                                                                            |
 
 ## License
 [MIT](http://opensource.org/licenses/MIT)
