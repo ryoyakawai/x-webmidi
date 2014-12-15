@@ -5,6 +5,8 @@ This is a polymer component, and this is a wrapping Web MIDI API.
  - What is Web MIDI API? -> [Web MIDI API@W3C](http://webaudio.github.io/web-midi-api/)
  - What is Polymer? -> [polymer](https://www.polymer-project.org/)
 
+![x-webmidi image](https://raw.githubusercontent.com/ryoyakawai/x-webmidi/master/images/screenshot.png)
+
 ## Purpose of using this component
 MIDI is well defined protocol. But to use the protocol you must learn 7bit code, such as NoteOn: 9nH, NoteOff: 8nH.
 With using this component you do NOT have to learn those 7bit code. And also, you do NOT have to know about method in Web MIDI API.
