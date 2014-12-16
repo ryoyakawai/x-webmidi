@@ -124,7 +124,8 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 
 
 ## License
-[MIT](http://opensource.org/licenses/MIT)
+Apache License, Version 2.0
+
 
 ## Copyright
 Copyright (c) 2014 Ryoya Kawai
