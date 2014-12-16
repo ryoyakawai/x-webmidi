@@ -65,11 +65,12 @@ $ git clone https://github.com/ryoyakawai/x-webmidi.git;
 ```
 #### Add eventlistener to obtain MIDI message form selected MIDI input device.
 ```
-window.addEventListener('midi-input-event', function(event) {
+window.addEventListener('midiin-event:foo-input', function(event) {
   // write what you want to do.
   console.log(event.detail.);
 }
 ```
+ - Format of event name: `midiin-event:<ID which corresponds with x-webmidiinput>`
  - Raw MIDI message from Web MIDI API is in `event.detail.data`.
  - Human readable format, which is parsed from Raw MIDI message, is in `event.detail.property`.
 
