@@ -87,7 +87,7 @@
             elem.innerText="[input:"+event.detail.property.subType +" note:0x"+ event.detail.property.noteNumber.toString(16)+"("+event.detail.property.itnl+")) velocity:0x"+  event.detail.property.velocity.toString(16)+"]";
             setTimeout(function(){ elem.innerText="";}, 1000);
         }
-        console.log(event.detail);
+        console.log("[input-port-01] ", event.detail);
     });
 
     window.addEventListener('midiin-event:input-port-02', function(event) {
@@ -97,7 +97,7 @@
             elem.innerText="[input:"+event.detail.property.subType +" note:0x"+ event.detail.property.noteNumber.toString(16)+"("+event.detail.property.itnl+")) velocity:0x"+  event.detail.property.velocity.toString(16)+"]";
             setTimeout(function(){ elem.innerText="";}, 1000);
         }
-        console.log(event.detail);
+        console.log("[input-port-02]", event.detail);
     });
     </script>
 
