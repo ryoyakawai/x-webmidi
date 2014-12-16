@@ -1,6 +1,17 @@
 <!--
-Copyright (c) 2014 Ryoya Kawai. All rights reserved.
-Distributed under the MIT License (license terms are at http://opensource.org/licenses/MIT).
+Copyright 2014 Ryoya Kawai. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 -->
 <polymer-element name="x-webmidiinput">
   <template>
@@ -15,6 +26,7 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
   <script type="text/javascript">
   Polymer({
       midiAccess: null,
+      inputIdx: "false",
       ready: function() {
           var self=this;
           var timerId=setInterval(function(){
@@ -25,28 +37,37 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
                   var elem=self.$["midiin"];
                   self.midiAccess.addOptions("input", elem);
                   self.$["midiin"].addEventListener("change", function(event){
-                      self.setMIDIINDevice.bind(self)(event.target.value);
-                      self.fire("midiinput-updated");
+                      self.setMIDIINDevice.bind(self)(event.target);
                   });
               }
           }, 100);
       },
-      setMIDIINDevice: function(Idx){
+      setMIDIINDevice: function(target){
+          var Idx=target.value;
           var inputs=this.midiAccess.midi.inputs;
           for(var i=0; i<inputs.length; i++) {
-              inputs[i].onmidimessage=function(){};
+              if(i==this.inputIdx) inputs[i].onmidimessage=null; // delete ex-input
               if(i==Idx) {
-                  inputs[i].onmidimessage=this.onMIDIMessage.bind(this);
+                  if(typeof inputs[i].onmidimessage=="function") {
+                      // TODO: Input parameter should be in array format to be able to obtain message from multiple input devices.
+                      console.log("[ERROR] alredy selected");
+                  } else {
+                      inputs[i].onmidimessage=this.onMIDIMessage.bind(this); // set new input
+                      this.inputIdx=Idx; // set new input to object property
+                  }
               }
           }
       },
       onMIDIMessage: function(event){
           var d16=[];
-          var p_d16=this.parseMIDIMessage(event.data)
+          var p_d16=this.parseMIDIMessage(event.data);
+          p_d16.device=this.midiAccess.midi.inputs[this.inputIdx];
+          p_d16.device.Idx=this.inputIdx;
+          
           for(var i=0; i<event.data.length; i++) {
               d16.push("0x"+("0"+event.data[i].toString(16)).slice(-2));
           }
-          if(p_d16!==false) this.fire("midi-input-event", p_d16);
+          if(p_d16!==false) this.fire("midiin-event:"+this.id, p_d16);
       },
       parseMIDIMessage: function(msg) {
           if(typeof msg!=="object") {
