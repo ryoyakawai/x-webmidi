@@ -124,14 +124,14 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 >
 > **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.
 >
->| type               | param                                                                             |
+>| type               | param                                                                            |
 | :------------------| :-------------------------------------------------------------------------------- |
 | noteon             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
 | noteof             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
 | programchange      | *(number)*                                                                        |
-| setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                          |
+| setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                        |
 | pitchbend          | *(number)*                                                                        |
-| sustain            | *(string)* [`on / off`]                                                             |
+| sustain            | *(string)* [`on / off`]                                                           |
 | modulation         | *(number)*                                                                        |
 | allsoundoff        | `null`                                                                            |
 | resetallcontroller | `null`                                                                            |
