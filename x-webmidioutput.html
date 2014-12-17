@@ -66,6 +66,7 @@ limitations under the License.
                   self.$["midiout"].addEventListener("change", function(event){
                       self.outputIdx=event.target.value;
                       if(event.target.value=="") self.outputIdx=false;
+                      self.fire("midioutput-updated:"+self.id);
                   });
               }
           }, 100);
