@@ -67,8 +67,12 @@ $ bower install;
 
 ### MIDI input
 #### Basic Demo
- - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/inputsample.html](https://github.com/ryoyakawai/x-webmidi/blob/gh-pages/inputsample.html)
- - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inputsample.html](http://ryoyakawai.github.io/x-webmidi/inputsample.html)
+ - input
+  - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/inputsample.html](https://github.com/ryoyakawai/x-webmidi/blob/gh-pages/inputsample.html)
+  - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inputsample.html](http://ryoyakawai.github.io/x-webmidi/inputsample.html)
+ - input & output
+  - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/inoutsample.html](https://github.com/ryoyakawai/x-webmidi/blob/gh-pages/inoutsample.html)
+  - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inpotsample.html](http://ryoyakawai.github.io/x-webmidi/inoutsample.html)
 
 #### Set MIDI input dropdown list.
 ```
