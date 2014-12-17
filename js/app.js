@@ -33,7 +33,7 @@ window.addEventListener("polymer-ready", function(){
 
     var voice=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
     window.addEventListener("midioutput-updated", function(){
-        var midiout=document.getElementById("output-port1");
+        var midiout=document.getElementById("output-port-01");
         
         // display control-area
         var elem=document.getElementById("controlarea");
@@ -55,7 +55,7 @@ window.addEventListener("polymer-ready", function(){
         updateProgramChange();
         
         // virtual keyboard
-        var midiout=document.getElementById("output-port1");
+        var midiout=document.getElementById("output-port-01");
         var fkey=document.getElementById("flatkey");
         fkey.setMIDIAccess(midiout.midiAccess);
         if(midiout.checkOutputIdx!="false") {
@@ -71,7 +71,7 @@ window.addEventListener("polymer-ready", function(){
 
     // for fireTriText
     document.getElementById("fireTri").addEventListener("click", function() {
-        var midiout=document.getElementById("output-port1");
+        var midiout=document.getElementById("output-port-01");
         var ch=(parseInt(document.getElementById("changeChValue").value)-1).toString(16);
 
         midiout.sendHRMessage("programchange", ch, 12);
@@ -90,7 +90,7 @@ window.addEventListener("polymer-ready", function(){
 
     // for Play sound with ProgramChnge
     document.getElementById("prgChange").addEventListener("mouseup", function(event){
-        var midiout=document.getElementById("output-port1");
+        var midiout=document.getElementById("output-port-01");
         var val=event.target.value;
         var ch=(parseInt(document.getElementById("changeChValue").value)-1).toString(16);
         voice[parseInt("0x"+ch)]=parseInt(event.target.value);
@@ -112,7 +112,7 @@ window.addEventListener("polymer-ready", function(){
 
     // with pitchbend
     document.getElementById("fireMidiBend").addEventListener("click", function(event){
-        var midiout=document.getElementById("output-port1");
+        var midiout=document.getElementById("output-port-01");
         var ch=(parseInt(document.getElementById("changeChValue").value)-1).toString(16);
         midiout.sendHRMessage("setpitchbendrange", ch, [0, 16383]);
         midiout.sendHRMessage("noteon", ch, [72, 120], 0);
@@ -137,7 +137,7 @@ window.addEventListener("polymer-ready", function(){
 
     // with modulation
     document.getElementById("fireMidiMod").addEventListener("click", function() {
-        var midiout=document.getElementById("output-port1");
+        var midiout=document.getElementById("output-port-01");
         var ch=(parseInt(document.getElementById("changeChValue").value)-1).toString(16);
         midiout.sendHRMessage("noteon", ch, [72, 120], 0);
         var val=0;
@@ -164,7 +164,7 @@ window.addEventListener("polymer-ready", function(){
         slider.dispatchEvent(event);
     }
     function sendCDEFG(ch, type) {
-        var midiout=document.getElementById("output-port1");
+        var midiout=document.getElementById("output-port-01");
         switch(type) {
           case "sustain":
             midiout.sendHRMessage("sustain", ch, "on", 0);
@@ -188,7 +188,7 @@ window.addEventListener("polymer-ready", function(){
     }
 
     document.getElementById("sendRaw").addEventListener("click", function() {
-        var midiout=document.getElementById("output-port1");
+        var midiout=document.getElementById("output-port-01");
         var ch=(document.getElementById("changeChValue").value-1).toString(16);
 
         midiout.sendRawMessage(["0x9"+ch, 72, 60], 0);
