@@ -10,7 +10,7 @@
   </head>
   <body>
     <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
-    <link rel="import" href="x-webmidirequestaccess.html">
+    <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
     <link rel="import" href="components/wm-flatkey/wm-flatkey.html">
 
     <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
@@ -27,8 +27,9 @@
 
       <h2 id="tosendmidi">[TO SEND MIDI MESSAGE]</h2>
       <h3 id="devicesText" style="margin: 0px;">[Select your device]</h3>
-      <div>input: <x-webmidiinput id="input-port1"></x-webmidiinput> <span id="midiinput-event"></span></div>
-      <div>output: <x-webmidioutput id="output-port1"></x-webmidioutput></div>
+      <div>input 01: <x-webmidiinput id="input-port-01"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
+      <div>input 02: <x-webmidiinput id="input-port-02"></x-webmidiinput> <span id="midiinput-event-02"></span></div>
+      <div>output: <x-webmidioutput id="output-port-01"></x-webmidioutput></div>
       <br>
 
       <div id="controlarea"> 
@@ -73,20 +74,36 @@
     </script>
 
     <script type="text/javascript">
-    window.addEventListener('midi-input-event', function(event) {
-        console.log(event.detail);
-        var output=document.getElementById("output-port1");
-        var ch=document.getElementById("changeChValue").value-1;
+    window.addEventListener('midiin-event:input-port-01', function(event) {
         if(document.getElementById("through-message").checked===true) {
+            var output1=document.getElementById("output-port-01");
+            var ch=document.getElementById("changeChValue").value-1;
             event.detail.data[0]="0x"+event.detail.data[0].toString(16).substr(0,1)+(parseInt(ch)).toString(16);
-            output.sendRawMessage(event.detail.data);
+            output1.sendRawMessage(event.detail.data);
         }
 
         if(event.detail.subType=="noteOn" || event.detail.subType=="noteOff") {
-            var elem=document.getElementById("midiinput-event");
+            var elem=document.getElementById("midiinput-event-01");
             elem.innerText="[input:"+event.detail.property.subType +" note:0x"+ event.detail.property.noteNumber.toString(16)+"("+event.detail.property.itnl+")) velocity:0x"+  event.detail.property.velocity.toString(16)+"]";
             setTimeout(function(){ elem.innerText="";}, 1000);
         }
+        console.log("[input-port-01] ", event.detail);
+    });
+
+    window.addEventListener('midiin-event:input-port-02', function(event) {
+        if(document.getElementById("through-message").checked===true) {
+            var output1=document.getElementById("output-port-01");
+            var ch=document.getElementById("changeChValue").value-1;
+            event.detail.data[0]="0x"+event.detail.data[0].toString(16).substr(0,1)+(parseInt(ch)).toString(16);
+            output1.sendRawMessage(event.detail.data);
+        }
+
+        if(event.detail.subType=="noteOn" || event.detail.subType=="noteOff") {
+            var elem=document.getElementById("midiinput-event-02");
+            elem.innerText="[input:"+event.detail.property.subType +" note:0x"+ event.detail.property.noteNumber.toString(16)+"("+event.detail.property.itnl+")) velocity:0x"+  event.detail.property.velocity.toString(16)+"]";
+            setTimeout(function(){ elem.innerText="";}, 1000);
+        }
+        console.log("[input-port-02]", event.detail);
     });
     </script>
 

@@ -1,12 +1,48 @@
 <!--
-Copyright (c) 2014 Ryoya Kawai. All rights reserved.
-Distributed under the MIT License (license terms are at http://opensource.org/licenses/MIT).
+Copyright 2014 Ryoya Kawai. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
 -->
 <polymer-element name="x-webmidioutput">
   <template>
     <style type="text/css">
-    .select-midiout {}
-    .button-connect-out {}
+    .select-midiout {
+      font-family:arial;
+      color:#000;
+      overflow: hidden;
+      outline: none;
+      font-size:15px; /*-webkit-small-control;*/
+      -webkit-appearance: button;
+      -moz-appearance: button;
+      appearance: button;
+      -webkit-border-radius: 6px;
+      -moz-border-radius: 6px;
+      box-sizing: border-box;
+      -webkit-box-sizing: border-box;
+      -moz-box-sizing: border-box;
+      background:#fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAABYCAYAAAAZZrIMAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gwMDjIbBk010QAAASBJREFUeNrt2D0uRGEYhuGHiUShodQolFQq5dQUVqCyATuQsAW2IAobUFrBbGBKBeWUIn6akxAiM86cnw/XlUw/ee9zkpknAQAAAAAAAAAAAAAAAAAA/pSFgr7LTpLrQu/0kmSY5O6/PzD7SV4L/Gx7l98dFhZnKMlXx4XEOZDie2c9xzmSYLqLnuKcOP3svzKvOo5z7uw/M0hy21Gcy8L+evwaS0lGLce5SbLo1PUtJxm3FGdUPQTMaSXJfcNxxlV8GrKWZNJQnIckq07avPUkj3PGmVSxaclmkueacZ6SbDhh+3ZrBtpyuu7sxfhZvFkXcONnj6Yt4MbPApzG+Fm8zwu48bMwHxdw42ehBtWbNHAKAAAAAAAAAAAAAAAo3BvDPY/9X9SQowAAAABJRU5ErkJggg==) no-repeat right center;
+      background-size: 22px 24px;
+      cursor: pointer;
+      vertical-align: middle;
+      user-select: none; /* CSS3 */
+      -moz-user-select: none; /* Firefox */
+      -webkit-user-select: none; /* Safari、Chromeなど */
+
+      padding:5px 30px 5px 5px;
+      border-radius:2px;
+      border:0px solid #ddd;
+      margin:3px 3px;
+    }
     </style>
     <select class="select-midiout" id="midiout">
       <option value="false">Not Selected</option>
@@ -30,7 +66,6 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
                   self.$["midiout"].addEventListener("change", function(event){
                       self.outputIdx=event.target.value;
                       if(event.target.value=="") self.outputIdx=false;
-                      self.fire("midioutput-updated");
                   });
               }
           }, 100);
