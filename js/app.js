@@ -32,7 +32,7 @@ window.addEventListener("polymer-ready", function(){
     });
 
     var voice=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-    window.addEventListener("midioutput-updated", function(){
+    window.addEventListener("midioutput-updated:output-port-01", function(){
         var midiout=document.getElementById("output-port-01");
         
         // display control-area
