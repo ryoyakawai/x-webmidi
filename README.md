@@ -34,8 +34,8 @@ Using this component allow you a quick and an easy MIDI application development.
 
 ## Preparation
 ### Requirements
- - [Bower](http://bower.io/)
- -- Please install bower as following [this instruction](http://bower.io/#install-bower) before starting use this component.
+ - [Bower](http://bower.io/)  
+  - Please install bower as following [this instruction](http://bower.io/#install-bower) before to start using this component.
 
 ### Get component
 #### bower
