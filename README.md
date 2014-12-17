@@ -45,6 +45,7 @@ $ bower install x-webmidi;
 #### git
 ```
 $ git clone https://github.com/ryoyakawai/x-webmidi.git;
+$ cd x-webmidi;
 $ bower install;
 ```
 ### include and import
@@ -66,8 +67,12 @@ $ bower install;
 
 ### MIDI input
 #### Basic Demo
- - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/inputsample.html](https://github.com/ryoyakawai/x-webmidi/blob/gh-pages/inputsample.html)
- - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inputsample.html](http://ryoyakawai.github.io/x-webmidi/inputsample.html)
+ - input
+  - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/inputsample.html](https://github.com/ryoyakawai/x-webmidi/blob/gh-pages/inputsample.html)
+  - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inputsample.html](http://ryoyakawai.github.io/x-webmidi/inputsample.html)
+ - input & output
+  - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/inoutsample.html](https://github.com/ryoyakawai/x-webmidi/blob/gh-pages/inoutsample.html)
+  - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inpotsample.html](http://ryoyakawai.github.io/x-webmidi/inoutsample.html)
 
 #### Set MIDI input dropdown list.
 ```
@@ -123,14 +128,14 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 >
 > **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.
 >
->| type               | param                                                                             |
+>| type               | param                                                                            |
 | :------------------| :-------------------------------------------------------------------------------- |
 | noteon             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
 | noteof             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
 | programchange      | *(number)*                                                                        |
-| setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                          |
+| setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                        |
 | pitchbend          | *(number)*                                                                        |
-| sustain            | *(string)* [`on / off`]                                                             |
+| sustain            | *(string)* [`on / off`]                                                           |
 | modulation         | *(number)*                                                                        |
 | allsoundoff        | `null`                                                                            |
 | resetallcontroller | `null`                                                                            |
