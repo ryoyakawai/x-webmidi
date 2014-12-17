@@ -1,10 +1,7 @@
-<<<<<<< HEAD
-=======
 # x-webmidi
 ## Live Demo
 [http://ryoyakawai.github.io/x-webmidi/](http://ryoyakawai.github.io/x-webmidi/)
 
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 ## What is this?
 This is a polymer component, and this is a wrapping Web MIDI API.
 
@@ -33,11 +30,6 @@ Using this component allow you a quick and an easy MIDI application development.
  - AllNoteOff
 
 ## Requirements (as is 2014 Dec 15)
-<<<<<<< HEAD
-Google Chrome to use this component. [Chrome](http://www.google.co.jp/intl/ja/chrome/browser/)  
-
-## Preparation
-=======
 [Google Chrome](http://www.google.co.jp/intl/ja/chrome/browser/) to use this component. 
 
 ## Preparation
@@ -45,7 +37,6 @@ Google Chrome to use this component. [Chrome](http://www.google.co.jp/intl/ja/ch
  - [Bower](http://bower.io/)  
   - Please install bower as following [this instruction](http://bower.io/#install-bower) before to start using this component.
 
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 ### Get component
 #### bower
 ```
@@ -54,11 +45,7 @@ $ bower install x-webmidi;
 #### git
 ```
 $ git clone https://github.com/ryoyakawai/x-webmidi.git;
-<<<<<<< HEAD
-=======
-$ cd x-webmidi;
 $ bower install;
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 ```
 ### include and import
 ```
@@ -77,15 +64,6 @@ $ bower install;
 > - include polyfill of Web Component if needed (NOT needed for Google Chrome!!)
 > - Import x-webmidi component.
 
-<<<<<<< HEAD
-### Set MIDI input dropdown list
-```
-<x-webmidiinput id="foo"></x-webmidiinput>
-```
-#### Add eventlistener to obtain MIDI message form selected MIDI input device.
-```
-window.addEventListener('midi-input-event', function(event) {
-=======
 ### MIDI input
 #### Basic Demo
  - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/inputsample.html](https://github.com/ryoyakawai/x-webmidi/blob/master/inputsample.html)
@@ -98,19 +76,10 @@ window.addEventListener('midi-input-event', function(event) {
 #### Add eventlistener to obtain MIDI message form selected MIDI input device.
 ```
 window.addEventListener('midiin-event:foo-input', function(event) {
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
   // write what you want to do.
   console.log(event.detail.);
 }
 ```
-<<<<<<< HEAD
- - Raw MIDI message from Web MIDI API is in `event.detail.data`.
- - Human readable format, which is parsed from Raw MIDI message, is in `event.detail.property`.
-
-### Set MIDI output dropdown list
-```
-<x-webmidioutput id="bar"></x-webmidioutput>
-=======
  - Format of event name: `midiin-event:<ID which corresponds with x-webmidiinput>`
  - Raw MIDI message from Web MIDI API is in `event.detail.data`.
  - Human readable format, which is parsed from Raw MIDI message, is in `event.detail.property`.
@@ -121,37 +90,24 @@ window.addEventListener('midiin-event:foo-input', function(event) {
 #### Set MIDI output dropdown list.
 ```
 <x-webmidioutput id="foo-output"></x-webmidioutput>
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 ```
 #### To send MIDI message to selected MIDI device.
 **Send by Array format (same format as Web MIDI API):**
 ```
-<<<<<<< HEAD
-var midiout=document.getElementById("output-port1");
-=======
 var midiout=document.getElementById("foo-output");
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 midiout.sendRawMessage([0x90, 0x45, 0x7f]);
 ```
 **Send by Human-Readable format:**
 
 ```
 // using int'l format
-<<<<<<< HEAD
-var midiout=document.getElementById("output-port1");
-=======
 var midiout=document.getElementById("foo-output");
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 midiout.sendHRMessage("noteon", 0, ["D4", 127], 0);
 midiout.sendHRMessage("noteoff", 0, ["D4", 127], 1000);
 ```
 ```
 // using note number format
-<<<<<<< HEAD
-var midiout=document.getElementById("output-port1");
-=======
 var midiout=document.getElementById("foo-output");
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 midiout.sendHRMessage("noteon", 0, [62, 127], 0);
 midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 ```
@@ -167,24 +123,14 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 >
 > **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.
 >
-<<<<<<< HEAD
 >| type               | param                                                                             |
-=======
->| type               | param                                                                            |
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 | :------------------| :-------------------------------------------------------------------------------- |
 | noteon             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
 | noteof             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
 | programchange      | *(number)*                                                                        |
-<<<<<<< HEAD
 | setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                          |
 | pitchbend          | *(number)*                                                                        |
 | sustain            | *(string)* [`on / off`]                                                             |
-=======
-| setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                        |
-| pitchbend          | *(number)*                                                                        |
-| sustain            | *(string)* [`on / off`]                                                           |
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 | modulation         | *(number)*                                                                        |
 | allsoundoff        | `null`                                                                            |
 | resetallcontroller | `null`                                                                            |
@@ -192,12 +138,8 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 
 
 ## License
-<<<<<<< HEAD
-[MIT](http://opensource.org/licenses/MIT)
-=======
 Apache License, Version 2.0
 
->>>>>>> adab95cf82ee176de6cb74757ffd5752addd5d96
 
 ## Copyright
 Copyright (c) 2014 Ryoya Kawai
