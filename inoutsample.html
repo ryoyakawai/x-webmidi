@@ -15,16 +15,16 @@
     <div><img src="./images/01.png"></div>
 
     <script>
-    window.addEventListener("midiin-event:input-port-01", function(data){
+    window.addEventListener("midiin-event:input-port-01", function(event){
         var output1=document.getElementById("output-port-01");
         if(output1.checkOutputIdx!="false") output1.sendRawMessage(event.detail.data);
-        console.log(data.detail);
+        console.log(event.detail);
     });
 
-    window.addEventListener("midiin-event:input-port-02", function(data){
+    window.addEventListener("midiin-event:input-port-02", function(event){
         var output1=document.getElementById("output-port-01");
         if(output1.checkOutputIdx!="false") output1.sendRawMessage(event.detail.data);
-        console.log(data.detail);
+        console.log(event.detail);
     });
     </script>
 
