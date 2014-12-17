@@ -33,6 +33,10 @@ Using this component allow you a quick and an easy MIDI application development.
 [Google Chrome](http://www.google.co.jp/intl/ja/chrome/browser/) to use this component. 
 
 ## Preparation
+### Requirements
+ - (Bower)[http://bower.io/]
+ -- Please install bower as following (this instruction)[http://bower.io/#install-bower] before starting use this component.
+
 ### Get component
 #### bower
 ```
@@ -41,6 +45,7 @@ $ bower install x-webmidi;
 #### git
 ```
 $ git clone https://github.com/ryoyakawai/x-webmidi.git;
+$ bower install;
 ```
 ### include and import
 ```
