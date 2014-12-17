@@ -101,9 +101,9 @@ limitations under the License.
               event.raw=msg;
               // Not Supporting Running
               this.lastStatusByte=msg16[0]; // for Running Status
-              event.statusNum=msg16[0].replace("0x", "").substr(0,1).toLowerCase();
+              event.statusByte=msg16[0].replace("0x", "").substr(0,1).toLowerCase();
               event.channel=parseInt((msg16[0].replace("0x", "").substr(1,1)),16);
-              switch(event.statusNum) {
+              switch(event.statusByte) {
                 case "8":
                   event.subType="noteOff";
                   event.noteNumber=msg[1];
