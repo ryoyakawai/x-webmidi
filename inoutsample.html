@@ -1,0 +1,33 @@
+<html>
+  <head></head>
+  <body>
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
+    <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
+
+    <div>input 01: <x-webmidiinput id="input-port-01"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
+    <div>input 02: <x-webmidiinput id="input-port-02"></x-webmidiinput> <span id="midiinput-event-02"></span></div>
+    <div>output 01: <x-webmidioutput id="output-port-01"></x-webmidioutput></div>
+
+    <br>
+
+    <h3 id="devicesText" style="margin: 0px;">[Routing Diagram]</h3>
+    <div><img src="./images/01.png"></div>
+
+    <script>
+    window.addEventListener("midiin-event:input-port-01", function(data){
+        var output1=document.getElementById("output-port-01");
+        if(output1.checkOutputIdx!="false") output1.sendRawMessage(event.detail.data);
+        console.log(data.detail);
+    });
+
+    window.addEventListener("midiin-event:input-port-02", function(data){
+        var output1=document.getElementById("output-port-01");
+        if(output1.checkOutputIdx!="false") output1.sendRawMessage(event.detail.data);
+        console.log(data.detail);
+    });
+    </script>
+
+
+  </body>
+</html>
