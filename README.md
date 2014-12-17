@@ -30,7 +30,7 @@ Using this component allow you a quick and an easy MIDI application development.
  - AllNoteOff
 
 ## Requirements (as is 2014 Dec 15)
-Google Chrome to use this component. [Chrome](http://www.google.co.jp/intl/ja/chrome/browser/)  
+[Google Chrome](http://www.google.co.jp/intl/ja/chrome/browser/) to use this component. 
 
 ## Preparation
 ### Get component
@@ -59,7 +59,12 @@ $ git clone https://github.com/ryoyakawai/x-webmidi.git;
 > - include polyfill of Web Component if needed (NOT needed for Google Chrome!!)
 > - Import x-webmidi component.
 
-### Set MIDI input dropdown list
+### MIDI input
+#### Basic Demo
+ - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/inputsample.html](https://github.com/ryoyakawai/x-webmidi/blob/master/inputsample.html)
+ - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inputsample.html](http://ryoyakawai.github.io/x-webmidi/inputsample.html)
+
+#### Set MIDI input dropdown list.
 ```
 <x-webmidiinput id="foo-input"></x-webmidiinput>
 ```
@@ -74,7 +79,10 @@ window.addEventListener('midiin-event:foo-input', function(event) {
  - Raw MIDI message from Web MIDI API is in `event.detail.data`.
  - Human readable format, which is parsed from Raw MIDI message, is in `event.detail.property`.
 
-### Set MIDI output dropdown list
+
+
+### MIDI output
+#### Set MIDI output dropdown list.
 ```
 <x-webmidioutput id="foo-output"></x-webmidioutput>
 ```
