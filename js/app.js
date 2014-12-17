@@ -16,7 +16,7 @@
 
 window.addEventListener("polymer-ready", function(){
     document.getElementById("midiMsgB").addEventListener("click", function(event){
-        var midiin=document.getElementById("input-port1");
+        var midiin=document.getElementById("input-port-01");
         var msg=document.getElementById("midiMsg").value;
         var ret=midiin.parseMIDIMessage(msg.split(" "));
         var disp=document.getElementById("result");
