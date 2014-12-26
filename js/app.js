@@ -23,9 +23,11 @@ window.addEventListener("polymer-ready", function(){
         var out=[];
         out.push("[Type] "+ret.type);
         out.push("[subType] "+ret.property.subType);
-        out.push("[channel] "+ret.property.channel);
-        out.push("[noteNum] "+ret.property.noteNumber);
-        out.push("[velocity] "+ret.property.velocity);
+        if(ret.type=="channel") {
+            out.push("[channel] "+ret.property.channel);
+            out.push("[noteNum] "+ret.property.noteNumber);
+            out.push("[velocity] "+ret.property.velocity);
+        }
         out.push("[raw] "+ret.property.raw.join(" "));
 
         disp.innerText=out.join("\n");
