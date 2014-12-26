@@ -106,24 +106,51 @@ limitations under the License.
               msg16.push(msg[i].toString(16));
           }
           var eventTypeByte=parseInt(msg[0], 16);
-          if((msg[0] & 0xf0) == 0xf0) {
-              // Systen Event
-              if(msg[0]==0xf0) {
-                  event.type="SysEx";
-                  event.raw=msg;
-              } else {
-                  //console.log("Not Supportted Message. ", msg);
-                  return false;
+          event.raw=msg;
+          
+          if(eventTypeByte.toString(16).substr(0,1)=="f") {
+              // System Common Event
+              event.type="systemCommon";
+              switch(eventTypeByte) {
+                  case 0xf0:
+                  case "0xf0":
+                      event.subType="SysEx";
+                      break;
+                  case 0xf1:
+                  case "0xf1":
+                      event.subType="midiTimecode";
+                      break;
+                  case 0xf2:
+                  case "0xf2":
+                      event.subType="songPosition";
+                      break;
+                  case 0xf3:
+                  case "0xf3":
+                      event.subType="songSelect";
+                      break;
+                  case 0xf4:
+                  case "0xf4":
+                      event.subType="undefined";
+                      break;
+                  case 0xf5:
+                  case "0xf5":
+                      event.subType="undefined";
+                      break;
+                  case 0xf6:
+                  case "0xf6":
+                      event.subType="tuningRequest";
+                      break;
+                  case 0xf7:
+                  case "0xf7":
+                      event.subType="endOfSystemExclusive";
+                      break;
+                  default:
+                      event.subType="unknown";
+                      break;
               }
-              out={
-                  "type": event.type,
-                  "data": event.raw,
-                  "event": event
-              };
           } else {
               // Channel Event
               event.type="channel";
-              event.raw=msg;
               // Not Supporting Running
               this.lastStatusByte=msg16[0]; // for Running Status
               event.statusNum=msg16[0].replace("0x", "").substr(0,1).toLowerCase();
@@ -345,7 +372,6 @@ limitations under the License.
                       event.ctrlName="NotDefined";
                       break;
                   }
-                  
                   break;
                 case "c":
         	        event.subType = 'programChange';
@@ -365,19 +391,18 @@ limitations under the License.
 				              event.value = bsMsb + lsb;
                   }
                   break;
-                  default:
-                      //console.log("Not Supportted Message. ", msg);
-                      return false;
-                  return;
+                default:
+                  event.subType="unknown";
                   break;
               }
-              out={
-                  "type": event.type,
-                  "subType": event.subType,
-                  "data" : event.raw,
-                  "property": event
-              };
           }
+          out={
+              "type": event.type,
+              "subType": event.subType,
+              "data" : event.raw,
+              "property": event
+          };
+          console.log(out);
           return out;
       }
 
