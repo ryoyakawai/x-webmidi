@@ -27,6 +27,8 @@ window.addEventListener("polymer-ready", function(){
             out.push("[channel] "+ret.property.channel);
             out.push("[noteNum] "+ret.property.noteNumber);
             out.push("[velocity] "+ret.property.velocity);
+            out.push("[key] "+ret.property.itnl);
+            out.push("[velocity] "+ret.property.velocity);
         }
         out.push("[raw] "+ret.property.raw.join(" "));
 
