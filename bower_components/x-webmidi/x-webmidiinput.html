@@ -113,95 +113,77 @@ limitations under the License.
               if(eventTypeByte.substr(0,1)=="f") {
                   // System Common Event & System Realtime
                   switch(eventTypeByte) {
-                      case 0xf0:
-                      case "0xf0":
+                      case "f0":
                           event.type="systemCommon";
                           event.subType="SysEx";
                           break;
-                      case 0xf1:
-                      case "0xf1":
+                      case "f1":
                           event.type="systemCommon";
                           event.subType="midiTimecode";
                           break;
-                      case 0xf2:
-                      case "0xf2":
+                      case "f2":
                           event.type="systemCommon";
                           event.subType="songPosition";
                           break;
-                      case 0xf3:
-                      case "0xf3":
+                      case "f3":
                           event.type="systemCommon";
                           event.subType="songSelect";
                           break;
-                      case 0xf4:
-                      case "0xf4":
+                      case "f4":
                           event.type="systemCommon";
                           event.subType="undefined";
                           break;
-                      case 0xf5:
-                      case "0xf5":
+                      case "f5":
                           event.type="systemCommon";
                           event.subType="undefined";
                           break;
-                      case 0xf6:
-                      case "0xf6":
+                      case "f6":
                           event.type="systemCommon";
                           event.subType="tuningRequest";
                           break;
-                      case 0xf7:
-                      case "0xf7":
+                      case "f7":
                           event.type="systemCommon";
                           event.subType="endOfSystemExclusive";
                           break;
-                      case 0xf8:
-                      case "0xf8":
+                      case "f8":
                           event.type="systemRealtime";
                           event.subType="MIDIClock";
                           break;
-                      case 0xf9:
-                      case "0xf9":
+                      case "f9":
                           event.type="systemRealtime";
                           event.subType="undefined";
                           break;
-                      case 0xfa:
-                      case "0xfa":
+                      case "fa":
                           event.type="systemRealtime";
                           event.subType="start";
                           break;
-                      case 0xfb:
-                      case "0xfb":
+                      case "fb":
                           event.type="systemRealtime";
                           event.subType="continue";
                           break;
-                      case 0xfc:
-                      case "0xfc":
+                      case "fc":
                           event.type="systemRealtime";
                           event.subType="stop";
                           break;
-                      case 0xfd:
-                      case "0xfd":
+                      case "fd":
                           event.type="systemRealtime";
                           event.subType="undefined";
                           break;
-                      case 0xfe:
-                      case "0xfe":
+                      case "fe":
                           event.type="systemRealtime";
                           event.subType="activeSensing";
                           break;
-                      case 0xf:
-                      case "0xf":
+                      case "ff":
                           event.type="systemRealtime";
                           event.subType="reset";
                           break;
-                          default:
+                      default:
                           event.subType="unknown";
                           break;
                   }
               } else {
                       // Channel Event
                       event.type="channel";
-                      // Not Supporting Running
-                      this.lastStatusByte=msg16[0]; // for Running Status
                       event.statusNum=msg16[0].replace("0x", "").substr(0,1).toLowerCase();
                       event.channel=parseInt((msg16[0].replace("0x", "").substr(1,1)),16);
                       switch(event.statusNum) {
