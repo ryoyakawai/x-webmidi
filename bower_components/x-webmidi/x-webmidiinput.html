@@ -92,7 +92,6 @@ limitations under the License.
           for(var i=0; i<event.data.length; i++) {
               d16.push("0x"+("0"+event.data[i].toString(16)).slice(-2));
           }
-          p_d16.property.frequency=440.0 * Math.pow(2.0, (p_d16.property.noteNumber - 69.0) / 12.0);
 
           if(p_d16.type!="notObject") this.fire("midiin-event:"+this.id, p_d16);
       },
@@ -193,12 +192,14 @@ limitations under the License.
                               event.subType="noteOff";
                               event.noteNumber=msg[1];
                               event.velocity=msg[2];
+                              event.frequency=440.0 * Math.pow(2.0, (event.noteNumber - 69.0) / 12.0);
                               event.itnl=this.midiAccess.convertKey2Itnl(parseInt(msg[1]));
                               break;
                           case "9":
                               event.subType="noteOn";
                               event.noteNumber=msg[1];
                               event.velocity=msg[2];
+                              event.frequency=440.0 * Math.pow(2.0, (event.noteNumber - 69.0) / 12.0);
                               event.itnl=this.midiAccess.convertKey2Itnl(parseInt(msg[1]));
                               // 0x9x 0xXX 0x00
                               if(event.velocity==0) {

@@ -17,8 +17,8 @@
 window.addEventListener("polymer-ready", function(){
     document.getElementById("midiMsgB").addEventListener("click", function(event){
         var midiin=document.getElementById("input-port-01");
-        var msg=document.getElementById("midiMsg").value;
-        var ret=midiin.parseMIDIMessage(msg.split(" "));
+        var msg=(document.getElementById("midiMsg").value).split(" ");
+        var ret=midiin.parseMIDIMessage([parseInt(msg[0]), parseInt(msg[1]), parseInt(msg[2])]);
         var disp=document.getElementById("result");
         var out=[];
         out.push("[Type] "+ret.type);
@@ -26,6 +26,7 @@ window.addEventListener("polymer-ready", function(){
         if(ret.type=="channel") {
             out.push("[channel] "+ret.property.channel);
             out.push("[noteNum] "+ret.property.noteNumber);
+            if(typeof ret.property.frequency!="undefined") out.push("[frequency] "+ret.property.frequency);
             out.push("[velocity] "+ret.property.velocity);
             out.push("[key] "+ret.property.itnl);
             out.push("[velocity] "+ret.property.velocity);
