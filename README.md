@@ -115,6 +115,10 @@ midiout.sendHRMessage("noteoff", 0, ["D4", 127], 1000);
 var midiout=document.getElementById("foo-output");
 midiout.sendHRMessage("noteon", 0, [62, 127], 0);
 midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
+
+// or ("d4" is 62 in international MIDI key number)
+midiout.sendHRMessage("noteon", 0, ["d4", 127], 0);
+midiout.sendHRMessage("noteoff", 0, ["d4", 127], 1000);
 ```
 
 > **Basic format:**
@@ -123,7 +127,7 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 > **Parameters in `sendHRMessage()` method:**
 >
 >  -  *(string)* **`type`**: Specify type of channel message of desiring to send. (For more detail is in table below.)
->  - *(number)* **`ch`**: Specify which channel to send.
+>  - *(number)* **`ch`**: Specify which channel to send. (Accepts format both in hexadecimal and in decimal.)
 >  - *(array/string)* **`param`**: Specify data of desiring to send.
 >
 > **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.
