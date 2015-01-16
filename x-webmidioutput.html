@@ -71,6 +71,9 @@ limitations under the License.
               }
           }, 100);
       },
+      convertItnl2Key: function(itnl) {
+          return super([itnl]);
+      },
       initializePerformanceNow: function() {
           this.pfmNow=window.performance.now();
       },
@@ -105,6 +108,9 @@ limitations under the License.
           if(typeof timestamp==="undefined") {
               timestamp=0;
           }
+          if(ch>=10) {
+              ch=ch.toString(16);
+          }
           type=type.toLowerCase();
           switch(type) {
               case "noteon":
@@ -115,7 +121,12 @@ limitations under the License.
                   if(typeof param[0]=="string") {
                       param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
                   }
-                  msg=["0x9"+ch, param[0], param[1]];
+                  var key=param[0];
+                  if(param[0]!=parseInt(param[0])) {
+                      key=this.convertItnl2Key(param[0].toUpperCase());
+                  }
+                  //msg=["0x9"+ch, param[0], param[1]];
+                  msg=["0x9"+ch, key, param[1]];
                   break;
               case "noteoff":
                   if(typeof param!="object") {
@@ -125,7 +136,11 @@ limitations under the License.
                   if(typeof param[0]=="string") {
                       param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
                   }
-                  msg=["0x8"+ch, param[0], param[1]];
+                  var key=param[0];
+                  if(param[0]!=parseInt(param[0])) {
+                      key=this.convertItnl2Key(param[0].toUpperCase());
+                  }
+                  msg=["0x8"+ch, key, param[1]];
                   break;
               case "programchange":
                   msg=["0xc"+ch, param];
