@@ -1,0 +1,25 @@
+<html>
+  <head></head>
+  <body>
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
+    <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
+
+    <div>output 01: <x-webmidioutput id="output-port-01"></x-webmidioutput></div>
+    <button id="noteOn">noteOn</button>
+    <button id="noteOff">noteOff</button>
+    <br>
+
+    <script>
+    var output=document.getElementById("output-port-01");
+    document.getElementById("noteOn").addEventListener("mousedown", function(event){
+        output.sendHRMessage("noteOn", 0, ["d4", 127], 0);
+    });
+    document.getElementById("noteOff").addEventListener("mousedown", function(event){
+        output.sendHRMessage("noteOff", 0, ["d4", 127], 0);
+    });
+    </script>
+
+
+  </body>
+</html>
