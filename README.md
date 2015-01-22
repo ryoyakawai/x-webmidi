@@ -92,6 +92,11 @@ window.addEventListener('midiin-event:foo-input', function(event) {
 
 
 ### MIDI output
+#### Basic Demo
+ - input
+  - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/outputsample.html](https://github.com/ryoyakawai/x-webmidi/blob/gh-pages/outputsample.html)
+  - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/outputsample.html](http://ryoyakawai.github.io/x-webmidi/outputsample.html)
+
 #### Set MIDI output dropdown list.
 ```
 <x-webmidioutput id="foo-output"></x-webmidioutput>
