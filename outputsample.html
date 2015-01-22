@@ -13,10 +13,10 @@
     <script>
     var output=document.getElementById("output-port-01");
     document.getElementById("noteOn").addEventListener("mousedown", function(event){
-        output.sendHRMessage("noteOn", 0, ["d4", 127], 0);
+        output.sendHRMessage("noteOn", 1, ["d4", 127], 0);
     });
     document.getElementById("noteOff").addEventListener("mousedown", function(event){
-        output.sendHRMessage("noteOff", 0, ["d4", 127], 0);
+        output.sendHRMessage("noteOff", 1, ["d4", 127], 0);
     });
     </script>
 
