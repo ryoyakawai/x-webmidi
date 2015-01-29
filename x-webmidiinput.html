@@ -70,8 +70,11 @@ limitations under the License.
       setMIDIINDevice: function(target){
           var Idx=target.value;
           var inputs=this.midiAccess.midi.inputs;
+          if(this.inputIdx!="false") {
+              inputs[i].onmidimessage=null; // delete ex-input
+              this.inputIdx="false";
+          }
           for(var i=0; i<inputs.length; i++) {
-              if(i==this.inputIdx) inputs[i].onmidimessage=null; // delete ex-input
               if(i==Idx) {
                   if(typeof inputs[i].onmidimessage=="function") {
                       // TODO: Input parameter should be in array format to be able to obtain message from multiple input devices.
