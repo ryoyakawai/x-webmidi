@@ -71,7 +71,7 @@ limitations under the License.
           var Idx=target.value;
           var inputs=this.midiAccess.midi.inputs;
           if(this.inputIdx!="false") {
-              inputs[i].onmidimessage=null; // delete ex-input
+              inputs[this.inputIdx].onmidimessage=null; // delete ex-input
               this.inputIdx="false";
           }
           for(var i=0; i<inputs.length; i++) {
