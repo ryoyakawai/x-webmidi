@@ -39,17 +39,17 @@ Using this component allow you a quick and an easy MIDI application development.
 
 ### Get component
 #### bower
-```
+```shell
 $ bower install x-webmidi;
 ```
 #### git
-```
+```shell
 $ git clone https://github.com/ryoyakawai/x-webmidi.git;
 $ cd x-webmidi;
 $ bower install;
 ```
 ### include and import
-```
+```html
 <script src="path/to/webcomponents.js"></script>
 <link rel="import" href="x-webmidirequestaccess.html">
 <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
@@ -75,11 +75,11 @@ $ bower install;
   - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inpotsample.html](http://ryoyakawai.github.io/x-webmidi/inoutsample.html)
 
 #### Set MIDI input dropdown list.
-```
+```html
 <x-webmidiinput id="foo-input"></x-webmidiinput>
 ```
 #### Add eventlistener to obtain MIDI message form selected MIDI input device.
-```
+```js
 window.addEventListener('midiin-event:foo-input', function(event) {
   // write what you want to do.
   console.log(event.detail.);
@@ -98,24 +98,24 @@ window.addEventListener('midiin-event:foo-input', function(event) {
   - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/outputsample.html](http://ryoyakawai.github.io/x-webmidi/outputsample.html)
 
 #### Set MIDI output dropdown list.
-```
+```html
 <x-webmidioutput id="foo-output"></x-webmidioutput>
 ```
 #### To send MIDI message to selected MIDI device.
 **Send by Array format (same format as Web MIDI API):**
-```
+```js
 var midiout=document.getElementById("foo-output");
 midiout.sendRawMessage([0x90, 0x45, 0x7f]);
 ```
 **Send by Human-Readable format:**
 
-```
+```js
 // using int'l format
 var midiout=document.getElementById("foo-output");
 midiout.sendHRMessage("noteon", 0, ["D4", 127], 0);
 midiout.sendHRMessage("noteoff", 0, ["D4", 127], 1000);
 ```
-```
+```js
 // using note number format
 var midiout=document.getElementById("foo-output");
 midiout.sendHRMessage("noteon", 0, [62, 127], 0);
