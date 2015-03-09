@@ -46,7 +46,6 @@ $ bower install x-webmidi;
 ```shell
 $ git clone https://github.com/ryoyakawai/x-webmidi.git;
 $ cd x-webmidi;
-$ bower install;
 ```
 ### include and import
 ```html
