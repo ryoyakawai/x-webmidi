@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<polymer-element name="x-webmidioutput">
+<polymer-element name="x-webmidioutput" attributes="autoreselect">
   <template>
     <style type="text/css">
     .select-midiout {
@@ -50,8 +50,9 @@ limitations under the License.
   </template>
   <script type="text/javascript">
   Polymer({
-      midiAccess:null,
+      midiAccess: null,
       outputIdx: "false",
+      autoreselect: "false",
       pfmNow: 0,
       pitchBendRange:{"min":0, "max":16384, "center":8192}, // Apple DLS Synth
       ready: function() {
@@ -62,11 +63,31 @@ limitations under the License.
               if(self.midiAccess.ready.output==true) {
                   clearInterval(timerId);
                   var elem=self.$["midiout"];
-                  self.midiAccess.addOptions("output", elem);
+                  self.midiAccess.addOptions("output", "add", "all", elem);
                   self.$["midiout"].addEventListener("change", function(event){
                       self.outputIdx=event.target.value;
                       if(event.target.value=="") self.outputIdx=false;
                       self.fire("midioutput-updated:"+self.id);
+                  });
+                  self.midiAccess.addEventListener("x-webmidi:output-updated", function(event){
+                      var port=event.detail.port, detail=event.detail;
+                      var elem=self.$["midiout"];
+                      var selected=false
+                      switch(detail.member) {
+                          case "new":
+                              self.midiAccess.addOptions("output", "add", detail.idx, elem, selected);
+                              break;
+                          case "old":
+                              if(self.autoreselect=="false" && port.state=="disconnected") {
+                                  if(self.outputIdx!="false") {
+                                      self.midiAccess.midi.outputs[self.outputIdx].onmidimessage=null;
+                                      self.outputIdx="false";
+                                  }
+                              }
+                              if(detail.idx==self.outputIdx) selected=true;
+                              self.midiAccess.addOptions("output", "update", detail.idx, elem, selected);
+                              break;
+                      }
                   });
               }
           }, 100);

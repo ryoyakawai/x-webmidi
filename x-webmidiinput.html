@@ -13,7 +13,7 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<polymer-element name="x-webmidiinput">
+<polymer-element name="x-webmidiinput" attributes="autoreselect">
   <template>
     <style type="text/css">
     .select-midiin {
@@ -52,17 +52,38 @@ limitations under the License.
   Polymer({
       midiAccess: null,
       inputIdx: "false",
+      autoreselect: "false",
       ready: function() {
           var self=this;
           var timerId=setInterval(function(){
-              var tmp=document.getElementsByTagName("x-webmidirequestaccess");
-              self.midiAccess=tmp[0];
+              var mididom=document.getElementsByTagName("x-webmidirequestaccess");
+              self.midiAccess=mididom[0];
               if(self.midiAccess.ready.input==true) {
                   clearInterval(timerId);
                   var elem=self.$["midiin"];
-                  self.midiAccess.addOptions("input", elem);
+                  self.midiAccess.addOptions("input", "add", "all", elem);
                   self.$["midiin"].addEventListener("change", function(event){
                       self.setMIDIINDevice.bind(self)(event.target);
+                  });
+                  self.midiAccess.addEventListener("x-webmidi:input-updated", function(event){
+                      var port=event.detail.port, detail=event.detail;
+                      var elem=self.$["midiin"];
+                      var selected=false
+                      switch(detail.member) {
+                          case "new":
+                              self.midiAccess.addOptions("input", "add", detail.idx, elem, selected);
+                              break;
+                          case "old":
+                              if(self.autoreselect=="false" && port.state=="disconnected") {
+                                  if(self.inputIdx!="false") {
+                                      self.midiAccess.midi.inputs[self.inputIdx].onmidimessage=null;
+                                      self.inputIdx="false";
+                                  }
+                              }
+                              if(detail.idx==self.inputIdx) selected=true;
+                              self.midiAccess.addOptions("input", "update", detail.idx, elem, selected);
+                              break;
+                      }
                   });
               }
           }, 100);
