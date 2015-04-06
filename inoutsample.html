@@ -3,11 +3,11 @@
   <body>
     <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
     <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
-    <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
+    <x-webmidirequestaccess sysex="false" input="true" output="true"></x-webmidirequestaccess>
 
-    <div>input 01: <x-webmidiinput id="input-port-01"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
-    <div>input 02: <x-webmidiinput id="input-port-02"></x-webmidiinput> <span id="midiinput-event-02"></span></div>
-    <div>output 01: <x-webmidioutput id="output-port-01"></x-webmidioutput></div>
+    <div>input 01: <x-webmidiinput id="input-port-01" autoreselect="true"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
+    <div>input 02: <x-webmidiinput id="input-port-02" autoreselect="true"></x-webmidiinput> <span id="midiinput-event-02"></span></div>
+    <div>output 01: <x-webmidioutput id="output-port-01" autoreselect="true"></x-webmidioutput></div>
 
     <br>
 

@@ -20,23 +20,24 @@
     <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
     <h1>x-webmidi Demo (input)</h1>
 
-    <x-webmidirequestaccess sysex="false" input="true" output="false"></x-webmidirequestaccess>
+    <x-webmidirequestaccess sysex="true" input="true" output="false"></x-webmidirequestaccess>
     <div class="inputblock">
-      <div>input-01: <x-webmidiinput id="input-port-01"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
+      <div>input-01: <x-webmidiinput id="input-port-01" autoreselect="true"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
       <div id="disp-input-port-01" class="disparea"></div>
     </div>
     <div class="inputblock">
-      <div>input-02: <x-webmidiinput id="input-port-02"></x-webmidiinput> <span id="midiinput-event-02"></span></div>
+      <div>input-02: <x-webmidiinput id="input-port-02" autoreselect="true"></x-webmidiinput> <span id="midiinput-event-02"></span></div>
       <div id="disp-input-port-02" class="disparea"></div>
     </div>
 
     <script type="text/javascript">
     var timerId={"input-port-01": 0, "input-port-02": 0,};
     window.addEventListener('midiin-event:input-port-01', function(event) {
-        dispParsedMIDI("input-port-01", event);
+        console.log(event.detail);
+        if(event.detail.data[0]!=0xf8) dispParsedMIDI("input-port-01", event);
     });
     window.addEventListener('midiin-event:input-port-02', function(event) {
-        dispParsedMIDI("input-port-02", event);
+        if(event.detail.data[0]!=0xf8) dispParsedMIDI("input-port-02", event);
     });
 
 
