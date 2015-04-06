@@ -75,7 +75,7 @@ $ cd x-webmidi;
 
 #### Set MIDI input dropdown list.
 ```html
-<x-webmidiinput id="foo-input"></x-webmidiinput>
+<x-webmidiinput id="foo-input" autoreselect="true"></x-webmidiinput>
 ```
 #### Add eventlistener to obtain MIDI message form selected MIDI input device.
 ```js
@@ -98,7 +98,7 @@ window.addEventListener('midiin-event:foo-input', function(event) {
 
 #### Set MIDI output dropdown list.
 ```html
-<x-webmidioutput id="foo-output"></x-webmidioutput>
+<x-webmidioutput id="foo-output" autoreselect="true"></x-webmidioutput>
 ```
 #### To send MIDI message to selected MIDI device.
 **Send by Array format (same format as Web MIDI API):**
