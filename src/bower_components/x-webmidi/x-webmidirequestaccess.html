@@ -69,27 +69,29 @@ limitations under the License.
           
           navigator.requestMIDIAccess({sysex:sysex}).then(successCallback.bind(this), errorCallback.bind(this));
           function successCallback(access) {
-              var self=this;
               access.onstatechange=function(event){
+                  console.log(event);
                   var portList;
-                  if(event.port.type=="input") portList=self.midi.inputs;
-                  if(event.port.type=="output") portList=self.midi.outputs;
+                  if(event.port.type=="input") portList=this.midi.inputs;
+                  if(event.port.type=="output") portList=this.midi.outputs;
                   var exist=false, Idx=false;
                   for(var i=0; i<portList.length; i++) {
                       if(portList[i].id==event.port.id) {
                           exist=true;
-                          portList[i]==event.port;
+                          portList[i]=event.port;
                           Idx=i;
-                          break;
                       }
+                      if(exist==true) break;
                   }
                   if(exist==false) {
                       if(portList==false) portList=[];
                       portList.push(event.port);
                       Idx=portList.length-1;
                   }
-                  self.fire("x-webmidi:"+event.port.type+"-updated", {"idx": Idx, "member": (exist==true ? "old" : "new"), "port": event.port});
-              }
+                  if(event.port.type=="input") this.midi.inputs=portList;
+                  if(event.port.type=="output") this.midi.outputs=portList;
+                  this.fire("x-webmidi:"+event.port.type+"-updated", {"idx": Idx, "member": (exist==true ? "old" : "new"), "port": event.port});
+              }.bind(this);
               var inputIterator=access.inputs.values();
               for(var o=inputIterator.next(); !o.done; o=inputIterator.next()) {
                   if(this.midi.inputs.length==0) this.midi.inputs=[];
@@ -100,6 +102,7 @@ limitations under the License.
               for(var o=outputIterator.next(); !o.done; o=outputIterator.next()) {
                   if(this.midi.outputs===false) this.midi.outputs=[];
                   this.midi.outputs.push(o.value);
+                  console.log(o.value);
               }
               
               this.ready.input=true;
@@ -127,8 +130,9 @@ limitations under the License.
          document.body.appendChild(elem);
 */
      },
-     addOptions: function(midiType, updateType, addIdx, selectElem, exSelected) {
+     addOptions: function(midiType, updateType, detail, selectElem, exSelected) {
          var ports;
+         var addIdx=detail.idx;
          switch(midiType) {
              case "output":
                  ports=this.midi.outputs;
@@ -145,7 +149,7 @@ limitations under the License.
                      }
                  }
                  else if(typeof addIdx=="number"){
-                     appendOption(ports[addIdx].name, addIdx, selectElem);
+                     appendOption(detail.port.name, addIdx, selectElem);
                  }
                  break;
              case "update":

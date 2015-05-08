@@ -63,7 +63,7 @@ limitations under the License.
               if(self.midiAccess.ready.output==true) {
                   clearInterval(timerId);
                   var elem=self.$["midiout"];
-                  self.midiAccess.addOptions("output", "add", "all", elem);
+                  self.midiAccess.addOptions("output", "add", {"idx":"all"}, elem);
                   self.$["midiout"].addEventListener("change", function(event){
                       self.outputIdx=event.target.value;
                       if(event.target.value=="") self.outputIdx=false;
@@ -75,7 +75,7 @@ limitations under the License.
                       var selected=false
                       switch(detail.member) {
                           case "new":
-                              self.midiAccess.addOptions("output", "add", detail.idx, elem, selected);
+                              self.midiAccess.addOptions("output", "add", detail, elem, selected);
                               break;
                           case "old":
                               if(self.autoreselect=="false" && port.state=="disconnected") {
@@ -85,7 +85,7 @@ limitations under the License.
                                   }
                               }
                               if(detail.idx==self.outputIdx) selected=true;
-                              self.midiAccess.addOptions("output", "update", detail.idx, elem, selected);
+                              self.midiAccess.addOptions("output", "update", detail, elem, selected);
                               break;
                       }
                   });

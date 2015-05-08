@@ -1,4 +1,4 @@
-<!--
+q<!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -61,7 +61,7 @@ limitations under the License.
               if(self.midiAccess.ready.input==true) {
                   clearInterval(timerId);
                   var elem=self.$["midiin"];
-                  self.midiAccess.addOptions("input", "add", "all", elem);
+                  self.midiAccess.addOptions("input", "add", {"idx": "all"}, elem);
                   self.$["midiin"].addEventListener("change", function(event){
                       self.setMIDIINDevice.bind(self)(event.target);
                   });
@@ -71,7 +71,7 @@ limitations under the License.
                       var selected=false
                       switch(detail.member) {
                           case "new":
-                              self.midiAccess.addOptions("input", "add", detail.idx, elem, selected);
+                              self.midiAccess.addOptions("input", "add", detail, elem, selected);
                               break;
                           case "old":
                               if(self.autoreselect=="false" && port.state=="disconnected") {
@@ -81,7 +81,7 @@ limitations under the License.
                                   }
                               }
                               if(detail.idx==self.inputIdx) selected=true;
-                              self.midiAccess.addOptions("input", "update", detail.idx, elem, selected);
+                              self.midiAccess.addOptions("input", "update", detail, elem, selected);
                               break;
                       }
                   });
@@ -97,14 +97,16 @@ limitations under the License.
           }
           for(var i=0; i<inputs.length; i++) {
               if(i==Idx) {
-                  if(typeof inputs[i].onmidimessage=="function") {
-                      // TODO: Input parameter should be in array format to be able to obtain message from multiple input devices.
-                      console.log("[ERROR] alredy selected");
-                  } else {
-                      inputs[i].onmidimessage=this.onMIDIMessage.bind(this); // set new input
-                      this.inputIdx=Idx; // set new input to object property
-                  }
-              }
+                  if(typeof inputs[i]!="undefined" && inputs[i]!==null) {
+                      if(typeof inputs[i].onmidimessage=="function") {
+                            // TODO: Input parameter should be in array format to be able to obtain message from multiple input devices.
+                            console.log("[ERROR] alredy selected");
+                        } else {
+                            inputs[i].onmidimessage=this.onMIDIMessage.bind(this); // set new input
+                            this.inputIdx=Idx; // set new input to object property
+                        }
+                    }
+                }
           }
       },
       onMIDIMessage: function(event){
@@ -116,7 +118,6 @@ limitations under the License.
           for(var i=0; i<event.data.length; i++) {
               d16.push("0x"+("0"+event.data[i].toString(16)).slice(-2));
           }
-
           if(p_d16.type!="notObject") this.fire("midiin-event:"+this.id, p_d16);
       },
       parseMIDIMessage: function(msg) {

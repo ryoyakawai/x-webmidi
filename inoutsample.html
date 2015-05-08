@@ -1,33 +1,6 @@
 <html>
-  <head></head>
-  <body>
-    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
-    <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
-    <x-webmidirequestaccess sysex="false" input="true" output="true"></x-webmidirequestaccess>
-
-    <div>input 01: <x-webmidiinput id="input-port-01" autoreselect="true"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
-    <div>input 02: <x-webmidiinput id="input-port-02" autoreselect="true"></x-webmidiinput> <span id="midiinput-event-02"></span></div>
-    <div>output 01: <x-webmidioutput id="output-port-01" autoreselect="true"></x-webmidioutput></div>
-
-    <br>
-
-    <h3 id="devicesText" style="margin: 0px;">[Routing Diagram]</h3>
-    <div><img src="./images/01.png"></div>
-
-    <script>
-    window.addEventListener("midiin-event:input-port-01", function(event){
-        var output1=document.getElementById("output-port-01");
-        if(output1.checkOutputIdx!="false") output1.sendRawMessage(event.detail.data);
-        console.log(event.detail);
-    });
-
-    window.addEventListener("midiin-event:input-port-02", function(event){
-        var output1=document.getElementById("output-port-01");
-        if(output1.checkOutputIdx!="false") output1.sendRawMessage(event.detail.data);
-        console.log(event.detail);
-    });
-    </script>
-
-
-  </body>
+  <head>
+    <META HTTP-EQUIV="Refresh" CONTENT="0; URL=./src/inoutsample.html" />
+  </head>
+  <body></body>
 </html>
