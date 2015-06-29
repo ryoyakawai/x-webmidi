@@ -5,6 +5,9 @@
     "Ryoya Kawai"
   ],
   "description": "Web MIDI API Wrapper with Web Components(polymer)",
+  keywords: [
+    'web-components'
+  ],
   "license": "Apache2",
   "ignore": [
     "**/.*",
