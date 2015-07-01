@@ -9,7 +9,7 @@ This is a polymer component, and this is a wrapping Web MIDI API.
  - What is Web MIDI API? -> [Web MIDI API@W3C](http://webaudio.github.io/web-midi-api/)
  - What is Polymer? -> [polymer](https://www.polymer-project.org/)
 
-![x-webmidi image](https://raw.githubusercontent.com/ryoyakawai/x-webmidi/gh-pages/images/screenshot.png)
+![x-webmidi image](https://raw.githubusercontent.com/ryoyakawai/x-webmidi/gh-pages/src/images/screenshot.png)
 
 ## Purpose of using this component
 MIDI is well defined protocol. But to use the protocol you must learn 7bit code, such as NoteOn: 9nH, NoteOff: 8nH.
