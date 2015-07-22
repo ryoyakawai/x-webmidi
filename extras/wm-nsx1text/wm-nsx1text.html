@@ -1,0 +1,54 @@
+<!--
+Copyright (c) 2015 Ryoya Kawai. All rights reserved.
+Distributed under the MIT License (license terms are at http://opensource.org/licenses/MIT).
+-->
+<dom-element id="wm-nsx1text">
+  <style></style>
+  </template>
+  <script src="./js/nsx39.js"></script>
+  <script src="./js/nsx1.js"></script>
+  </template>
+</dom-element>
+<script type="text/javascript">
+Polymer({
+    is:"wm-nsx1text",
+    properties: {
+        devide: {
+            type: Number,
+            value: 64
+        },
+        idx: {
+            type: Number,
+            value: 0
+        },
+        type: {
+            type: String,
+            value: "evy1" // ["evy1", "poke39"]
+        },
+    },
+    ready: function() {
+        if(this.type=="poke39") {
+            this.nsx39=new Nsx39();
+        } else
+        if(this.type=="evy1") {
+            this.nsx1=new Nsx1();
+        }
+    },
+    convertText2SysEx: function(text, idx) {
+        if(typeof idx=="undefined") idx=this.idx;
+        var sysEx=[], errCount;
+        switch(this.type) {
+            case "evy1":
+                sysEx=this.nsx1.getSysExByText(text);
+                errCount="notsupported";
+                break;
+            case "poke39":
+                var tempOut=this.nsx39.getUpdateSysExByText(text.replace(/。/g, "").replace(/ /g, ""), idx, false);
+                sysEx.push(tempOut.sysEx);
+                errCount=tempOut.errCount;
+                break;
+        }
+        return {sysEx: sysEx, errCount: errCount};
+    }
+});
+</script>
