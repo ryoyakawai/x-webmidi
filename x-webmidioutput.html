@@ -1,4 +1,4 @@
-<!-- x-webmidioutput.html (2015/08/21) -->
+<!-- x-webmidioutput.html (2015/08/22) -->
 <!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
@@ -97,7 +97,10 @@ Polymer({
                                     self.outputIdx="false";
                             }
                         }
-                        if(detail.idx==self.outputIdx) selected=true;
+                        if(detail.idx==self.outputIdx
+                           || detail.port.name==self.autoselect) {
+                            selected=true;
+                        }
                         self.midiAccess.addOptions("output", "update", detail, elem, selected, self.autoselect);
                         break;
                     }
