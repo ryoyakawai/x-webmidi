@@ -1,4 +1,4 @@
-<!-- x-webmidiinput.html (2015/07/22) -->
+<!-- x-webmidiinput.html (2015/08/21) -->
 <!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
@@ -54,10 +54,14 @@ limitations under the License.
 Polymer({
     is: "x-webmidiinput",
     properties: {
+        autoselect: {
+            type: String,
+            value: ""
+        },
         autoreselect: {
             type: Boolean,
             value: true
-        }
+        },
     },
     midiAccess: null,
     inputIdx: "false",
@@ -69,7 +73,7 @@ Polymer({
             if(self.midiAccess.ready.input==true) {
                 clearInterval(timerId);
                 var elem=self.$["midiin"];
-                self.midiAccess.addOptions("input", "add", {"idx": "all"}, elem);
+                self.midiAccess.addOptions("input", "add", {"idx": "all"}, elem, null, self.autoselect);
                 self.$["midiin"].addEventListener("change", function(event){
                     self.setMIDIINDevice.bind(self)(event.target);
                 });
@@ -79,7 +83,7 @@ Polymer({
                     var selected=false
                     switch(detail.member) {
                         case "new":
-                            self.midiAccess.addOptions("input", "add", detail, elem, selected);
+                            self.midiAccess.addOptions("input", "add", detail, elem, selected, self.autoselect);
                             break;
                         case "old":
                             if(self.autoreselect==false && port.state=="disconnected") {
@@ -89,7 +93,7 @@ Polymer({
                             }
                         }
                         if(detail.idx==self.inputIdx) selected=true;
-                        self.midiAccess.addOptions("input", "update", detail, elem, selected);
+                        self.midiAccess.addOptions("input", "update", detail, elem, selected, self.autoselect);
                         break;
                     }
                 });

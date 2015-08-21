@@ -1,4 +1,4 @@
-<!-- x-webmidirequestaccess.html (2015/07/22) -->
+<!-- x-webmidirequestaccess.html (2015/08/21) -->
 <!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
@@ -34,7 +34,6 @@ Polymer({
         input: {
             type: Boolean,
             value: false
-            
         },
         output: {
             type: Boolean,
@@ -141,7 +140,7 @@ Polymer({
             document.body.appendChild(elem);
              */
         },
-        addOptions: function(midiType, updateType, detail, selectElem, exSelected) {
+        addOptions: function(midiType, updateType, detail, selectElem, exSelected, autoSelect) {
             var ports;
             var addIdx=detail.idx;
             switch(midiType) {
@@ -156,27 +155,31 @@ Polymer({
                 case "add":
                     if(addIdx=="all") {
                         for(var i=0; i<ports.length; i++) {
-                            appendOption(ports[i].name, i, selectElem);
+                            appendOption(ports[i].name, i, selectElem, autoSelect);
+                        }
                     }
-                }
-                else if(typeof addIdx=="number"){
-                    appendOption(detail.port.name, addIdx, selectElem);
-                }
-                break;
+                    else if(typeof addIdx=="number"){
+                        appendOption(detail.port.name, addIdx, selectElem, autoSelect);
+                    }
+                    break;
                 case "update":
-                updateOption(ports[addIdx].state, addIdx, selectElem, exSelected);
+                    updateOption(ports[addIdx].state, addIdx, selectElem, exSelected);
                 break;
             }
-            function appendOption(name, idx, selectElem) {
+            function appendOption(name, idx, selectElem, autoSelect) {
                 selectElem.appendChild((new Option(name, idx)));
+                if(name==autoSelect) {
+                    var op_idx=idx+1;
+                    selectElem.selectedIndex=op_idx; 
+                };
             }
             function updateOption(updateType, idx, selectElem, exSelected) {
                 var op_idx=idx+1;
                 for(var i=0; i<selectElem.options.length; i++) {
                     if(selectElem.options[i].value==idx) {
-                        if(updateType=="disconnected") { 
-                                                        selectElem.options[i].setAttribute("hidden", "hidden");
-                                                        if(selectElem.selectedIndex==op_idx) {
+                        if(updateType=="disconnected") {
+                            selectElem.options[i].setAttribute("hidden", "hidden");
+                            if(selectElem.selectedIndex==op_idx) {
                                 selectElem.selectedIndex=0; 
                             }
                         }
