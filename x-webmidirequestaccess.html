@@ -194,7 +194,9 @@ Polymer({
                             selectElem.options[i].removeAttribute("hidden");
                             if(exSelected==true) {
                                 selectElem.selectedIndex=i;
-                                out=true; outIdx=i;
+                                // Option index is including "Not Selected".
+                                // So actual device number starts 1, but midi device list starts 0.
+                                out=true; outIdx=i-1; 
                             }
                         }
                     }
