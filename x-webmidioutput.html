@@ -1,4 +1,5 @@
 <!-- x-webmidioutput.html (2015/08/22) -->
+<!-- x-webmidioutput.html (2015/08/22) -->
 <!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
@@ -70,12 +71,18 @@ Polymer({
     ready: function() {
         var self=this;
         var timerId=setInterval(function(){
+            var result={"autoselected": false, "idx":false};
             var tmp=document.getElementsByTagName("x-webmidirequestaccess");
             self.midiAccess=tmp[0];
             if(self.midiAccess.ready.output==true) {
                 clearInterval(timerId);
                 var elem=self.$["midiout"];
-                self.midiAccess.addOptions("output", "add", {"idx":"all"}, elem, null, self.autoselect);
+                result=self.midiAccess.addOptions("output", "add", {"idx":"all"}, elem, null, self.autoselect);
+                console.log(result);
+                if(result.autoselected===true) {
+                    // fire setMIDIOUTDevice
+                    self.outputIdx=result.idx;
+                }
                 self.$["midiout"].addEventListener("change", function(event){
                     console.log("midioutput-updated:"+self.id);
                     self.outputIdx=event.target.value;
@@ -88,7 +95,7 @@ Polymer({
                     var selected=false
                     switch(detail.member) {
                         case "new":
-                            self.midiAccess.addOptions("output", "add", detail, elem, selected, self.autoselect);
+                            result=self.midiAccess.addOptions("output", "add", detail, elem, selected, self.autoselect);
                             break;
                         case "old":
                             if(self.autoreselect==false && port.state=="disconnected") {
@@ -103,6 +110,10 @@ Polymer({
                         }
                         self.midiAccess.addOptions("output", "update", detail, elem, selected, self.autoselect);
                         break;
+                    }
+                    if(result.autoselected===true) {
+                        // fire setMIDIOUTDevice
+                        self.outputIdx=result.idx;
                     }
                 });
             }

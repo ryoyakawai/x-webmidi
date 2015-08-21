@@ -1,4 +1,5 @@
 <!-- x-webmidirequestaccess.html (2015/08/22) -->
+<!-- x-webmidirequestaccess.html (2015/08/22) -->
 <!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
@@ -141,7 +142,7 @@ Polymer({
              */
         },
         addOptions: function(midiType, updateType, detail, selectElem, exSelected, autoSelect) {
-            var ports;
+            var ports, result={"autoselected": false, "idx":false};
             var addIdx=detail.idx;
             switch(midiType) {
                 case "output":
@@ -151,29 +152,35 @@ Polymer({
                     ports=this.midi.inputs;
                     break;
             }
+            var out;
             switch(updateType) {
                 case "add":
                     if(addIdx=="all") {
                         for(var i=0; i<ports.length; i++) {
-                            appendOption(ports[i].name, i, selectElem, autoSelect);
+                            out=appendOption(ports[i].name, i, selectElem, autoSelect);
+                            if(out.autoselected===true) result=out;
                         }
                     }
                     else if(typeof addIdx=="number"){
-                        appendOption(detail.port.name, addIdx, selectElem, autoSelect);
+                        result=appendOption(detail.port.name, addIdx, selectElem, autoSelect);
                     }
                     break;
                 case "update":
-                    updateOption(ports[addIdx].state, addIdx, selectElem, exSelected);
+                    result=updateOption(ports[addIdx].state, addIdx, selectElem, exSelected);
                 break;
             }
             function appendOption(name, idx, selectElem, autoSelect) {
                 selectElem.appendChild((new Option(name, idx)));
+                var out=false, outIdx=false;
                 if(name==autoSelect) {
                     var op_idx=idx+1;
                     selectElem.selectedIndex=op_idx; 
+                    out=true; outIdx=idx;
                 };
+                return {"autoselected": out, "idx":outIdx}
             }
             function updateOption(updateType, idx, selectElem, exSelected) {
+                var out=false, outIdx=false;
                 var op_idx=idx+1;
                 for(var i=0; i<selectElem.options.length; i++) {
                     if(selectElem.options[i].value==idx) {
@@ -187,11 +194,14 @@ Polymer({
                             selectElem.options[i].removeAttribute("hidden");
                             if(exSelected==true) {
                                 selectElem.selectedIndex=i;
+                                out=true; outIdx=i;
                             }
                         }
                     }
                 }
+                return {"autoselected": out, "idx":outIdx}
             }
+            return result;
         }
     });
 </script>
