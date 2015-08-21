@@ -96,7 +96,6 @@ Polymer({
                            || detail.port.name==self.autoselect) {
                             selected=true;
                         }
-                        console.log(detail.port.name);
                         self.midiAccess.addOptions("input", "update", detail, elem, selected, self.autoselect);
                         break;
                     }
