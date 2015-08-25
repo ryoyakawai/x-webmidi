@@ -1,4 +1,4 @@
-<!-- x-webmidioutput.html (2015/08/22) -->
+<!-- x-webmidioutput.html (2015/08/25) -->
 <!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
@@ -77,10 +77,10 @@ Polymer({
                 clearInterval(timerId);
                 var elem=self.$["midiout"];
                 result=self.midiAccess.addOptions("output", "add", {"idx":"all"}, elem, null, self.autoselect);
-                console.log(result);
                 if(result.autoselected===true) {
                     // fire setMIDIOUTDevice
                     self.outputIdx=result.idx;
+                    self.fire("midiout-autoselected:"+self.id, {"idx": result.idx});
                 }
                 self.$["midiout"].addEventListener("change", function(event){
                     console.log("midioutput-updated:"+self.id);
@@ -107,12 +107,13 @@ Polymer({
                            || detail.port.name==self.autoselect) {
                             selected=true;
                         }
-                        self.midiAccess.addOptions("output", "update", detail, elem, selected, self.autoselect);
+                        result=self.midiAccess.addOptions("output", "update", detail, elem, selected, self.autoselect);
                         break;
                     }
                     if(result.autoselected===true) {
                         // fire setMIDIOUTDevice
                         self.outputIdx=result.idx;
+                        self.fire("midiout-autoselected:"+self.id, {"idx": result.idx});
                     }
                 });
             }

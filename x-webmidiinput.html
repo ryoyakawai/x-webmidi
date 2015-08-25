@@ -1,4 +1,4 @@
-<!-- x-webmidiinput.html (2015/08/22) -->
+<!-- x-webmidiinput.html (2015/08/25) -->
 <!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
@@ -79,6 +79,7 @@ Polymer({
                     // fire setMIDIINDevice
                     var target={"value":result.idx}
                     self.setMIDIINDevice(target);
+                    self.fire("midiin-autoselected:"+self.id, {"idx": result.idx});
                 }
                 self.$["midiin"].addEventListener("change", function(event){
                     self.setMIDIINDevice.bind(self)(event.target);
@@ -110,6 +111,7 @@ Polymer({
                         // fire setMIDIINDevice
                         var target={"value":result.idx}
                         self.setMIDIINDevice(target);
+                        self.fire("midiin-autoselected:"+self.id, {"idx": result.idx});
                     }
                 });
             }
