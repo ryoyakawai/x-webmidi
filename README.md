@@ -145,7 +145,7 @@ midiout.sendHRMessage("noteoff", 0, ["d4", 127], 1000);
 >| type               | param                                                                            |
 | :------------------| :-------------------------------------------------------------------------------- |
 | noteon             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
-| noteof             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
+| noteoff            | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
 | programchange      | *(number)*                                                                        |
 | setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                        |
 | pitchbend          | *(number)*                                                                        |
