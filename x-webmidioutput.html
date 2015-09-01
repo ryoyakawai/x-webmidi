@@ -62,6 +62,10 @@ Polymer({
             type: Boolean,
             value: true
         },
+        additionalid: {
+            type: String,
+            value: ""
+        }
     },
     midiAccess: null,
     outputIdx: "false",
@@ -116,6 +120,11 @@ Polymer({
                         self.fire("midiout-autoselected:"+self.id, {"idx": result.idx});
                     }
                 });
+                // add aditional output
+                if(self.additionalid!="") {
+                    var additionalOutput=document.getElementById(self.additionalid).getOutput();
+                    self.midiAccess.addAdditionalDevice("output", additionalOutput, elem);
+                }
             }
         }, 100);
     },

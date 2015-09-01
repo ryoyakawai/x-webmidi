@@ -123,6 +123,18 @@ Polymer({
                 this.midi=false;
             }
         },
+        addAdditionalDevice: function(midiType, additionalDevice, elem) {
+            switch(midiType) {
+                case "input":
+                    console.log("[NOT Implement Yet] inputs: ", this.midi.inputs, additionalDevice, elem);
+                    break; 
+                case "output":
+                    var idx=99999;
+                    this.midi.outputs[idx]=additionalDevice;
+                    this.addOptions(midiType, "add", {"idx": idx, "port": additionalDevice}, elem);
+                    break; 
+            }
+        },
         appendFileImport: function(type) {
             /*
             var href;
