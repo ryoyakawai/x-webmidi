@@ -1,0 +1,121 @@
+<!--
+Copyright (c) 2015 Ryoya Kawai. All rights reserved.
+Distributed under the MIT License (license terms are at http://opensource.org/licenses/MIT).
+-->
+<dom-module id="wm-pckeyboard">
+  <style></style>
+  <template></template>
+</dom-module>
+<script type="text/javascript">
+Polymer({
+    is: "wm-pckeyboard",
+    properties: {
+        oct: {
+            type: Number,
+            value: (5*12)
+        },
+        keydown: {
+            type: Array,
+            value: []
+        },
+        poly: {
+            type: Number,
+            value: 5
+        },
+        keyno: {
+            type: Array,
+            value:[90, 83, 88, 68, 67, 86, 71,
+                   66, 72, 78, 74, 77, 188] 
+            /*
+            90:z, 83:s, 88:x, 68:d, 67:c
+            86:v, 71:g, 66:b, 72:h, 78:n
+            74:j, 77:m, 188:,
+             */
+        },
+        velocity: {
+            type: Number,
+            value:42
+        }
+    },
+    ready: function() {
+        var createInputDevice=(function(){
+            var MIDIInput=function() {
+                this.manifacturer="wm-keyboard";
+                this.name="PC-Keyboard";
+                this.onmidimessage=null;
+                this.onstatechange=null;
+                this.state="connected";
+                this.type="input";
+                this.version="";
+            };
+            return MIDIInput;
+        })();
+
+        var createMIDIMessageEvent=(function(){
+            var MIDIMessageEvent=function(target, message) {
+                var tmpBuffer=new Uint8Array(3);
+                tmpBuffer.set(message);
+                this.currentTarget=target;
+                this.srcElement=target;
+                this.data=tmpBuffer;
+                this.receivedTime=window.performance.now();
+                this.timeStamp=Math.floor( new Date().getTime() / 1000 );
+                this.type="midimessage";
+            };
+            return MIDIMessageEvent;
+        })();
+        this.inputdevice=new createInputDevice();
+
+        window.onkeydown=function(event){
+            if(typeof this.keydown[event.keyCode]!=="boolean") {
+                this.keydown[event.keyCode]=true;
+                key=this.getkeyNo(event.keyCode);
+                if(key!==false) {
+                    var note=this.convert2Hex(key);
+                    var midimessage=(new createMIDIMessageEvent(this.inputdevice, [0x90, parseInt(note, 16), this.velocity]));
+                    if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
+                }
+            }
+            var key=event.keyCode-48;
+            if(key>0 && key<6) {
+                console.log(key);
+                this.velocity=key*parseInt(127/5);
+            }
+        }.bind(this);
+        window.onkeyup=function(event){
+            if(typeof this.keydown[event.keyCode]=="boolean") {
+                key=this.getkeyNo(event.keyCode);
+                if(key!==false) {
+                    var note=this.convert2Hex(key);
+                    var midimessage=(new createMIDIMessageEvent(this.inputdevice, [0x80, parseInt(note, 16), 0x00]));
+                    if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
+                }
+                this.keydown[event.keyCode]="";
+            }
+        }.bind(this);
+         
+
+    },
+    getInput: function() {
+        return this.inputdevice;
+    },
+    getkeyNo: function(keyCode) {
+        var out=false;
+        for(var kcode in this.keyno) {
+            if(keyCode==this.keyno[kcode]) {
+                out=kcode;
+                break;
+            }
+        }
+        return out;
+    },
+    convert2Hex: function(note) {
+        return "0x"+(parseInt(note, 10)+this.oct).toString(16);
+    },
+    attached: function() {
+        // used be a domReady
+        this.async(function() {
+        });
+    }
+});
+</script>

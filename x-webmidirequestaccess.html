@@ -126,7 +126,9 @@ Polymer({
         addAdditionalDevice: function(midiType, additionalDevice, elem) {
             switch(midiType) {
                 case "input":
-                    console.log("[NOT Implement Yet] inputs: ", this.midi.inputs, additionalDevice, elem);
+                    var idx=99999;
+                    this.midi.inputs[idx]=additionalDevice;
+                    this.addOptions(midiType, "add", {"idx": idx, "port": additionalDevice}, elem);
                     break; 
                 case "output":
                     var idx=99999;
@@ -167,9 +169,11 @@ Polymer({
             switch(updateType) {
                 case "add":
                     if(addIdx=="all") {
-                        for(var i=0; i<ports.length; i++) {
-                            out=appendOption(ports[i].name, i, selectElem, autoSelect);
+                        var i=0
+                        for(var idx in ports) {
+                            out=appendOption(ports[idx].name, i, selectElem, autoSelect);
                             if(out.autoselected===true) result=out;
+                            i++;
                         }
                     }
                     else if(typeof addIdx=="number"){
