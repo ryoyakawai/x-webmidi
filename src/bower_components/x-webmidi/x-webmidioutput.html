@@ -1,3 +1,4 @@
+<!-- x-webmidioutput.html (2015/08/25) -->
 <!--
 Copyright 2014 Ryoya Kawai. All rights reserved.
 
@@ -13,210 +14,239 @@ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
 -->
-<polymer-element name="x-webmidioutput" attributes="autoreselect">
+<dom-module id="x-webmidioutput">
+  <style type="text/css">
+  .select-midiout {
+    font-family:arial;
+    color:#000;
+    overflow: hidden;
+    outline: none;
+    font-size:15px; /*-webkit-small-control;*/
+    -webkit-appearance: button;
+    -moz-appearance: button;
+    appearance: button;
+    -webkit-border-radius: 6px;
+    -moz-border-radius: 6px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    background:#fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAABYCAYAAAAZZrIMAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gwMDjIbBk010QAAASBJREFUeNrt2D0uRGEYhuGHiUShodQolFQq5dQUVqCyATuQsAW2IAobUFrBbGBKBeWUIn6akxAiM86cnw/XlUw/ee9zkpknAQAAAAAAAAAAAAAAAAAA/pSFgr7LTpLrQu/0kmSY5O6/PzD7SV4L/Gx7l98dFhZnKMlXx4XEOZDie2c9xzmSYLqLnuKcOP3svzKvOo5z7uw/M0hy21Gcy8L+evwaS0lGLce5SbLo1PUtJxm3FGdUPQTMaSXJfcNxxlV8GrKWZNJQnIckq07avPUkj3PGmVSxaclmkueacZ6SbDhh+3ZrBtpyuu7sxfhZvFkXcONnj6Yt4MbPApzG+Fm8zwu48bMwHxdw42ehBtWbNHAKAAAAAAAAAAAAAAAo3BvDPY/9X9SQowAAAABJRU5ErkJggg==) no-repeat right center;
+    background-size: 22px 24px;
+    cursor: pointer;
+    vertical-align: middle;
+    user-select: none; /* CSS3 */
+    -moz-user-select: none; /* Firefox */
+    -webkit-user-select: none; /* Safari、Chromeなど */
+    
+    padding:5px 30px 5px 5px;
+    border-radius:2px;
+    border:0px solid #ddd;
+    margin:3px 3px;
+  }
+  </style>
   <template>
-    <style type="text/css">
-    .select-midiout {
-      font-family:arial;
-      color:#000;
-      overflow: hidden;
-      outline: none;
-      font-size:15px; /*-webkit-small-control;*/
-      -webkit-appearance: button;
-      -moz-appearance: button;
-      appearance: button;
-      -webkit-border-radius: 6px;
-      -moz-border-radius: 6px;
-      box-sizing: border-box;
-      -webkit-box-sizing: border-box;
-      -moz-box-sizing: border-box;
-      background:#fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAABYCAYAAAAZZrIMAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gwMDjIbBk010QAAASBJREFUeNrt2D0uRGEYhuGHiUShodQolFQq5dQUVqCyATuQsAW2IAobUFrBbGBKBeWUIn6akxAiM86cnw/XlUw/ee9zkpknAQAAAAAAAAAAAAAAAAAA/pSFgr7LTpLrQu/0kmSY5O6/PzD7SV4L/Gx7l98dFhZnKMlXx4XEOZDie2c9xzmSYLqLnuKcOP3svzKvOo5z7uw/M0hy21Gcy8L+evwaS0lGLce5SbLo1PUtJxm3FGdUPQTMaSXJfcNxxlV8GrKWZNJQnIckq07avPUkj3PGmVSxaclmkueacZ6SbDhh+3ZrBtpyuu7sxfhZvFkXcONnj6Yt4MbPApzG+Fm8zwu48bMwHxdw42ehBtWbNHAKAAAAAAAAAAAAAAAo3BvDPY/9X9SQowAAAABJRU5ErkJggg==) no-repeat right center;
-      background-size: 22px 24px;
-      cursor: pointer;
-      vertical-align: middle;
-      user-select: none; /* CSS3 */
-      -moz-user-select: none; /* Firefox */
-      -webkit-user-select: none; /* Safari、Chromeなど */
-
-      padding:5px 30px 5px 5px;
-      border-radius:2px;
-      border:0px solid #ddd;
-      margin:3px 3px;
-    }
-    </style>
     <select class="select-midiout" id="midiout">
       <option value="false">Not Selected</option>
     </select>
   </template>
-  <script type="text/javascript">
-  Polymer({
-      midiAccess: null,
-      outputIdx: "false",
-      autoreselect: "false",
-      pfmNow: 0,
-      pitchBendRange:{"min":0, "max":16384, "center":8192}, // Apple DLS Synth
-      ready: function() {
-          var self=this;
-          var timerId=setInterval(function(){
-              var tmp=document.getElementsByTagName("x-webmidirequestaccess");
-              self.midiAccess=tmp[0];
-              if(self.midiAccess.ready.output==true) {
-                  clearInterval(timerId);
-                  var elem=self.$["midiout"];
-                  self.midiAccess.addOptions("output", "add", {"idx":"all"}, elem);
-                  self.$["midiout"].addEventListener("change", function(event){
-                      self.outputIdx=event.target.value;
-                      if(event.target.value=="") self.outputIdx=false;
-                      self.fire("midioutput-updated:"+self.id);
-                  });
-                  self.midiAccess.addEventListener("x-webmidi:output-updated", function(event){
-                      var port=event.detail.port, detail=event.detail;
-                      var elem=self.$["midiout"];
-                      var selected=false
-                      switch(detail.member) {
-                          case "new":
-                              self.midiAccess.addOptions("output", "add", detail, elem, selected);
-                              break;
-                          case "old":
-                              if(self.autoreselect=="false" && port.state=="disconnected") {
-                                  if(self.outputIdx!="false") {
-                                      self.midiAccess.midi.outputs[self.outputIdx].onmidimessage=null;
-                                      self.outputIdx="false";
-                                  }
-                              }
-                              if(detail.idx==self.outputIdx) selected=true;
-                              self.midiAccess.addOptions("output", "update", detail, elem, selected);
-                              break;
-                      }
-                  });
-              }
-          }, 100);
-      },
-      convertItnl2Key: function(itnl) {
-          return this.super([itnl]);
-      },
-      initializePerformanceNow: function() {
-          this.pfmNow=window.performance.now();
-      },
-      checkOutputIdx: function() {
-          if(this.outputIdx==="false") {
-              console.log("output port is NOT selected.");
-              return "false";
-          }
-          return "true";
-      },
-      getOutputDevice: function() {
-          if(this.checkOutputIdx()=="false") {
-              return;
-          }
-          return this.midiAccess.midi.outputs[this.outputIdx];
-      },
-      sendRawMessage: function(msg, timestamp) {
-          if(this.checkOutputIdx()=="false") {
-              return;
-          }
-          if(typeof timestamp==="undefined") {
-              timestamp=0;
-          }
-          this.initializePerformanceNow();
-          this.midiAccess.midi.outputs[this.outputIdx].send(msg, this.pfmNow+timestamp);
-      },
-      sendHRMessage: function(type, ch, param, timestamp) { //hex format
-          if(this.checkOutputIdx()=="false") {
-              return;
-          }
-          var msg=false;
-          if(typeof timestamp==="undefined") {
-              timestamp=0;
-          }
-          if(ch>=10) {
-              ch=ch.toString(16);
-          }
-          type=type.toLowerCase();
-          switch(type) {
-              case "noteon":
-                  if(typeof param!="object") {
-                      console.log("[noteon: Parameter Error:param must be object] "+param);
-                      return;
-                  }
-                  if(typeof param[0]=="string") {
-                      param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
-                  }
-                  var key=param[0];
-                  if(param[0]!=parseInt(param[0])) {
-                      key=this.convertItnl2Key(param[0].toUpperCase());
-                  }
-                  //msg=["0x9"+ch, param[0], param[1]];
-                  msg=["0x9"+ch, key, param[1]];
-                  break;
-              case "noteoff":
-                  if(typeof param!="object") {
-                      console.log("[noteoff: Parameter Error:param must be object] "+param);
-                      return;
-                  }
-                  if(typeof param[0]=="string") {
-                      param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
-                  }
-                  var key=param[0];
-                  if(param[0]!=parseInt(param[0])) {
-                      key=this.convertItnl2Key(param[0].toUpperCase());
-                  }
-                  msg=["0x8"+ch, key, param[1]];
-                  break;
-              case "programchange":
-                  msg=["0xc"+ch, param];
-                  break;
-              case "setpitchbendrange":
-                  if(typeof param!="object") {
-                      console.log("[setpitchbendvalue: Parameter Error:param must be object] "+param);
-                      return;
-                  }
-                  msg=false;
-                  this.pitchBendRange={"min":param[0], "max":param[1], "center":(param[0]+param[1]+1)/2};
-                  break;
-              case "pitchbend":
-                  if(typeof param!="number") {
-                      console.log("[pitchbend: Parameter Error:param must be object] "+param);
-                      return;
-                  }
-                  var value = param < this.pitchBendRange.min ? this.pitchBendRange.min : param > this.pitchBendRange.max ? this.pitchBendRange.max : param;
-                  var msb=(~~(value/128));
-                  var lsb=(value%128);
-                  msg=["0xe"+ch, lsb, msb];
-                  break;
-              case "sustain":
-                  var msg=["0xb"+ch, 0x40, 0x00];
-                  switch(param) {
-                      case "on":
-                          msg=["0xb"+ch, 0x40, 0x7f];
-                          break;
-                  }
-                  break;
-              case "modulation":
-                  if(typeof param!="number") {
-                      console.log("[Parameter Error:param must be number] "+param);
-                      return;
-                  }
-                  var value = param < 0 ? 0 : param > 127 ? 127 : param;
-                  var msg=["0xb"+ch, 0x01, value];
-                  break;
-              case "allsoundoff":
-                  msg=[ "0xb"+ch, 0x78, 0x00 ];
-                  break;
-              case "resetallcontroller":
-                  msg=[ "0xb"+ch, 0x79, 0x00 ];
-                  break;
-              case "allnoteoff":
-                  msg=[ "0xb"+ch, 0x7b, 0x00 ];
-                  break;
-          }
-          // send message
-          if(msg!=false) {
-              this.initializePerformanceNow();
-              this.midiAccess.midi.outputs[this.outputIdx].send(msg, this.pfmNow+timestamp);
-          }
-      }
-
-  });
-  </script>
-</polymer-element>
+</dom-module>
+<script type="text/javascript">
+Polymer({
+    is: "x-webmidioutput",
+    properties: {
+        autoselect: {
+            type: String,
+            value: ""
+        },
+        autoreselect: {
+            type: Boolean,
+            value: true
+        },
+        additionalid: {
+            type: String,
+            value: ""
+        }
+    },
+    midiAccess: null,
+    outputIdx: "false",
+    pfmNow: 0,
+    pitchBendRange:{"min":0, "max":16384, "center":8192}, // Apple DLS Synth
+    ready: function() {
+        var self=this;
+        var timerId=setInterval(function(){
+            var result={"autoselected": false, "idx":false};
+            var tmp=document.getElementsByTagName("x-webmidirequestaccess");
+            self.midiAccess=tmp[0];
+            if(self.midiAccess.ready.output==true) {
+                clearInterval(timerId);
+                var elem=self.$["midiout"];
+                result=self.midiAccess.addOptions("output", "add", {"idx":"all"}, elem, null, self.autoselect);
+                if(result.autoselected===true) {
+                    // fire setMIDIOUTDevice
+                    self.outputIdx=result.idx;
+                    self.fire("midiout-autoselected:"+self.id, {"idx": result.idx});
+                }
+                self.$["midiout"].addEventListener("change", function(event){
+                    console.log("midioutput-updated:"+self.id);
+                    self.outputIdx=event.target.value;
+                    if(event.target.value=="") self.outputIdx=false;
+                    self.fire("midioutput-updated:"+self.id);
+                });
+                self.midiAccess.addEventListener("x-webmidi:output-updated", function(event){
+                    var port=event.detail.port, detail=event.detail;
+                    var elem=self.$["midiout"];
+                    var selected=false
+                    switch(detail.member) {
+                        case "new":
+                            result=self.midiAccess.addOptions("output", "add", detail, elem, selected, self.autoselect);
+                            break;
+                        case "old":
+                            if(self.autoreselect==false && port.state=="disconnected") {
+                                if(self.outputIdx!="false") {
+                                    self.midiAccess.midi.outputs[self.outputIdx].onmidimessage=null;
+                                    self.outputIdx="false";
+                            }
+                        }
+                        if(detail.idx==self.outputIdx
+                           || detail.port.name==self.autoselect) {
+                            selected=true;
+                        }
+                        result=self.midiAccess.addOptions("output", "update", detail, elem, selected, self.autoselect);
+                        break;
+                    }
+                    if(result.autoselected===true) {
+                        // fire setMIDIOUTDevice
+                        self.outputIdx=result.idx;
+                        self.fire("midiout-autoselected:"+self.id, {"idx": result.idx});
+                    }
+                });
+                // add aditional output
+                if(self.additionalid!="") {
+                    var additionalOutput=document.getElementById(self.additionalid).getOutput();
+                    self.midiAccess.addAdditionalDevice("output", additionalOutput, elem);
+                }
+            }
+        }, 100);
+    },
+    convertItnl2Key: function(itnl) {
+        return this.super([itnl]);
+    },
+    initializePerformanceNow: function() {
+        this.pfmNow=window.performance.now();
+    },
+    checkOutputIdx: function() {
+        if(this.outputIdx==="false") {
+            console.log("output port is NOT selected.");
+            return "false";
+        }
+        return "true";
+    },
+    getOutputDevice: function() {
+        if(this.checkOutputIdx()=="false") {
+            return;
+        }
+        return this.midiAccess.midi.outputs[this.outputIdx];
+    },
+    sendRawMessage: function(msg, timestamp) {
+        if(this.checkOutputIdx()=="false") {
+            return;
+        }
+        if(typeof timestamp==="undefined") {
+            timestamp=0;
+        }
+        this.initializePerformanceNow();
+        this.midiAccess.midi.outputs[this.outputIdx].send(msg, this.pfmNow+timestamp);
+    },
+    sendHRMessage: function(type, ch, param, timestamp) { //hex format
+        if(this.checkOutputIdx()=="false") {
+            return;
+        }
+        var msg=false;
+        if(typeof timestamp==="undefined") timestamp=0;
+        if(ch>=10) ch=ch.toString(16);
+        type=type.toLowerCase();
+        switch(type) {
+            case "noteon":
+                if(typeof param!="object") {
+                    console.log("[noteon: Parameter Error:param must be object] "+param);
+                    return;
+                }
+                if(typeof param[0]=="string") {
+                    param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
+                }
+                var key=param[0];
+                if(param[0]!=parseInt(param[0])) {
+                    key=this.convertItnl2Key(param[0].toUpperCase());
+                }
+                //msg=["0x9"+ch, param[0], param[1]];
+                msg=["0x9"+ch, key, param[1]];
+                break;
+            case "noteoff":
+                if(typeof param!="object") {
+                    console.log("[noteoff: Parameter Error:param must be object] "+param);
+                    return;
+                }
+                if(typeof param[0]=="string") {
+                    param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
+                }
+                var key=param[0];
+                if(param[0]!=parseInt(param[0])) {
+                    key=this.convertItnl2Key(param[0].toUpperCase());
+                }
+                msg=["0x8"+ch, key, param[1]];
+                break;
+            case "programchange":
+                msg=["0xc"+ch, param];
+                break;
+            case "setpitchbendrange":
+                if(typeof param!="object") {
+                    console.log("[setpitchbendvalue: Parameter Error:param must be object] "+param);
+                    return;
+                }
+                msg=false;
+                this.pitchBendRange={"min":param[0], "max":param[1], "center":(param[0]+param[1]+1)/2};
+                break;
+            case "pitchbend":
+                if(typeof param!="number") {
+                    console.log("[pitchbend: Parameter Error:param must be object] "+param);
+                    return;
+                }
+                var value = param < this.pitchBendRange.min ? this.pitchBendRange.min : param > this.pitchBendRange.max ? this.pitchBendRange.max : param;
+                var msb=(~~(value/128));
+                var lsb=(value%128);
+                msg=["0xe"+ch, lsb, msb];
+                break;
+            case "sustain":
+                var msg=["0xb"+ch, 0x40, 0x00];
+                switch(param) {
+                    case "on":
+                        msg=["0xb"+ch, 0x40, 0x7f];
+                        break;
+                }
+                break;
+            case "modulation":
+                if(typeof param!="number") {
+                    console.log("[Parameter Error:param must be number] "+param);
+                    return;
+                }
+                var value = param < 0 ? 0 : param > 127 ? 127 : param;
+                var msg=["0xb"+ch, 0x01, value];
+                break;
+            case "allsoundoff":
+                msg=[ "0xb"+ch, 0x78, 0x00 ];
+                break;
+            case "resetallcontroller":
+                msg=[ "0xb"+ch, 0x79, 0x00 ];
+                break;
+            case "allnoteoff":
+                msg=[ "0xb"+ch, 0x7b, 0x00 ];
+                break;
+        }
+        // send message
+        if(msg!=false) {
+            this.initializePerformanceNow();
+            this.midiAccess.midi.outputs[this.outputIdx].send(msg, this.pfmNow+timestamp);
+        }
+    }
+});
+</script>

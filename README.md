@@ -9,7 +9,7 @@ This is a polymer component, and this is a wrapping Web MIDI API.
  - What is Web MIDI API? -> [Web MIDI API@W3C](http://webaudio.github.io/web-midi-api/)
  - What is Polymer? -> [polymer](https://www.polymer-project.org/)
 
-![x-webmidi image](https://raw.githubusercontent.com/ryoyakawai/x-webmidi/gh-pages/images/screenshot.png)
+![x-webmidi image](https://raw.githubusercontent.com/ryoyakawai/x-webmidi/gh-pages/src/images/screenshot.png)
 
 ## Purpose of using this component
 MIDI is well defined protocol. But to use the protocol you must learn 7bit code, such as NoteOn: 9nH, NoteOff: 8nH.
@@ -39,17 +39,16 @@ Using this component allow you a quick and an easy MIDI application development.
 
 ### Get component
 #### bower
-```
+```shell
 $ bower install x-webmidi;
 ```
 #### git
-```
+```shell
 $ git clone https://github.com/ryoyakawai/x-webmidi.git;
 $ cd x-webmidi;
-$ bower install;
 ```
 ### include and import
-```
+```html
 <script src="path/to/webcomponents.js"></script>
 <link rel="import" href="x-webmidirequestaccess.html">
 <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
@@ -75,11 +74,14 @@ $ bower install;
   - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/inpotsample.html](http://ryoyakawai.github.io/x-webmidi/inoutsample.html)
 
 #### Set MIDI input dropdown list.
+```html
+<x-webmidiinput id="foo-input" autoselect="input-devicename-foo" autoreselect="true"></x-webmidiinput>
 ```
-<x-webmidiinput id="foo-input"></x-webmidiinput>
-```
+ - Specifying device name as parameter ` autoselect` enables to be selected the device automatically when the device is connected.
+
+
 #### Add eventlistener to obtain MIDI message form selected MIDI input device.
-```
+```js
 window.addEventListener('midiin-event:foo-input', function(event) {
   // write what you want to do.
   console.log(event.detail.);
@@ -92,29 +94,41 @@ window.addEventListener('midiin-event:foo-input', function(event) {
 
 
 ### MIDI output
+#### Basic Demo
+ - input
+  - [Code] [https://github.com/ryoyakawai/x-webmidi/blob/master/outputsample.html](https://github.com/ryoyakawai/x-webmidi/blob/gh-pages/outputsample.html)
+  - [Live Demo] [http://ryoyakawai.github.io/x-webmidi/outputsample.html](http://ryoyakawai.github.io/x-webmidi/outputsample.html)
+
 #### Set MIDI output dropdown list.
+```html
+<x-webmidioutput id="foo-output"  autoselect="output-devicename-foo" autoreselect="true"></x-webmidioutput>
 ```
-<x-webmidioutput id="foo-output"></x-webmidioutput>
-```
+ - Specifying device name as parameter ` autoselect` enables to be selected the device automatically when the device is connected.
+
+
 #### To send MIDI message to selected MIDI device.
 **Send by Array format (same format as Web MIDI API):**
-```
+```js
 var midiout=document.getElementById("foo-output");
 midiout.sendRawMessage([0x90, 0x45, 0x7f]);
 ```
 **Send by Human-Readable format:**
 
-```
+```js
 // using int'l format
 var midiout=document.getElementById("foo-output");
 midiout.sendHRMessage("noteon", 0, ["D4", 127], 0);
 midiout.sendHRMessage("noteoff", 0, ["D4", 127], 1000);
 ```
-```
+```js
 // using note number format
 var midiout=document.getElementById("foo-output");
 midiout.sendHRMessage("noteon", 0, [62, 127], 0);
 midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
+
+// or ("d4" is 62 in international MIDI key number)
+midiout.sendHRMessage("noteon", 0, ["d4", 127], 0);
+midiout.sendHRMessage("noteoff", 0, ["d4", 127], 1000);
 ```
 
 > **Basic format:**
@@ -123,7 +137,7 @@ midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 > **Parameters in `sendHRMessage()` method:**
 >
 >  -  *(string)* **`type`**: Specify type of channel message of desiring to send. (For more detail is in table below.)
->  - *(number)* **`ch`**: Specify which channel to send.
+>  - *(number)* **`ch`**: Specify which channel to send. (Accepts format both in hexadecimal and in decimal.)
 >  - *(array/string)* **`param`**: Specify data of desiring to send.
 >
 > **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.

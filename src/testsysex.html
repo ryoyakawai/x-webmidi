@@ -1,0 +1,87 @@
+<html>
+  <head></head>
+  <body>
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
+    <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
+
+    <div>input: <x-webmidiinput id="input-port-01" autoreselect="true"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
+    <div>output: <x-webmidioutput id="output-port-01" autoreselect="true"></x-webmidioutput></div>
+    <button id="sendsysex">Send SysEx</button>
+    <button id="sendnoteon">Send NoteOn</button>
+    <button id="sendnoteoff">Send NoteOff</button>
+    <br>
+
+    <script>
+    window.addEventListener("midiin-event:input-port-01", function(event){
+
+        var sameByteCount=0;
+        for(var i=0; i<exSendMessage.length; i++) {
+            if(event.detail.data[i]==exSendMessage[i]) {
+                sameByteCount++;                
+            }
+        }
+        var testResult=false;
+        if(sameByteCount==event.detail.data.length) {
+            testResult=true;
+        }
+        console.log("[Recieved] ", testResult==true ? "<Success>" : "<Fail>", event.detail.data.length, event.detail.subType, event.detail.data);
+
+        var click_sendSysEx=document.getElementById("sendsysex");
+        var evt = document.createEvent("MouseEvents");
+        evt.initMouseEvent("mousedown", true, false, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        click_sendSysEx.dispatchEvent( evt );
+        evt.preventDefault();
+        evt.stopPropagation();
+    });
+
+    var count=1, stop_send=2048;
+    var sysEx={ "head":0xf0, "foot":0xf7 };
+    var exSendMessage=[];
+    var output1=false;
+    document.getElementById("sendsysex").addEventListener("mousedown", function(event){
+        if(count<stop_send) {
+            if(output1.checkOutputIdx!="false") output1=document.getElementById("output-port-01");
+            var data=[];
+            data.push(sysEx.head);
+            for(var i=0; i<count; i++) {
+                data.push(parseInt(Math.random()*127));
+            }
+            data.push(sysEx.foot);
+
+            if(output1.checkOutputIdx!="false") {
+                count+=Math.random()*10;
+                //count++;
+                output1.sendRawMessage(data);
+                exSendMessage=data;
+                console.log("[Send] ", data.length, data );
+            } else {
+                console.log("error");
+            }
+        } 
+
+    });
+
+    document.getElementById("sendnoteon").addEventListener("mousedown", function(event){
+        if(output1.checkOutputIdx!="false") output1=document.getElementById("output-port-01");
+        if(output1.checkOutputIdx!="false") {
+            data=[0x90, 0x45, 0x45];
+            output1.sendRawMessage(data);
+            console.log("[Send] ", data.length, data );
+        }
+    });
+    document.getElementById("sendnoteoff").addEventListener("mousedown", function(event){
+        if(output1.checkOutputIdx!="false") output1=document.getElementById("output-port-01");
+        if(output1.checkOutputIdx!="false") {
+            data=[0x80, 0x45, 0x45];
+            output1.sendRawMessage(data);
+            console.log("[Send] ", data.length, data );
+        }
+    });
+
+
+    </script>
+
+
+  </body>
+</html>

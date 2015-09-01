@@ -1,6 +1,6 @@
 {
   "name": "x-webmidi",
-  "version": "0.9.8",
+  "version": "0.10.2",
   "authors": [
     "Ryoya Kawai"
   ],
@@ -14,6 +14,6 @@
     "tests"
   ],
   "dependencies": {
-    "polymer": "Polymer/polymer#~0.5.1"
+    "polymer": "Polymer/polymer#^1.0.0"
   }
 }

@@ -13,7 +13,7 @@
     <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
     <link rel="import" href="components/wm-flatkey/wm-flatkey.html">
 
-    <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
+    <x-webmidirequestaccess sysex input output></x-webmidirequestaccess>
 
     <div class="main-container">
     <h1>x-webmidi Demo</h1>
@@ -23,6 +23,46 @@
       <div id="parseMIDIMsg">To test parse MIDI message</div>
       <input id="midiMsg" size="50" style="border-radius: 4px;" value="0x90 0x4f 0x7f"><input id="midiMsgB" type="button" value="Parse MIDI Message">
       <div id="result" style="background-color:#efefef; border: 1px solid rgb(175, 175, 175); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; height: 200px; width: 400px; word-wrap: break-word; overflow: auto; font-family: monospace;" "="">(Result Area)</div>
+
+      <link rel="import" href="./bower_components/x-webmidi/extras/wm-nsx1text/wm-nsx1text.html">
+      <input id="text" value="あいうえおかきくけこさしすせそたちつてと">
+      <wm-nsx1text id="evy1" type="evy1"></wm-nsx1text>
+      <wm-nsx1text id="poke39" type="poke39"></wm-nsx1text>
+      <button id="39text">get39SysEx</button>
+      <button id="1text">get1SysEx</button>
+      <script>
+      document.getElementById("39text").addEventListener("click", function(event){
+          var text=document.getElementById("text").value;
+          var out=document.getElementById("poke39").convertText2SysEx(text);
+          var midiout=document.getElementById("output-port-01");
+          console.log(out.sysEx, midiout);
+          for(var i=0; i<out.sysEx.length; i++) {
+              midiout.sendRawMessage(out.sysEx[i], 0);
+          }
+          playTone(text.length);
+      });
+      document.getElementById("1text").addEventListener("click", function(event){
+          var text=document.getElementById("text").value;
+          var out=document.getElementById("evy1").convertText2SysEx(text);
+          var midiout=document.getElementById("output-port-01");
+          for(var i=0; i<out.sysEx.length; i++) {
+              midiout.sendRawMessage(out.sysEx[i], 0);
+              console.log(out.sysEx[i]);
+          }
+          playTone(text.length);
+      });
+      function playTone(count) {
+          var interval=400; // (ms)
+          var noteNo=69; // A4
+          var midiout=document.getElementById("output-port-01");
+          for(var i=0; i<count; i++) {
+              midiout.sendRawMessage([0x90, "0x"+(noteNo+i).toString(16), 0x7f], interval*i);
+              midiout.sendRawMessage([0x80, "0x"+(noteNo+i).toString(16), 0x7f], interval*(i+1));
+          }  
+      }
+      </script>
+<!--
+-->
 
 
       <h2 id="tosendmidi">[TO SEND MIDI MESSAGE]</h2>
