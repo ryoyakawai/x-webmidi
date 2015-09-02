@@ -26,13 +26,15 @@
         for (var o = inputIterator.next(); !o.done; o = inputIterator.next()) {
             midi.inputs.push(o.value)
         }
+        midi.outputs.push(wmlinkDevice);
+
         var outputIterator = access.outputs.values();
         for (var o = outputIterator.next(); !o.done; o = outputIterator.next()) {
             midi.outputs.push(o.value);
         }
+        midi.inputs.push(wmPckbdDevice);
 
         // outputs
-        midi.outputs.push(wmlinkDevice);
         var osel=document.querySelector("#midi-output");
         for(var i=0; i<midi.outputs.length; i++) {
             osel.appendChild((new Option(midi.outputs[i]["name"], i)));
@@ -43,7 +45,6 @@
 
         // inputs
         var inputSelIdx;
-        midi.inputs.push(wmPckbdDevice);
         var isel=document.querySelector("#midi-input");
         for(var i=0; i<midi.inputs.length; i++) {
             isel.appendChild(new Option(midi.inputs[i]["name"], i));
