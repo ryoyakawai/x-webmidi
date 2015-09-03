@@ -1,0 +1,27 @@
+<html>
+  <head></head>
+  <body>
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
+    <link rel="import" href="bower_components/x-webmidi/extras/wm-webmidilink/wm-webmidilink.html">
+    <link rel="import" href="bower_components/x-webmidi/extras/wm-pckeyboard/wm-pckeyboard.html">
+    <x-webmidirequestaccess input output></x-webmidirequestaccess>
+
+    <wm-webmidilink id="wmlink"></wm-webmidilink>
+    <wm-pckeyboard id="pckeyboard"></wm-pckeyboard>
+
+    input: <x-webmidiinput id="midi-input" additionalid="pckeyboard" autoselect="nanoKEY2 KEYBOARD" autoreselect></x-webmidiinput><br>
+    output: <x-webmidioutput id="midi-output" additionalid="wmlink" autoselect="YAMAHA MU2000 Port1" autoreselect></x-webmidioutput>
+    <br>
+
+    <script type="text/javascript">
+    var output=document.getElementById("midi-output");
+    window.addEventListener("midiin-event:midi-input", function(event){
+        if(output.checkOutputIdx!="false") {
+            output.sendRawMessage(event.detail.data);
+        }
+    });
+    </script>
+
+  </body>
+</html>
