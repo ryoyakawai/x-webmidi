@@ -65,10 +65,16 @@ Polymer({
         additionalid: {
             type: String,
             value: ""
+        },
+        midiAccess: {
+          type: Object, 
+          value: {},
+        },
+        inputIdx: {
+          type: String, 
+          value: "false",
         }
     },
-    midiAccess: null,
-    inputIdx: "false",
     ready: function() {
         var self=this;
         var timerId=setInterval(function(){
@@ -122,7 +128,6 @@ Polymer({
                 if(self.additionalid!="") {
                     var additionalInput=document.getElementById(self.additionalid).getInput();
                     self.midiAccess.addAdditionalDevice("input", additionalInput, elem);
-                    console.log(additionalInput, elem);
                 }
             }
         }, 100);

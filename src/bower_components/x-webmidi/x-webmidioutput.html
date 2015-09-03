@@ -65,12 +65,24 @@ Polymer({
         additionalid: {
             type: String,
             value: ""
+        },
+        midiAccess: {
+          type: Object, 
+          value: {},
+        },
+        outputIdx: {
+          type: String, 
+          value: "false",
+        },
+        pfmNow: {
+          type: Number,  
+          value: 0,
+        },
+        pitchBendRange: {
+            type: Object,
+            value: {"min":0, "max":16384, "center":8192}, // Apple DLS Synth
         }
     },
-    midiAccess: null,
-    outputIdx: "false",
-    pfmNow: 0,
-    pitchBendRange:{"min":0, "max":16384, "center":8192}, // Apple DLS Synth
     ready: function() {
         var self=this;
         var timerId=setInterval(function(){
@@ -87,9 +99,8 @@ Polymer({
                     self.fire("midiout-autoselected:"+self.id, {"idx": result.idx});
                 }
                 self.$["midiout"].addEventListener("change", function(event){
-                    console.log("midioutput-updated:"+self.id);
                     self.outputIdx=event.target.value;
-                    if(event.target.value=="") self.outputIdx=false;
+                    if(event.target.value=="") self.outputIdx="false";
                     self.fire("midioutput-updated:"+self.id);
                 });
                 self.midiAccess.addEventListener("x-webmidi:output-updated", function(event){
@@ -103,16 +114,15 @@ Polymer({
                         case "old":
                             if(self.autoreselect==false && port.state=="disconnected") {
                                 if(self.outputIdx!="false") {
-                                    self.midiAccess.midi.outputs[self.outputIdx].onmidimessage=null;
                                     self.outputIdx="false";
+                                }
                             }
-                        }
-                        if(detail.idx==self.outputIdx
-                           || detail.port.name==self.autoselect) {
-                            selected=true;
-                        }
-                        result=self.midiAccess.addOptions("output", "update", detail, elem, selected, self.autoselect);
-                        break;
+                            if(detail.idx==self.outputIdx
+                               || detail.port.name==self.autoselect) {
+                                selected=true;
+                            }
+                            result=self.midiAccess.addOptions("output", "update", detail, elem, selected, self.autoselect);
+                            break;
                     }
                     if(result.autoselected===true) {
                         // fire setMIDIOUTDevice
