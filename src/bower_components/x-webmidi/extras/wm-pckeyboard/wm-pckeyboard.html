@@ -3,8 +3,77 @@ Copyright (c) 2015 Ryoya Kawai. All rights reserved.
 Distributed under the MIT License (license terms are at http://opensource.org/licenses/MIT).
 -->
 <dom-module id="wm-pckeyboard">
-  <style></style>
-  <template></template>
+  <style>
+  #pckey-info {
+    display:none;
+    transition:0.5s;
+  }
+  #kb-all-area {
+    position:absolute;
+    display:inline-block;
+    border:1px solid #37474F;
+    vertical-align: middle;
+    text-align:left;
+    text-valigh:middle;
+    width:26px; height:26px;
+    border-radius:50%;
+    transition:0.5s;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+  }
+  #kb-grab-area {
+    display:inline-block;
+    vertical-align:middle;
+    transition:0.5s;
+    border:0px solid #000;
+    height:26px; width:26px;
+    background-color:#37474F;
+    border-radius:50%;
+    transition:0.4s;
+    text-align:left;
+    cursor:pointer;
+  }
+  #kb-icon-image {
+    width:16px; height:16px;
+    padding:5px;
+    text-align:left;
+  }
+  #kb-info-area {
+    display:none;
+    opacity:1;
+    background-color:#ffffff;
+    transition:0.2s;
+    padding:4px;
+    width:0px;
+    height:0px;
+    transition:0.5s;
+  }
+  .stable {
+    opacity:0.4; 
+  }
+  .midianimation {
+    animation-duration:1.5s;
+    animation-name:midiactive;
+    animation-iteration-count:infinite;
+  }
+  @keyframes midiactive {
+    12% {
+      background-color:#303F9F/*#BF360C*/;
+      border-color:#303F9F/*#BF360C*/;
+    }
+  }
+  </style>
+  <template>
+    <span id="pckey-info">
+      <div id="kb-all-area" class="stable">
+        <div id="kb-grab-area">
+          <img id="kb-icon-image" src="{{kbicon.808080}}">
+        </div>
+        <div id="kb-info-area">
+         aaaaaaaaaaaaaa あああああああああああ
+        </div>
+      </div>
+    </span>
+  </template>
 </dom-module>
 <script type="text/javascript">
 Polymer({
@@ -35,6 +104,17 @@ Polymer({
         velocity: {
             type: Number,
             value:42
+        },
+        kbicon: {
+            type: Object,
+            value: {
+                "808080": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkHBzoV8kByhQAAAn9JREFUeNrtm89u00AQh79xrF6poELiGbgRrpVmQQqi4XVA4r1oJXrIrm89QFsJlUeAC/RO5TAcukHGivPHpSg085MiJdnJz7vfzDrSrlfIijGWIYQ6pTQE7nM3damqH2djBShnLSIySikdcseVUgIYA0cAUlVVaWYjoNfgRWRpjJmxad7AWESOJVNpu9RLfjwApOeFl3mXPX0NmK7jraoiec5/aAUeAjsLjB4Dj3pAsFx6Xd5XwEFP3y/A5wUxV7n0mxqWwINWdt6r6qsl8+gd8LBHtmQF7z41PQXOV+z3i0a/94pMr6mdFS64w+apT7+tYMvlAByAA3AADsABOAAH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfgABzAYtUbOJbpPwFQVdUAuOgBYQp8XyHuEvjZIyGfqqoqbx1AXddTVX3N9X77OhoAz1NKg66A3Pas1S/reN/UD1V9U9d1fesAiqJgMpmIqt4D9oER8BJ428r2KRBy+0hVBbhQ1c5SzW0XOXYEPOHPhyUkfzdqvPZVdXcymUhRFLc/BUIIiMgsEydABBJw3srUpaqm3B5jjGJmSzNkZnWMUYCoqmdzIJ3NPPPrBEBELISwNoBez+PMLqSqdS7deTcha8as6W2L7jHzPPsM3v8GHYADcAAOwAE4AAfgAByAA3AADsABOAAH4AC2FUD7hNa6q72zJar2MtUm7h20xyYSYxyKyLrH5toSYBd4mj8b8JXr/YObdnh8w751epnZsO/ByS4IzTX/VQ4yrqLyL1bW3IOTJdfr64dbNv3HwPHv+Z9SOtgiCGNVPWqXxLGqSozxiYjs0b0N9b9KzOxbCOE0Vz0AvwC42th9YL+YOAAAAABJRU5ErkJggg==",
+                "c0c0c0": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkHBzkTMA6EcwAAAkhJREFUeNrtm79uE0EQh7+NT26JIELiGehi2hSAZETM64BE5Z/fiUQijVOmgCQSCo8ADbgnuuMoPKccq9wfryFykvlJJ/t8s7Oz38zK0u5twDSdTrPZbJZLGgEPuZtaSPpcjRUgq56EEMaSDrjjkgQwAQ4BgqQMGANJgw8hdNqUZcmm+TYIR8GoxF7yjsYDICR23OU7S/RbAsUqviWFYHP+U2R4AAxbHD0FniRAKK30mnxfAvuJfr8BX1tsLi3rdY0y4FGUnY+S3nTMow/A44RshR6+U2q6AM57xv2qFvfOltGra9ijwyGbp5S4yy3uuRyAA3AADsABOAAH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfgAByAA2hXvoFjKW4EgKQBcJEAoQB+9rBbAL8TEvLFXvb47xVQSHrLcr99FQ2AlwawDe6LKK6y4XtdvyS9S6nMpCkgKUh6AOyxfL3mNfA+yvYp8NyejyUF4EJS0eK3MJtg7Xb5+2WJYL+Na9eepG1rcyNToJ6JE2AOHAPnUaYWko7t+dwC7JOh3Gznks6u6f+s8mnXSdWnxbaSssQKqD7z2n2c2bJukwA4b7HJm2Lyv0EH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfQDSBeTFx1tbdaooqXqTZx7yAeW/KxuVgB2Aae2X0JfGe5f7BuwJM1Y2vzNUo9ONkEob7m3+cgYx9l/7Cyrj04udbR2Vusq6OzRmP/HkGYSDqMS+LIdnx2gR2at6FuqwLwQ9JpfQ/xDxJHx0av1pAaAAAAAElFTkSuQmCC"
+            }
+        },
+        infoOpen: {
+            type: Boolean,
+            value: false
         }
     },
     ready: function() {
@@ -47,6 +127,7 @@ Polymer({
                 this.state="connected";
                 this.type="input";
                 this.version="";
+                this.virtual=true;
             };
             return MIDIInput;
         })();
@@ -73,6 +154,7 @@ Polymer({
                 if(key!==false) {
                     var note=this.convert2Hex(key);
                     var midimessage=(new createMIDIMessageEvent(this.inputdevice, [0x90, parseInt(note, 16), this.velocity]));
+                     midiMessageAnimation.bind(this)();
                     if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
                 }
             }
@@ -87,16 +169,78 @@ Polymer({
                 if(key!==false) {
                     var note=this.convert2Hex(key);
                     var midimessage=(new createMIDIMessageEvent(this.inputdevice, [0x80, parseInt(note, 16), 0x00]));
+                     midiMessageAnimation.bind(this)();
                     if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
                 }
                 this.keydown[event.keyCode]="";
             }
         }.bind(this);
-         
+       
+        function midiMessageAnimation() {
+            this.$["kb-icon-image"].src=this.kbicon["808080"];
+            this.$["kb-grab-area"].className=(this.$["kb-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
+            this.$["kb-grab-area"].className+=" midianimation";
+            this.$["kb-all-area"].className=(this.$["kb-all-area"].className.replace("stable", "")).replace(/^\s+|\s+$/g, "");
+            this.$["kb-all-area"].style.setProperty("border", "1px solid #303F9F");
+            var exTimerId=timerId;
+            var timerId=setTimeout(function(){
+                clearTimeout(exTimerId)
+                self.$["kb-icon-image"].src=self.kbicon["c0c0c0"];
+                self.$["kb-grab-area"].className=(self.$["kb-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
+                self.$["kb-all-area"].className=self.$["kb-all-area"].className.replace("stable", "");
+                if(self.infoOpen!==true) self.$["kb-all-area"].className+=" stable";
+                self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+            }, 200);
+        }
 
+        var self=this;
+/*
+        this.$["kb-grab-area"].addEventListener("mousedown", function(event){
+            switch(self.infoOpen) {
+                case true:
+                    self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+                    self.$["kb-all-area"].style.removeProperty("z-index");
+                    self.$["kb-grab-area"].style.setProperty("width", "26px");
+                    self.$["kb-grab-area"].style.setProperty("border-radius", "50%");
+                    if(self.$["kb-all-area"].className.match(/stable/)==null) self.$["kb-all-area"].className+=" stable";
+                    self.$["kb-all-area"].style.setProperty("width", "26px");
+                    self.$["kb-all-area"].style.setProperty("border-radius", "50%");
+                    self.$["kb-all-area"].style.setProperty("height", "26px");
+                    self.$["kb-info-area"].style.setProperty("heigth", "0px");
+                    self.$["kb-info-area"].style.setProperty("opacity", "0");
+                    setTimeout(function(){
+                        self.$["kb-info-area"].style.setProperty("display", "none");
+                    }, 600);
+                    break;
+                case false:
+                    self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+                    self.$["kb-all-area"].style.setProperty("z-index", "100");
+                    self.$["kb-grab-area"].style.setProperty("width", "300px");
+                    self.$["kb-grab-area"].style.setProperty("border-radius", "3px 3px 0px 0px");
+                    self.$["kb-all-area"].className=self.$["kb-all-area"].className.replace("stable", "");
+                    self.$["kb-all-area"].style.setProperty("width", "300px");
+                    self.$["kb-all-area"].style.setProperty("border-radius", "0px");
+                    self.$["kb-all-area"].style.setProperty("border-radius", "5px 5px 0px 0px");
+                    self.$["kb-all-area"].style.setProperty("height", "200px");
+                    self.$["kb-info-area"].style.setProperty("height", "166px");
+                    self.$["kb-info-area"].style.setProperty("width", "291px");
+                    self.$["kb-info-area"].style.setProperty("border", "0px solid #000");
+                    self.$["kb-info-area"].style.setProperty("display", "block");
+                    setTimeout(function(){
+                        self.$["kb-info-area"].style.setProperty("opacity", "1");
+                    }, 10);
+                    break;
+            }
+            self.infoOpen=!self.infoOpen;
+        });
+*/
     },
     getInput: function() {
         return this.inputdevice;
+    },
+    getElement: function() {
+        this.$["pckey-info"].style.setProperty("display", "inline");
+        return this.$["pckey-info"];
     },
     getkeyNo: function(keyCode) {
         var out=false;

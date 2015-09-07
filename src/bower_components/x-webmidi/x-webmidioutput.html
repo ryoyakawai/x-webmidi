@@ -43,11 +43,18 @@ limitations under the License.
     border:0px solid #ddd;
     margin:3px 3px;
   }
+  .midiactive {
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05), 0 1px 1px rgba(0,0,0,0.05); 
+  }
+  #virtual-output {
+    transition:0.5s;
+  }
   </style>
   <template>
-    <select class="select-midiout" id="midiout">
+    <select id="midiout" class="select-midiout" >
       <option value="false">Not Selected</option>
     </select>
+    <span id="virtual-output"></span>
   </template>
 </dom-module>
 <script type="text/javascript">
@@ -81,6 +88,10 @@ Polymer({
         pitchBendRange: {
             type: Object,
             value: {"min":0, "max":16384, "center":8192}, // Apple DLS Synth
+        },
+        timerId: {
+            type:Object,
+            value: {"timerId":null, "extimerId":null}
         }
     },
     ready: function() {
@@ -94,14 +105,13 @@ Polymer({
                 var elem=self.$["midiout"];
                 result=self.midiAccess.addOptions("output", "add", {"idx":"all"}, elem, null, self.autoselect);
                 if(result.autoselected===true) {
-                    // fire setMIDIOUTDevice
-                    self.outputIdx=result.idx;
-                    self.fire("midiout-autoselected:"+self.id, {"idx": result.idx});
+                    // setMIDIOUTDevice
+                    self.setMIDIOUTDevice.bind(self)({"value": result.idx});
                 }
                 self.$["midiout"].addEventListener("change", function(event){
-                    self.outputIdx=event.target.value;
-                    if(event.target.value=="") self.outputIdx="false";
-                    self.fire("midioutput-updated:"+self.id);
+                    // setMIDIOUTDevice
+                    self.setMIDIOUTDevice.bind(self)({"value": event.target.value});
+
                 });
                 self.midiAccess.addEventListener("x-webmidi:output-updated", function(event){
                     var port=event.detail.port, detail=event.detail;
@@ -125,18 +135,53 @@ Polymer({
                             break;
                     }
                     if(result.autoselected===true) {
-                        // fire setMIDIOUTDevice
-                        self.outputIdx=result.idx;
-                        self.fire("midiout-autoselected:"+self.id, {"idx": result.idx});
+                        // setMIDIOUTDevice
+                        self.setMIDIOUTDevice.bind(self)({"value": result.idx});
                     }
                 });
                 // add aditional output
                 if(self.additionalid!="") {
-                    var additionalOutput=document.getElementById(self.additionalid).getOutput();
-                    self.midiAccess.addAdditionalDevice("output", additionalOutput, elem);
+                    var virtualElem=document.getElementById(self.additionalid);
+                    console.log(virtualElem);
+                    var additionalOutput=virtualElem.getOutput();
+                    var result=self.midiAccess.addAdditionalDevice("output", additionalOutput, elem, "", self.autoselect);
+                    self.$["virtual-output"].appendChild(virtualElem.getElement());
+                    if(result.autoselected===true) {
+                        // setMIDIOUTDevice
+                        self.setMIDIOUTDevice.bind(self)({"value": result.idx});
+                    }
                 }
             }
         }, 100);
+    },
+    setMIDIOUTDevice: function(target) {
+        var Idx=target.value;
+        var outputs=this.midiAccess.midi.outputs;
+        if(Idx=="" || Idx=="false" || Idx===false) {
+            this.outputIdx="false";
+        } else {
+            for(key in outputs) {
+                if(key==Idx) {
+                    if(typeof outputs[key]!="undefined" && outputs[key]!==null) {
+                        this.outputIdx=Idx; // set new output
+                    }
+                }
+            }
+        }
+
+        // disp virtual output
+        if(this.outputIdx!="false" && typeof outputs[Idx].virtual!="undefined") {
+            this.$["virtual-output"].className=this.$["virtual-output"].className.replace("none", "");
+            setTimeout(function(){
+                this.$["virtual-output"].style.setProperty("opacity", 1);
+            }.bind(this), 10);
+        } else  {
+            this.$["virtual-output"].style.setProperty("opacity", 0);
+            setTimeout(function(){
+                if(this.$["virtual-output"].className.match(/none/)==null) this.$["virtual-output"].className+=" none";
+            }.bind(this), 600);
+        }
+
     },
     convertItnl2Key: function(itnl) {
         return this.super([itnl]);
@@ -157,6 +202,17 @@ Polymer({
         }
         return this.midiAccess.midi.outputs[this.outputIdx];
     },
+    updateIndicator: function() {
+        // indicator
+        if(this.$["midiout"].className.match("midiactive")==null) {
+            this.$["midiout"].className=this.$["midiout"].className.replace(/^\s+|\s+$/g, "")+" midiactive";
+        }
+        this.exTimerId=this.timerId;
+        this.timerId=setTimeout(function(){
+            clearTimeout(this.exTimerId);
+            this.$["midiout"].className=this.$["midiout"].className.replace("midiactive", "").replace(/^\s+|\s+$/g, "");
+        }.bind(this), 300);
+    },
     sendRawMessage: function(msg, timestamp) {
         if(this.checkOutputIdx()=="false") {
             return;
@@ -166,6 +222,8 @@ Polymer({
         }
         this.initializePerformanceNow();
         this.midiAccess.midi.outputs[this.outputIdx].send(msg, this.pfmNow+timestamp);
+        // indicator
+        this.updateIndicator.bind(this)();
     },
     sendHRMessage: function(type, ch, param, timestamp) { //hex format
         if(this.checkOutputIdx()=="false") {
@@ -256,6 +314,8 @@ Polymer({
         if(msg!=false) {
             this.initializePerformanceNow();
             this.midiAccess.midi.outputs[this.outputIdx].send(msg, this.pfmNow+timestamp);
+            // indicator
+            this.updateIndicator.bind(this)();
         }
     }
 });

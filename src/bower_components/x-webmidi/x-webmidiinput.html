@@ -42,12 +42,21 @@ limitations under the License.
     border-radius:2px;
     border:0px solid #ddd;
     margin:3px 3px;
+    transition:0.2s;
+  }
+  .midiactive {
+    box-shadow: 0 1px 1px rgba(0,0,0,0.05), 0 1px 1px rgba(0,0,0,0.05); 
+  }
+  #virtual-input {
+    opacity:0;
+    transition:0.5s;
   }
   </style>
   <template>
-    <select class="select-midiin" id="midiin">
+    <select  id="midiin" class="select-midiin">
       <option value="false">Not Selected</option>
     </select>
+    <span id="virtual-input"></span>
   </template>
 </dom-module>
 <script type="text/javascript">
@@ -73,6 +82,10 @@ Polymer({
         inputIdx: {
           type: String, 
           value: "false",
+        },
+        timerId: {
+            type:Object,
+            value: {"timerId":null, "extimerId":null}
         }
     },
     ready: function() {
@@ -88,7 +101,7 @@ Polymer({
                 if(result.autoselected===true) {
                     // fire setMIDIINDevice
                     var target={"value":result.idx}
-                    self.setMIDIINDevice(target);
+                    self.setMIDIINDevice.bind(self)(target);
                     self.fire("midiin-autoselected:"+self.id, {"idx": result.idx});
                 }
                 self.$["midiin"].addEventListener("change", function(event){
@@ -120,14 +133,22 @@ Polymer({
                     if(result.autoselected===true) {
                         // fire setMIDIINDevice
                         var target={"value":result.idx}
-                        self.setMIDIINDevice(target);
+                        self.setMIDIINDevice.bind(self)(target);
                         self.fire("midiin-autoselected:"+self.id, {"idx": result.idx});
                     }
                 });
                 // add aditional input
                 if(self.additionalid!="") {
-                    var additionalInput=document.getElementById(self.additionalid).getInput();
-                    self.midiAccess.addAdditionalDevice("input", additionalInput, elem);
+                    var virtualElem=document.getElementById(self.additionalid);
+                    var additionalInput=virtualElem.getInput();
+                    var result=self.midiAccess.addAdditionalDevice("input", additionalInput, elem, "", self.autoselect);
+                    self.$["virtual-input"].appendChild(virtualElem.getElement());
+                    if(result.autoselected===true) {
+                        // fire setMIDIINDevice
+                        var target={"value":result.idx}
+                        self.setMIDIINDevice.bind(self)(target);
+                        self.fire("midiin-autoselected:"+self.id, {"idx": result.idx});
+                    }
                 }
             }
         }, 100);
@@ -135,10 +156,39 @@ Polymer({
     setMIDIINDevice: function(target){
         var Idx=target.value;
         var inputs=this.midiAccess.midi.inputs;
-        if(this.inputIdx!="false") {
+        //if(this.inputIdx!="false") {
+        if(this.inputIdx!="false" || Idx=="" || Idx=="false" || Idx===false) {
             inputs[this.inputIdx].onmidimessage=null; // delete ex-input
             this.inputIdx="false";
         }
+        for(key in inputs) {
+            if(key==Idx) {
+                if(typeof inputs[key]!="undefined" && inputs[key]!==null) {
+                    if(typeof inputs[key].onmidimessage=="function") {
+                        // TODO: Input parameter should be in array format to be able to obtain message from multiple input devices.
+                        console.log("[ERROR] alredy selected");
+                    } else {
+                        inputs[key].onmidimessage=this.onMIDIMessage.bind(this); // set new input
+                        this.inputIdx=Idx; // set new input to object property
+                    }
+                }
+            }
+        }
+
+        // disp virtual input
+        if(this.inputIdx!="false" && typeof inputs[Idx].virtual!="undefined") {
+            this.$["virtual-input"].className=this.$["virtual-input"].className.replace("none", "");
+            setTimeout(function(){
+                this.$["virtual-input"].style.setProperty("opacity", 1);
+            }.bind(this),10);
+        } else  {
+            this.$["virtual-input"].style.setProperty("opacity", 0);
+            setTimeout(function(){
+                if(this.$["virtual-input"].className.match(/none/)==null) this.$["virtual-input"].className+=" none";
+            }.bind(this),600);
+        }
+
+/*
         for(var i=0; i<inputs.length; i++) {
             if(i==Idx) {
                 if(typeof inputs[i]!="undefined" && inputs[i]!==null) {
@@ -152,6 +202,7 @@ Polymer({
                 }
             }
         }
+*/
     },
     onMIDIMessage: function(event){
         var d16=[];
@@ -163,6 +214,18 @@ Polymer({
             d16.push("0x"+("0"+event.data[i].toString(16)).slice(-2));
         }
         if(p_d16.type!="notObject") this.fire("midiin-event:"+this.id, p_d16);
+        this.updateIndicator.bind(this)();
+    },
+    updateIndicator: function() {
+        // indicator
+        if(this.$["midiin"].className.match("midiactive")==null) {
+            this.$["midiin"].className=this.$["midiin"].className.replace(/^\s+|\s+$/g, "")+" midiactive";
+        }
+        this.exTimerId=this.timerId;
+        this.timerId=setTimeout(function(){
+            clearTimeout(this.exTimerId);
+            this.$["midiin"].className=this.$["midiin"].className.replace("midiactive", "").replace(/^\s+|\s+$/g, "");
+        }.bind(this), 300);
     },
     parseMIDIMessage: function(msg) {
         var event={ };
