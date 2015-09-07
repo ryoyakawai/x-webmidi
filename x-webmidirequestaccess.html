@@ -140,19 +140,21 @@ Polymer({
                 this.midi=false;
             }
         },
-        addAdditionalDevice: function(midiType, additionalDevice, elem) {
+        addAdditionalDevice: function(midiType, additionalDevice, elem, exSelected, autoSelect) {
+            var result={"autoselected": false, "idx":false};
             switch(midiType) {
                 case "input":
                     var idx=99999;
                     this.midi.inputs[idx]=additionalDevice;
-                    this.addOptions(midiType, "add", {"idx": idx, "port": additionalDevice}, elem);
-                    break; 
+                    result=this.addOptions(midiType, "add", {"idx": idx, "port": additionalDevice}, elem, exSelected, autoSelect);
+                    break;
                 case "output":
                     var idx=99999;
                     this.midi.outputs[idx]=additionalDevice;
-                    this.addOptions(midiType, "add", {"idx": idx, "port": additionalDevice}, elem);
-                    break; 
+                    result=this.addOptions(midiType, "add", {"idx": idx, "port": additionalDevice}, elem, exSelected, autoSelect);
+                    break;
             }
+            return result;
         },
         appendFileImport: function(type) {
             /*
