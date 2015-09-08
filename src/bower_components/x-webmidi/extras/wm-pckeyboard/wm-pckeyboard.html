@@ -19,8 +19,6 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
     border-radius:50%;
     transition:0.5s;
     box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-    -webkit-user-select: none;
-    -moz-user-select: none;
   }
   #kb-grab-area {
     display:inline-block;
@@ -47,7 +45,7 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
     padding:4px;
     width:0px;
     height:0px;
-    transition:1.3s;
+    transition:0.5s;
   }
   .stable {
     opacity:0.4; 
@@ -63,84 +61,6 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
       border-color:#303F9F/*#BF360C*/;
     }
   }
-  #kb-ch-area {
-    position:relative;
-    margin-top:25px;
-  }
-  #kb-area {
-    position:relative;
-    margin-top:80px;
-  }
-  #kb-area-outer {
-    display:table-cell;
-    position:relative;
-  }
-  .keyboard-key {
-    font-family:arial;
-    position:absolute; 
-    border:0px solid #aaa;
-    color:rgba(101, 101, 101, 1);
-    width:36px;
-    height:40px; 
-    border-radius:5px;
-    margin-top:28px;
-    padding:4px 0px 0px 8px;
-    transition:0.2s;
-    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
-  }
-  .keyboard-ch {
-    width:40px;
-    height:40px; 
-    border-radius:0px;
-    padding:4px 0px 0px 4px;
-    box-shadow: 0 0px 0px rgba(0,0,0,0), 0 0px 0px rgba(0,0,0,0);
-    background-color:#aaa;
-    color:#fff;
-  }
-  .key-push {
-    box-shadow: 0 0px 0px rgba(0,0,0,0), 0 0px 0px rgba(0,0,0,0);
-    background-color:#aaa;
-    color:#fff !important;
-  }
-  .ch-num {
-    float:right;
-    margin-right:10px;
-  }
-  .ch-warn {
-    color:#FFD600;
-  }
-  .kb-area-title {
-    font-family:arial;
-    margin:2px 0px 0px 15px;
-  }
-  .velocity {
-    color:rgba(66, 133, 244, 1);
-  }
-  .velocity-val {
-    border-color:rgba(66, 133, 244, 1);
-    background-color:rgba(66, 133, 244, 1);
-  }
-  .octave {
-    color:rgba(219, 68, 5, 1);
-  }
-  .octave-val {
-    border-color:rgba(219, 68, 5, 1);
-    background-color:rgba(219, 68, 5, 1);
-  }
-  .channel {
-    color:rgba(244, 180, 0, 1);
-  }
-  .channel-val {
-    border-color:rgba(244, 180, 0, 1);
-    background-color:rgba(244, 180, 0, 1);
-  }
-  .programno {
-    color:rgba(15, 157, 88, 1);
-  }
-  .programno-val {
-    border-color:rgba(15, 157, 88, 1);
-    background-color:rgba(15, 157, 88, 1);
-  }
   </style>
   <template>
     <span id="pckey-info">
@@ -149,44 +69,7 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
           <img id="kb-icon-image" src="{{kbicon.808080}}">
         </div>
         <div id="kb-info-area">
-          <div class="kb-area-title">WM-PCKeyboard: Key Assign</div>
-          <div id="kb-velocity-area">
-            <div id="k49" class="keyboard-key velocity" style="top:25px; left:20px;">1</div>
-            <div id="k50" class="keyboard-key velocity" style="top:25px; left:70px;">2</div>
-            <div id="k51" class="keyboard-key velocity" style="top:25px; left:120px;">3</div>
-            <div id="k52" class="keyboard-key velocity" style="top:25px; left:170px;">4</div>
-            <div id="k53" class="keyboard-key velocity" style="top:25px; left:220px;">5</div>
-            <div id="ch-num" class="keyboard-key keyboard-ch velocity-val" style="top:25px; left:270px;">VEL<br><span class="ch-num">{{velocity}}</span></div>
-            <div id="k55" class="keyboard-key octave" style="top:25px; left:370px;">7</div>
-            <div id="oct-num" class="keyboard-key keyboard-ch octave-val" style="top:25px; left:420px;">OCT<br><span class="ch-num">{{oct}}</span></div>
-            <div id="k57" class="keyboard-key octave" style="top:25px; left:470px;">9</div>
-          </div>
-          <div id="kb-ch-area">
-            <div id="k87" class="keyboard-key channel" style="top:5px; left:90px;">W</div>
-            <div id="ch-num" class="keyboard-key keyboard-ch channel-val" style="top:5px; left:140px;">CH<br><span class="ch-num">{{channel}}</span></div>
-            <div id="k82" class="keyboard-key channel" style="top:5px; left:190px;">R</div>
-            <div id="k89" class="keyboard-key programno" style="top:5px; left:290px;">Y</div>
-            <div id="prg-num" class="keyboard-key keyboard-ch programno-val" style="top:5px; left:340px;">PRG<br><span class="ch-num" id="progranchno"></span></div>
-            <div id="k73" class="keyboard-key programno" style="top:5px; left:390px;">I</div>
-          </div>
-          <div id="kb-area">
-            <div id="kb-area-outer">
-              <div id="k83" class="keyboard-key" style="top:5px; left:105px;">S</div>
-              <div id="k68" class="keyboard-key" style="top:5px; left:155px;">D</div>
-              <div id="k71" class="keyboard-key" style="top:5px; left:255px;">G</div>
-              <div id="k72" class="keyboard-key" style="top:5px; left:305px;">H</div>
-              <div id="k74" class="keyboard-key" style="top:5px; left:355px;">J</div>
-
-              <div id="k90" class="keyboard-key" style="top:60px; left:80px;">Z</div>
-              <div id="k88" class="keyboard-key" style="top:60px; left:130px;">X</div>
-              <div id="k67" class="keyboard-key" style="top:60px; left:180px;">C</div>
-              <div id="k86" class="keyboard-key" style="top:60px; left:230px;">V</div>
-              <div id="k66" class="keyboard-key" style="top:60px; left:280px;">B</div>
-              <div id="k78" class="keyboard-key" style="top:60px; left:330px;">N</div>
-              <div id="k77" class="keyboard-key" style="top:60px; left:380px;">M</div>
-              <div id="k188" class="keyboard-key" style="top:60px; left:430px;"><</div>
-            </div>
-          </div>
+         aaaaaaaaaaaaaa あああああああああああ
         </div>
       </div>
     </span>
@@ -196,13 +79,9 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
 Polymer({
     is: "wm-pckeyboard",
     properties: {
-        mousedown: {
-            type: Boolean,
-            value: false
-        },
         oct: {
             type: Number,
-            value: 5//(5*12)
+            value: (5*12)
         },
         keydown: {
             type: Array,
@@ -224,30 +103,18 @@ Polymer({
         },
         velocity: {
             type: Number,
-            value:51
-        },
-        programno: {
-            type: Array,
-            value: [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+            value:42
         },
         kbicon: {
             type: Object,
             value: {
-                "c0c0c0": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkHBzoV8kByhQAAAn9JREFUeNrtm89u00AQh79xrF6poELiGbgRrpVmQQqi4XVA4r1oJXrIrm89QFsJlUeAC/RO5TAcukHGivPHpSg085MiJdnJz7vfzDrSrlfIijGWIYQ6pTQE7nM3damqH2djBShnLSIySikdcseVUgIYA0cAUlVVaWYjoNfgRWRpjJmxad7AWESOJVNpu9RLfjwApOeFl3mXPX0NmK7jraoiec5/aAUeAjsLjB4Dj3pAsFx6Xd5XwEFP3y/A5wUxV7n0mxqWwINWdt6r6qsl8+gd8LBHtmQF7z41PQXOV+z3i0a/94pMr6mdFS64w+apT7+tYMvlAByAA3AADsABOAAH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfgABzAYtUbOJbpPwFQVdUAuOgBYQp8XyHuEvjZIyGfqqoqbx1AXddTVX3N9X77OhoAz1NKg66A3Pas1S/reN/UD1V9U9d1fesAiqJgMpmIqt4D9oER8BJ428r2KRBy+0hVBbhQ1c5SzW0XOXYEPOHPhyUkfzdqvPZVdXcymUhRFLc/BUIIiMgsEydABBJw3srUpaqm3B5jjGJmSzNkZnWMUYCoqmdzIJ3NPPPrBEBELISwNoBez+PMLqSqdS7deTcha8as6W2L7jHzPPsM3v8GHYADcAAOwAE4AAfgAByAA3AADsABOAAH4AC2FUD7hNa6q72zJar2MtUm7h20xyYSYxyKyLrH5toSYBd4mj8b8JXr/YObdnh8w751epnZsO/ByS4IzTX/VQ4yrqLyL1bW3IOTJdfr64dbNv3HwPHv+Z9SOtgiCGNVPWqXxLGqSozxiYjs0b0N9b9KzOxbCOE0Vz0AvwC42th9YL+YOAAAAABJRU5ErkJggg==",
-                "808080": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkHBzkTMA6EcwAAAkhJREFUeNrtm79uE0EQh7+NT26JIELiGehi2hSAZETM64BE5Z/fiUQijVOmgCQSCo8ADbgnuuMoPKccq9wfryFykvlJJ/t8s7Oz38zK0u5twDSdTrPZbJZLGgEPuZtaSPpcjRUgq56EEMaSDrjjkgQwAQ4BgqQMGANJgw8hdNqUZcmm+TYIR8GoxF7yjsYDICR23OU7S/RbAsUqviWFYHP+U2R4AAxbHD0FniRAKK30mnxfAvuJfr8BX1tsLi3rdY0y4FGUnY+S3nTMow/A44RshR6+U2q6AM57xv2qFvfOltGra9ijwyGbp5S4yy3uuRyAA3AADsABOAAH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfgAByAA2hXvoFjKW4EgKQBcJEAoQB+9rBbAL8TEvLFXvb47xVQSHrLcr99FQ2AlwawDe6LKK6y4XtdvyS9S6nMpCkgKUh6AOyxfL3mNfA+yvYp8NyejyUF4EJS0eK3MJtg7Xb5+2WJYL+Na9eepG1rcyNToJ6JE2AOHAPnUaYWko7t+dwC7JOh3Gznks6u6f+s8mnXSdWnxbaSssQKqD7z2n2c2bJukwA4b7HJm2Lyv0EH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfQDSBeTFx1tbdaooqXqTZx7yAeW/KxuVgB2Aae2X0JfGe5f7BuwJM1Y2vzNUo9ONkEob7m3+cgYx9l/7Cyrj04udbR2Vusq6OzRmP/HkGYSDqMS+LIdnx2gR2at6FuqwLwQ9JpfQ/xDxJHx0av1pAaAAAAAElFTkSuQmCC"
+                "808080": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkHBzoV8kByhQAAAn9JREFUeNrtm89u00AQh79xrF6poELiGbgRrpVmQQqi4XVA4r1oJXrIrm89QFsJlUeAC/RO5TAcukHGivPHpSg085MiJdnJz7vfzDrSrlfIijGWIYQ6pTQE7nM3damqH2djBShnLSIySikdcseVUgIYA0cAUlVVaWYjoNfgRWRpjJmxad7AWESOJVNpu9RLfjwApOeFl3mXPX0NmK7jraoiec5/aAUeAjsLjB4Dj3pAsFx6Xd5XwEFP3y/A5wUxV7n0mxqWwINWdt6r6qsl8+gd8LBHtmQF7z41PQXOV+z3i0a/94pMr6mdFS64w+apT7+tYMvlAByAA3AADsABOAAH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfgABzAYtUbOJbpPwFQVdUAuOgBYQp8XyHuEvjZIyGfqqoqbx1AXddTVX3N9X77OhoAz1NKg66A3Pas1S/reN/UD1V9U9d1fesAiqJgMpmIqt4D9oER8BJ428r2KRBy+0hVBbhQ1c5SzW0XOXYEPOHPhyUkfzdqvPZVdXcymUhRFLc/BUIIiMgsEydABBJw3srUpaqm3B5jjGJmSzNkZnWMUYCoqmdzIJ3NPPPrBEBELISwNoBez+PMLqSqdS7deTcha8as6W2L7jHzPPsM3v8GHYADcAAOwAE4AAfgAByAA3AADsABOAAH4AC2FUD7hNa6q72zJar2MtUm7h20xyYSYxyKyLrH5toSYBd4mj8b8JXr/YObdnh8w751epnZsO/ByS4IzTX/VQ4yrqLyL1bW3IOTJdfr64dbNv3HwPHv+Z9SOtgiCGNVPWqXxLGqSozxiYjs0b0N9b9KzOxbCOE0Vz0AvwC42th9YL+YOAAAAABJRU5ErkJggg==",
+                "c0c0c0": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3wkHBzkTMA6EcwAAAkhJREFUeNrtm79uE0EQh7+NT26JIELiGehi2hSAZETM64BE5Z/fiUQijVOmgCQSCo8ADbgnuuMoPKccq9wfryFykvlJJ/t8s7Oz38zK0u5twDSdTrPZbJZLGgEPuZtaSPpcjRUgq56EEMaSDrjjkgQwAQ4BgqQMGANJgw8hdNqUZcmm+TYIR8GoxF7yjsYDICR23OU7S/RbAsUqviWFYHP+U2R4AAxbHD0FniRAKK30mnxfAvuJfr8BX1tsLi3rdY0y4FGUnY+S3nTMow/A44RshR6+U2q6AM57xv2qFvfOltGra9ijwyGbp5S4yy3uuRyAA3AADsABOAAH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfgAByAA2hXvoFjKW4EgKQBcJEAoQB+9rBbAL8TEvLFXvb47xVQSHrLcr99FQ2AlwawDe6LKK6y4XtdvyS9S6nMpCkgKUh6AOyxfL3mNfA+yvYp8NyejyUF4EJS0eK3MJtg7Xb5+2WJYL+Na9eepG1rcyNToJ6JE2AOHAPnUaYWko7t+dwC7JOh3Gznks6u6f+s8mnXSdWnxbaSssQKqD7z2n2c2bJukwA4b7HJm2Lyv0EH4AAcgANwAA7AATgAB+AAHIADcAAOwAE4AAfQDSBeTFx1tbdaooqXqTZx7yAeW/KxuVgB2Aae2X0JfGe5f7BuwJM1Y2vzNUo9ONkEob7m3+cgYx9l/7Cyrj04udbR2Vusq6OzRmP/HkGYSDqMS+LIdnx2gR2at6FuqwLwQ9JpfQ/xDxJHx0av1pAaAAAAAElFTkSuQmCC"
             }
         },
         infoOpen: {
             type: Boolean,
             value: false
-        },
-        zindex: {
-            type: Number,
-            value: 0
-        },
-        channel: {
-            type: Number,
-            value: 1
         }
     },
     ready: function() {
@@ -280,20 +147,59 @@ Polymer({
         })();
         this.inputdevice=new createInputDevice();
 
-        window.onkeydown=this.keyDownHandler.bind(this);
-        window.onkeyup=this.keyUpHandler.bind(this);
-
+        window.onkeydown=function(event){
+            if(typeof this.keydown[event.keyCode]!=="boolean") {
+                this.keydown[event.keyCode]=true;
+                key=this.getkeyNo(event.keyCode);
+                if(key!==false) {
+                    var note=this.convert2Hex(key);
+                    var midimessage=(new createMIDIMessageEvent(this.inputdevice, [0x90, parseInt(note, 16), this.velocity]));
+                     midiMessageAnimation.bind(this)();
+                    if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
+                }
+            }
+            var key=event.keyCode-48;
+            if(key>0 && key<6) {
+                this.velocity=key*parseInt(127/5);
+            }
+        }.bind(this);
+        window.onkeyup=function(event){
+            if(typeof this.keydown[event.keyCode]=="boolean") {
+                key=this.getkeyNo(event.keyCode);
+                if(key!==false) {
+                    var note=this.convert2Hex(key);
+                    var midimessage=(new createMIDIMessageEvent(this.inputdevice, [0x80, parseInt(note, 16), 0x00]));
+                     midiMessageAnimation.bind(this)();
+                    if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
+                }
+                this.keydown[event.keyCode]="";
+            }
+        }.bind(this);
+       
+        function midiMessageAnimation() {
+            this.$["kb-icon-image"].src=this.kbicon["808080"];
+            this.$["kb-grab-area"].className=(this.$["kb-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
+            this.$["kb-grab-area"].className+=" midianimation";
+            this.$["kb-all-area"].className=(this.$["kb-all-area"].className.replace("stable", "")).replace(/^\s+|\s+$/g, "");
+            this.$["kb-all-area"].style.setProperty("border", "1px solid #303F9F");
+            var exTimerId=timerId;
+            var timerId=setTimeout(function(){
+                clearTimeout(exTimerId)
+                self.$["kb-icon-image"].src=self.kbicon["c0c0c0"];
+                self.$["kb-grab-area"].className=(self.$["kb-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
+                self.$["kb-all-area"].className=self.$["kb-all-area"].className.replace("stable", "");
+                if(self.infoOpen!==true) self.$["kb-all-area"].className+=" stable";
+                self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+            }, 200);
+        }
 
         var self=this;
+/*
         this.$["kb-grab-area"].addEventListener("mousedown", function(event){
             switch(self.infoOpen) {
                 case true:
-                    self.zindex=0;
-                    self.$["kb-all-area"].style.setProperty("z-index", self.zindex);
-                    self.$["kb-info-area"].style.setProperty("z-index", self.zindex);
-                    self.fire("updated:z-index", {"value":0});
-
                     self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+                    self.$["kb-all-area"].style.removeProperty("z-index");
                     self.$["kb-grab-area"].style.setProperty("width", "26px");
                     self.$["kb-grab-area"].style.setProperty("border-radius", "50%");
                     if(self.$["kb-all-area"].className.match(/stable/)==null) self.$["kb-all-area"].className+=" stable";
@@ -305,27 +211,21 @@ Polymer({
                     setTimeout(function(){
                         self.$["kb-info-area"].style.setProperty("display", "none");
                     }, 600);
-                    self.$["kb-info-area"].style.setProperty("transition", "0.3s");
                     break;
                 case false:
-                    self.zindex++;
-                    self.$["kb-all-area"].style.setProperty("z-index", self.zindex);
-                    self.$["kb-info-area"].style.setProperty("z-index", self.zindex);
-                    self.fire("updated:z-index", {"value":self.zindex});
-
                     self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
-                    self.$["kb-grab-area"].style.setProperty("width", "540px");
+                    self.$["kb-all-area"].style.setProperty("z-index", "100");
+                    self.$["kb-grab-area"].style.setProperty("width", "300px");
                     self.$["kb-grab-area"].style.setProperty("border-radius", "3px 3px 0px 0px");
                     self.$["kb-all-area"].className=self.$["kb-all-area"].className.replace("stable", "");
-                    self.$["kb-all-area"].style.setProperty("width", "540px");
+                    self.$["kb-all-area"].style.setProperty("width", "300px");
                     self.$["kb-all-area"].style.setProperty("border-radius", "0px");
                     self.$["kb-all-area"].style.setProperty("border-radius", "5px 5px 0px 0px");
-                    self.$["kb-all-area"].style.setProperty("height", "280px");
-                    self.$["kb-info-area"].style.setProperty("height", "246px");
-                    self.$["kb-info-area"].style.setProperty("width", "532px");
+                    self.$["kb-all-area"].style.setProperty("height", "200px");
+                    self.$["kb-info-area"].style.setProperty("height", "166px");
+                    self.$["kb-info-area"].style.setProperty("width", "291px");
                     self.$["kb-info-area"].style.setProperty("border", "0px solid #000");
                     self.$["kb-info-area"].style.setProperty("display", "block");
-                    self.$["kb-info-area"].style.setProperty("transition", "1.3s");
                     setTimeout(function(){
                         self.$["kb-info-area"].style.setProperty("opacity", "1");
                     }, 10);
@@ -333,189 +233,7 @@ Polymer({
             }
             self.infoOpen=!self.infoOpen;
         });
-
-        // eventListener for z-index
-        document.addEventListener("updated:z-index", function(event){
-            this.zindex=event.detail.value;
-        }.bind(this));
-
-        // initial programno display
-        var ch=(this.channel-1).toString(16);
-        this.$["progranchno"].innerHTML=this.programno[ch]+1;
-
-        var keyName=[49, 50, 51, 52, 53, 55, 57,
-                     87, 82, 89, 73, 
-                     83, 68, 71, 72, 74, 
-                     90, 88, 67, 86, 66, 78, 77, 188];
-        for(var i=0; i<keyName.length; i++) {
-            document.querySelector("#k"+keyName[i]).addEventListener("mousedown", onKeydownEvent.bind(this));
-            document.querySelector("#k"+keyName[i]).addEventListener("mouseup", onKeyupEvent.bind(this));
-            document.querySelector("#k"+keyName[i]).addEventListener("mouseout", onKeyupEvent.bind(this));
-        }
-        function onKeydownEvent(event) {
-            if(event.type=="mousedown") this.mousedown=true;
-            if(this.mousedown==true) {
-                var keyCode=parseInt(event.target.id.replace("k", ""), 10);
-                this.keyDownHandler.bind(this)({"keyCode": keyCode});
-            }
-        }
-        function onKeyupEvent(event) {
-            if(event.type=="mouseup") this.mousedown=false;
-            var keyCode=parseInt(event.target.id.replace("k", ""), 10);
-            this.keyUpHandler.bind(this)({"keyCode": keyCode});
-        }
-
-    },
-    midiMessageAnimation: function () {
-        this.$["kb-icon-image"].src=this.kbicon["808080"];
-        this.$["kb-grab-area"].className=(this.$["kb-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
-        this.$["kb-grab-area"].className+=" midianimation";
-        this.$["kb-all-area"].className=(this.$["kb-all-area"].className.replace("stable", "")).replace(/^\s+|\s+$/g, "");
-        this.$["kb-all-area"].style.setProperty("border", "1px solid #303F9F");
-        var exTimerId=timerId;
-        var self=this;
-        var timerId=setTimeout(function(){
-            clearTimeout(exTimerId)
-            self.$["kb-icon-image"].src=self.kbicon["c0c0c0"];
-            self.$["kb-grab-area"].className=(self.$["kb-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
-            self.$["kb-all-area"].className=self.$["kb-all-area"].className.replace("stable", "");
-            if(self.infoOpen!==true) self.$["kb-all-area"].className+=" stable";
-            self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
-        }, 200);
-    },
-    keyDownHandler: function(event){
-        var createMIDIMessageEvent=(function(){
-            var MIDIMessageEvent=function(target, message) {
-                var tmpBuffer=new Uint8Array(message.length);
-                tmpBuffer.set(message);
-                this.currentTarget=target;
-                this.srcElement=target;
-                this.data=tmpBuffer;
-                this.receivedTime=window.performance.now();
-                this.timeStamp=Math.floor( new Date().getTime() / 1000 );
-                this.type="midimessage";
-            };
-            return MIDIMessageEvent;
-        })();
-
-        if(typeof this.keydown[event.keyCode]!=="boolean") {
-            this.keydown[event.keyCode]=true;
-            var ch=(this.channel-1).toString(16);
-            key=this.getkeyNo(event.keyCode);
-            if(key.kcode!==false) {
-                switch(key.type) {
-                    case "play":
-                        var note=this.convert2Hex(key.kcode);
-                        var midimessage=(new createMIDIMessageEvent(this.inputdevice, ["0x9"+ch, parseInt(note, 16), this.velocity]));
-                        if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
-                        break;
-                    case "channel":
-                        if(key.kcode=="up") {
-                            if(this.channel<16) {
-                                this.channel++;
-                        } else {
-                                dispchwarn.bind(this)("ch-num");
-                        }
-                    } else
-                        if(key.kcode=="down") {
-                            if(this.channel>1) {
-                                this.channel--;
-                            } else {
-                                dispchwarn.bind(this)("ch-num");
-                            }
-                        }
-
-                        var ch=this.channel-1;
-                        this.$["progranchno"].innerHTML=this.programno[ch]+1;
-                        break;
-                        case "octave":
-                        if(key.kcode=="up") {
-                            if(this.oct<9) {
-                                this.oct++;
-                            } else {
-                                dispchwarn.bind(this)("oct-num");
-                            }
-                        } else
-                            if(key.kcode=="down") {
-                                if(this.oct>1) {
-                                    this.oct--;
-                                } else {
-                                    dispchwarn.bind(this)("oct-num");
-                                }
-                            }
-                            break;
-                            case "programno":
-                            var ch=this.channel-1;
-                            switch(key.programno) {
-                                case "up":
-                                    if(this.programno[ch]<127) {
-                                        this.programno[ch]++;
-                                    } else {
-                                        dispchwarn.bind(this)("prg-num");
-                                    }
-                                    break;
-                                case "down":
-                                    if(this.programno[ch]>0) {
-                                        this.programno[ch]--;
-                                    } else {
-                                        dispchwarn.bind(this)("prg-num");
-                                    }
-                                break;
-                            }
-                            this.$["progranchno"].innerHTML=this.programno[ch]+1;
-                            var midimessage=(new createMIDIMessageEvent(this.inputdevice, ["0xc"+ch, this.programno[ch]]));
-                            if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
-                            break;
-                            case "velocity":
-                            this.velocity=key.velocity+2;
-                            break;
-                        }
-                        function dispchwarn(elemName) {
-                            this.$[elemName].className.replace(/^\s+|\s+$/g, "")+" ch-warn";
-                            if(this.$[elemName].className.match(/ch\-warn/)==null) this.$[elemName].className=this.$[elemName].className.replace(/^\s+|\s+$/g, "")+" ch-warn";
-                            setTimeout(function(){
-                                this.$[elemName].className=this.$[elemName].className.replace("ch-warn", "").replace(/^\s+|\s+$/g, "");
-                            }.bind(this), 200);
-                        }
-
-                        // UI update
-                        if(this.$["k"+event.keyCode].className.match(/key\-push/)==null) this.$["k"+event.keyCode].className=this.$["k"+event.keyCode].className.replace(/^\s+|\s+$/g, "")+" key-push";
-                        this.midiMessageAnimation.bind(this)();
-                    }
-                }
-    },
-    keyUpHandler: function (event){
-        var createMIDIMessageEvent=(function(){
-            var MIDIMessageEvent=function(target, message) {
-                var tmpBuffer=new Uint8Array(message.length);
-                tmpBuffer.set(message);
-                this.currentTarget=target;
-                this.srcElement=target;
-                this.data=tmpBuffer;
-                this.receivedTime=window.performance.now();
-                this.timeStamp=Math.floor( new Date().getTime() / 1000 );
-                this.type="midimessage";
-            };
-            return MIDIMessageEvent;
-        })();
-
-        if(typeof this.keydown[event.keyCode]=="boolean") {
-            var ch=(this.channel-1).toString(16);
-            key=this.getkeyNo(event.keyCode);
-            if(key.kcode!==false) {
-                switch(key.type) {
-                    case "play":
-                        var note=this.convert2Hex(key.kcode);
-                        var midimessage=(new createMIDIMessageEvent(this.inputdevice, ["0x8"+ch, parseInt(note, 16), 0x00]));
-                        if(typeof this.inputdevice.onmidimessage=="function") this.inputdevice.onmidimessage(midimessage);
-                        this.midiMessageAnimation.bind(this)();
-                        break;
-                }
-                // UI update
-                this.$["k"+event.keyCode].className=this.$["k"+event.keyCode].className.replace("key-push", "").replace(/^\s+|\s+$/g, "");
-            }
-            this.keydown[event.keyCode]="";
-        }
+*/
     },
     getInput: function() {
         return this.inputdevice;
@@ -525,39 +243,17 @@ Polymer({
         return this.$["pckey-info"];
     },
     getkeyNo: function(keyCode) {
-        var out={"type":false, "kcode":false};
+        var out=false;
         for(var kcode in this.keyno) {
             if(keyCode==this.keyno[kcode]) {
-                out={"type": "play", "kcode":kcode};
+                out=kcode;
                 break;
-            } else {
-                if(keyCode==87 || keyCode==82) {
-                    out={"type": "channel", "kcode":"down"};
-                    if(keyCode==82) {
-                        out.kcode="up";
-                    }
-                } else 
-                if(keyCode==55 || keyCode==57) {
-                    out={"type": "octave", "kcode":"down"};
-                    if(keyCode==57) {
-                        out.kcode="up";
-                    }
-                } else 
-                if(keyCode==89 || keyCode==73) {
-                    out={"type": "programno", "programno":"down"};
-                    if(keyCode==73) {
-                        out.programno="up";
-                     }
-                } else 
-                if(keyCode-48>0 && keyCode-48<6){
-                    out={"type": "velocity", "velocity":(keyCode-48)*Math.floor(127/5)};
-                }
             }
         }
         return out;
     },
     convert2Hex: function(note) {
-        return "0x"+(parseInt(note, 10)+12*this.oct).toString(16);
+        return "0x"+(parseInt(note, 10)+this.oct).toString(16);
     },
     attached: function() {
         // used be a domReady

@@ -142,6 +142,7 @@ Polymer({
                 // add aditional output
                 if(self.additionalid!="") {
                     var virtualElem=document.getElementById(self.additionalid);
+                    console.log(virtualElem);
                     var additionalOutput=virtualElem.getOutput();
                     var result=self.midiAccess.addAdditionalDevice("output", additionalOutput, elem, "", self.autoselect);
                     self.$["virtual-output"].appendChild(virtualElem.getElement());
@@ -163,7 +164,6 @@ Polymer({
                 if(key==Idx) {
                     if(typeof outputs[key]!="undefined" && outputs[key]!==null) {
                         this.outputIdx=Idx; // set new output
-                        this.fire("midioutput-updated:"+this.id);
                     }
                 }
             }

@@ -9,8 +9,9 @@
     <wm-webmidilink id="wmlink"></wm-webmidilink>
     <wm-pckeyboard id="pckeyboard"></wm-pckeyboard>
 
-    input: <select id="midi-input"><option>SelectOne</option></select><span id="virtual-input"></span><br><br>
-    output: <select id="midi-output"><option>SelectOne</option></select><span id="virtual-output"></span><br>
+    input: <select id="midi-input"><option value="false">SelectOne</option></select><br>
+    output: <select id="midi-output"><option>SelectOne</option></select>
+    <br>
 
     <script type="text/javascript">
     var wmlinkDevice=(document.querySelector("#wmlink")).getOutput();
@@ -40,13 +41,6 @@
         }
         osel.addEventListener("change", function(event){
             outputSelIdx=event.target.value;
-
-            // web virtual instruments
-            if(parseInt(outputSelIdx)>=0 && midi.outputs[outputSelIdx].virtual==true) {
-                document.querySelector("#virtual-output").appendChild(document.querySelector("#wmlink").getElement());
-            } else {
-                document.querySelector("#virtual-output").innerHTML=""
-            }
         });
 
         // inputs
@@ -61,14 +55,6 @@
             }
             inputSelIdx=event.target.value;
             midi.inputs[event.target.value].onmidimessage=eventOut;
-
-            // web virtual instruments
-            if(parseInt(inputSelIdx)>=0 && midi.inputs[inputSelIdx].virtual==true) {
-                document.querySelector("#virtual-input").appendChild(document.querySelector("#pckeyboard").getElement());
-            } else {
-                document.querySelector("#virtual-input").innerHTML=""
-            }
-
         });
         function eventOut(event) {
             if(outputSelIdx!=null) {
