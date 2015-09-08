@@ -351,8 +351,13 @@ Polymer({
             document.querySelector("#k"+keyName[i]).addEventListener("mousedown", onKeydownEvent.bind(this));
             document.querySelector("#k"+keyName[i]).addEventListener("mouseup", onKeyupEvent.bind(this));
             document.querySelector("#k"+keyName[i]).addEventListener("mouseout", onKeyupEvent.bind(this));
+
+            document.querySelector("#k"+keyName[i]).addEventListener("touchstart", onKeydownEvent.bind(this));
+            document.querySelector("#k"+keyName[i]).addEventListener("touchend", onKeyupEvent.bind(this));
         }
         function onKeydownEvent(event) {
+            event.stopPropagathin();
+            event.preventDefault();
             if(event.type=="mousedown") this.mousedown=true;
             if(this.mousedown==true) {
                 var keyCode=parseInt(event.target.id.replace("k", ""), 10);
@@ -360,6 +365,8 @@ Polymer({
             }
         }
         function onKeyupEvent(event) {
+            event.stopPropagathin();
+            event.preventDefault();
             if(event.type=="mouseup") this.mousedown=false;
             var keyCode=parseInt(event.target.id.replace("k", ""), 10);
             this.keyUpHandler.bind(this)({"keyCode": keyCode});
