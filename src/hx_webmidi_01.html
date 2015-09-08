@@ -13,9 +13,6 @@
     output: <select id="midi-output"><option>SelectOne</option></select><span id="virtual-output"></span><br>
 
     <script type="text/javascript">
-    var wmlinkDevice=(document.querySelector("#wmlink")).getOutput();
-    var wmPckbdDevice=(document.querySelector("#pckeyboard")).getInput();
-
     var midi={"inputs":[], "outputs":[]};
     var outputSelIdx=null;
     var inputSelIdx=null;
@@ -23,15 +20,15 @@
     function successCallback(access) {
         var inputIterator = access.inputs.values();
         for (var o = inputIterator.next(); !o.done; o = inputIterator.next()) {
-            midi.inputs.push(o.value)
+            midi.inputs.push(o.value);
         }
-        midi.outputs.push(wmlinkDevice);
+        midi.outputs.push((document.querySelector("#wmlink")).getOutput());
 
         var outputIterator = access.outputs.values();
         for (var o = outputIterator.next(); !o.done; o = outputIterator.next()) {
             midi.outputs.push(o.value);
         }
-        midi.inputs.push(wmPckbdDevice);
+        midi.inputs.push((document.querySelector("#pckeyboard")).getInput());
 
         // outputs
         var osel=document.querySelector("#midi-output");
