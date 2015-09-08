@@ -134,6 +134,10 @@ Polymer({
             type: Boolean,
             value: false
         },
+        zindex: {
+            type: Number,
+            value: 0
+        },
         ready: {
             type: Boolean,
             value: false
@@ -176,9 +180,12 @@ Polymer({
             var sb=msg[0].toString(16).substring(0,1);
             var out=[];
             out.push("midi");
-            out.push(msg[0].toString(16));
-            out.push(msg[1].toString(16));
-            out.push(msg[2].toString(16));
+            for(var i=0; i<msg.length; i++) {
+                out.push(msg[i].toString(16));
+            }
+            //out.push(msg[0].toString(16));
+            //out.push(msg[1].toString(16));
+            //out.push(msg[2].toString(16));
             this.$["target-synth"].contentWindow.postMessage(out.join(","), "*");
             this.$["wmlink-icon-image"].src=this.midiicon["808080"];
             this.$["wmlink-grab-area"].className=(this.$["wmlink-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
@@ -196,6 +203,11 @@ Polymer({
                     self.$["wmlink-all-area"].style.setProperty("border", "1px solid #37474F");
             }, 200);
         }.bind(this);
+
+        // eventListener for z-index
+        document.addEventListener("updated:z-index", function(event){
+            this.zindex=event.detail.value;
+        }.bind(this));
     },
     getOutput: function() {
         return this.outputdevice;
@@ -211,8 +223,11 @@ Polymer({
         this.async(function() {
             this.$["wmlink-grab-area"].addEventListener("mousedown", function(event){
                 if(self.windowOpen===true) {
+                    self.zindex=0;
+                    this.$["wmlink-all-area"].style.setProperty("z-index", self.zindex);
+                    self.fire("updated:z-index", {"value":0});
+
                     this.$["wmlink-all-area"].style.setProperty("border", "1px solid #37474F");
-                    this.$["wmlink-all-area"].style.removeProperty("z-index");
                     this.$["wmlink-all-area"].style.setProperty("width", "25px");
                     this.$["wmlink-all-area"].style.setProperty("border-radius", "50%");
                     this.$["wmlink-all-area"].style.setProperty("height", "26px");
@@ -227,8 +242,11 @@ Polymer({
                     this.$["target-synth"].style.setProperty("width", "0px");
                     this.$["target-synth"].style.setProperty("border", "0px");
                 } else {
+                    self.zindex++;
+                    this.$["wmlink-all-area"].style.setProperty("z-index", self.zindex);
+                    self.fire("updated:z-index", {"value":self.zindex});
+
                     this.$["wmlink-all-area"].style.setProperty("border", "1px solid #37474F");
-                    this.$["wmlink-all-area"].style.setProperty("z-index", "100");
                     this.$["wmlink-all-area"].style.setProperty("width", "100px");
                     this.$["wmlink-all-area"].style.setProperty("border-radius", "7px 7px 0px 0px");
                     this.$["wmlink-all-area"].style.setProperty("height", "0px");
