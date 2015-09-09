@@ -52,7 +52,6 @@
         });
 
         // MIDI Inputデバイスのリスト表示と選択く時の処理
-        var inputSelIdx;
         var isel=document.querySelector("#midi-input");
         for(var i=0; i<midi.inputs.length; i++) {
             isel.appendChild(new Option(midi.inputs[i]["name"], i));
