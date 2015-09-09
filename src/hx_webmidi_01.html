@@ -57,7 +57,7 @@
             isel.appendChild(new Option(midi.inputs[i]["name"], i));
         }
         isel.addEventListener("change", function(event){
-            if(inputSelIdx!=null) {
+            if(parseInt(inputSelIdx)>=0) {
                 midi.inputs[inputSelIdx].onmidimessage=null;
             }
             inputSelIdx=event.target.value;
