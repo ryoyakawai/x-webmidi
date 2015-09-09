@@ -12,6 +12,8 @@
     input: <select id="midi-input"><option>SelectOne</option></select><span id="virtual-input"></span><br><br>
     output: <select id="midi-output"><option>SelectOne</option></select><span id="virtual-output"></span><br>
 
+    <div id="msg" style="margin:30px;"></div>
+
     <script type="text/javascript">
     var midi={"inputs":[], "outputs":[]};
     var outputSelIdx=null;
@@ -72,6 +74,9 @@
 
         });
         function eventOut(event) {
+            for(var i=0, out=[]; i<event.data.length; i++) out.push(event.data[i].toString(16));
+            var div_msg=document.getElementById("msg");
+            div_msg.innerHTML=out.join(" ")+"<br>" + div_msg.innerHTML;
             if(outputSelIdx!=null) {
                 midi.outputs[outputSelIdx].send(event.data);
             }
