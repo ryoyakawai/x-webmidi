@@ -18,18 +18,24 @@
     var inputSelIdx=null;
     navigator.requestMIDIAccess({sysex:false}).then(successCallback, errorCallback);
     function successCallback(access) {
-        var inputIterator = access.inputs.values();
-        for (var o = inputIterator.next(); !o.done; o = inputIterator.next()) {
-            midi.inputs.push(o.value);
-        }
-        midi.outputs.push((document.querySelector("#wmlink")).getOutput());
+        // MIDI Outputデバイスの配列を作成
         var outputIterator = access.outputs.values();
         for (var o = outputIterator.next(); !o.done; o = outputIterator.next()) {
             midi.outputs.push(o.value);
         }
+        // 仮想のMIDI Outputデバイスを追加
+        midi.outputs.push((document.querySelector("#wmlink")).getOutput());
+
+        // MIDI Inputデバイスの配列を作成
+        var inputIterator = access.inputs.values();
+        for (var o = inputIterator.next(); !o.done; o = inputIterator.next()) {
+            midi.inputs.push(o.value);
+        }
+        // 仮想のMIDI Inputデバイスを追加
         midi.inputs.push((document.querySelector("#pckeyboard")).getInput());
 
-        // outputs
+
+        // MIDI Outputデバイスのリスト表示と選択時の処理
         var osel=document.querySelector("#midi-output");
         for(var i=0; i<midi.outputs.length; i++) {
             osel.appendChild((new Option(midi.outputs[i]["name"], i)));
@@ -37,7 +43,7 @@
         osel.addEventListener("change", function(event){
             outputSelIdx=event.target.value;
 
-            // web virtual instruments
+            // 仮想のMIDI Outputデバイスが選択された時の処理
             if(parseInt(outputSelIdx)>=0 && midi.outputs[outputSelIdx].virtual==true) {
                 document.querySelector("#virtual-output").appendChild(document.querySelector("#wmlink").getElement());
             } else {
@@ -45,20 +51,19 @@
             }
         });
 
-        // inputs
-        var inputSelIdx;
+        // MIDI Inputデバイスのリスト表示と選択く時の処理
         var isel=document.querySelector("#midi-input");
         for(var i=0; i<midi.inputs.length; i++) {
             isel.appendChild(new Option(midi.inputs[i]["name"], i));
         }
         isel.addEventListener("change", function(event){
-            if(inputSelIdx!=null) {
+            if(parseInt(inputSelIdx)>=0) {
                 midi.inputs[inputSelIdx].onmidimessage=null;
             }
             inputSelIdx=event.target.value;
             midi.inputs[event.target.value].onmidimessage=eventOut;
 
-            // web virtual instruments
+            // 仮想のMIDI Inputデバイスが選択された時の処理
             if(parseInt(inputSelIdx)>=0 && midi.inputs[inputSelIdx].virtual==true) {
                 document.querySelector("#virtual-input").appendChild(document.querySelector("#pckeyboard").getElement());
             } else {
