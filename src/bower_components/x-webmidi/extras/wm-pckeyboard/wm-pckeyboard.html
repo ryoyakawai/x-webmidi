@@ -11,7 +11,7 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
   #kb-all-area {
     position:absolute;
     display:inline-block;
-    border:1px solid #37474F;
+    border:0px solid #37474F;
     vertical-align: middle;
     text-align:left;
     text-valigh:middle;
@@ -293,7 +293,7 @@ Polymer({
                     self.$["kb-info-area"].style.setProperty("z-index", self.zindex);
                     self.fire("updated:z-index", {"value":0});
 
-                    self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+                    self.$["kb-all-area"].style.setProperty("border", "0px solid #37474F");
                     self.$["kb-grab-area"].style.setProperty("width", "26px");
                     self.$["kb-grab-area"].style.setProperty("border-radius", "50%");
                     if(self.$["kb-all-area"].className.match(/stable/)==null) self.$["kb-all-area"].className+=" stable";
@@ -313,7 +313,7 @@ Polymer({
                     self.$["kb-info-area"].style.setProperty("z-index", self.zindex);
                     self.fire("updated:z-index", {"value":self.zindex});
 
-                    self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+                    self.$["kb-all-area"].style.setProperty("border", "0px solid #37474F");
                     self.$["kb-grab-area"].style.setProperty("width", "540px");
                     self.$["kb-grab-area"].style.setProperty("border-radius", "3px 3px 0px 0px");
                     self.$["kb-all-area"].className=self.$["kb-all-area"].className.replace("stable", "");
@@ -356,7 +356,7 @@ Polymer({
             document.querySelector("#k"+keyName[i]).addEventListener("touchend", onKeyupEvent.bind(this));
         }
         function onKeydownEvent(event) {
-            event.stopPropagathin();
+            event.stopPropagation();
             event.preventDefault();
             if(event.type=="mousedown") this.mousedown=true;
             if(this.mousedown==true) {
@@ -365,7 +365,7 @@ Polymer({
             }
         }
         function onKeyupEvent(event) {
-            event.stopPropagathin();
+            event.stopPropagation();
             event.preventDefault();
             if(event.type=="mouseup") this.mousedown=false;
             var keyCode=parseInt(event.target.id.replace("k", ""), 10);

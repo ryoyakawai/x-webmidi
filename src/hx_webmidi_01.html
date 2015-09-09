@@ -23,7 +23,6 @@
             midi.inputs.push(o.value);
         }
         midi.outputs.push((document.querySelector("#wmlink")).getOutput());
-
         var outputIterator = access.outputs.values();
         for (var o = outputIterator.next(); !o.done; o = outputIterator.next()) {
             midi.outputs.push(o.value);
