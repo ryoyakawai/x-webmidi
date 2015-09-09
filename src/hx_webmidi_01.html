@@ -74,10 +74,12 @@
 
         });
         function eventOut(event) {
+            // MIDIメッセージを表示
             for(var i=0, out=[]; i<event.data.length; i++) out.push(event.data[i].toString(16));
             var div_msg=document.getElementById("msg");
             div_msg.innerHTML=out.join(" ")+"<br>" + div_msg.innerHTML;
-            if(outputSelIdx!=null) {
+            
+            if(parseInt(inputSelIdx)>=0) {
                 midi.outputs[outputSelIdx].send(event.data);
             }
         }
