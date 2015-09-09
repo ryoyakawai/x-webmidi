@@ -79,7 +79,7 @@
             var div_msg=document.getElementById("msg");
             div_msg.innerHTML=out.join(" ")+"<br>" + div_msg.innerHTML;
             
-            if(parseInt(inputSelIdx)>=0) {
+            if(parseInt(outputSelIdx)>=0) {
                 midi.outputs[outputSelIdx].send(event.data);
             }
         }
