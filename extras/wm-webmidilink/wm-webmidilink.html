@@ -176,32 +176,41 @@ Polymer({
         })();
 
         this.outputdevice=new createOutputDevice(this.synthname);
-        this.outputdevice.send=function(msg){
+        this.outputdevice.send=function(msg, timing){
             var sb=msg[0].toString(16).substring(0,1);
             var out=[];
             out.push("midi");
             for(var i=0; i<msg.length; i++) {
                 out.push(msg[i].toString(16));
             }
+            if(timing=="" || parseInt(timing)<0) {
+                sendMIDILink.bind(this)(out);
+            } else {
+                setTimeout(function(){
+                    sendMIDILink.bind(this)(out);
+                }.bind(this), timing);
+            }
             //out.push(msg[0].toString(16));
             //out.push(msg[1].toString(16));
             //out.push(msg[2].toString(16));
-            this.$["target-synth"].contentWindow.postMessage(out.join(","), "*");
-            this.$["wmlink-icon-image"].src=this.midiicon["808080"];
-            this.$["wmlink-grab-area"].className=(this.$["wmlink-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
-            this.$["wmlink-grab-area"].className+=" midianimation";
-            this.$["wmlink-all-area"].className=(this.$["wmlink-all-area"].className.replace("stable", "")).replace(/^\s+|\s+$/g, "");
-            this.$["wmlink-all-area"].style.setProperty("border", "1px solid #303F9F");
-            var self=this;
-            var exTimerId=timerId;
-            var timerId=setTimeout(function(){
-                clearTimeout(exTimerId)
-                self.$["wmlink-icon-image"].src=self.midiicon["c0c0c0"];
-                self.$["wmlink-grab-area"].className=(self.$["wmlink-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
-                self.$["wmlink-all-area"].className=self.$["wmlink-all-area"].className.replace("stable", "");
-                if(self.windowOpen!==true) self.$["wmlink-all-area"].className+=" stable";
+            function sendMIDILink(out) {
+                this.$["target-synth"].contentWindow.postMessage(out.join(","), "*");
+                this.$["wmlink-icon-image"].src=this.midiicon["808080"];
+                this.$["wmlink-grab-area"].className=(this.$["wmlink-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
+                this.$["wmlink-grab-area"].className+=" midianimation";
+                this.$["wmlink-all-area"].className=(this.$["wmlink-all-area"].className.replace("stable", "")).replace(/^\s+|\s+$/g, "");
+                this.$["wmlink-all-area"].style.setProperty("border", "1px solid #303F9F");
+                var self=this;
+                var exTimerId=timerId;
+                var timerId=setTimeout(function(){
+                    clearTimeout(exTimerId)
+                    self.$["wmlink-icon-image"].src=self.midiicon["c0c0c0"];
+                    self.$["wmlink-grab-area"].className=(self.$["wmlink-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
+                    self.$["wmlink-all-area"].className=self.$["wmlink-all-area"].className.replace("stable", "");
+                    if(self.windowOpen!==true) self.$["wmlink-all-area"].className+=" stable";
                     self.$["wmlink-all-area"].style.setProperty("border", "1px solid #37474F");
-            }, 200);
+                }, 200);
+            }
         }.bind(this);
 
         // eventListener for z-index

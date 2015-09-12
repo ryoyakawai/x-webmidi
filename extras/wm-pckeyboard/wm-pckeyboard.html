@@ -356,7 +356,7 @@ Polymer({
             document.querySelector("#k"+keyName[i]).addEventListener("touchend", onKeyupEvent.bind(this));
         }
         function onKeydownEvent(event) {
-            event.stopPropagathin();
+            event.stopPropagation();
             event.preventDefault();
             if(event.type=="mousedown") this.mousedown=true;
             if(this.mousedown==true) {
@@ -365,7 +365,7 @@ Polymer({
             }
         }
         function onKeyupEvent(event) {
-            event.stopPropagathin();
+            event.stopPropagation();
             event.preventDefault();
             if(event.type=="mouseup") this.mousedown=false;
             var keyCode=parseInt(event.target.id.replace("k", ""), 10);
