@@ -1,0 +1,148 @@
+<!--
+Copyright 2015 Ryoya Kawai. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<dom-module id="peppermicro-monaka">
+  <style></style>
+  <template></template>
+</dom-module>
+<script>
+Polymer({
+    is: "peppermicro-monaka",
+    properties: {
+        inputid: {
+            type: String,
+            value: ""
+        },
+        outputid: {
+            type: String,
+            value: ""
+        },
+        mode: {
+            type: Number,
+            value: 1
+        }
+    },
+    ready: function() {
+        if(this.mode==0 || this.mode>8) {
+            console.warn("[Out of Range] mode:" + this.mode + " (range:1 to 8)\n  Set mode=1");
+            this.mode=1;
+        }
+        this.analogInputValues=[0, 0, 0, 0];
+        this.digitalInputValues=[0, 0, 0, 0];
+        
+        self=this;
+        var autoselected={"input":false, "output":false};
+        window.addEventListener("midiin-autoselected:"+this.inputid, function(event){
+            autoselected.input=true;
+            connetionUpdate();
+        });
+        window.addEventListener("midiout-autoselected:"+this.outputid, function(event){
+            autoselected.output=true;
+            connetionUpdate();
+        });
+        function connetionUpdate() {
+            self.midiin=document.querySelector("#"+self.inputid);
+            self.midiout=document.querySelector("#"+self.outputid);
+            if(autoselected.input && autoselected.output) {
+                autoselected={"input":false, "output":false};
+                self.setMode.bind(self)(self.mode);
+
+                window.addEventListener("midiin-event:"+self.inputid, self.onMIDIInput.bind(self));
+                self.fire("peppermicro-connected:"+self.id, self);
+            }
+        }
+    },
+    onMIDIInput: function(event) {
+        switch(event.detail.subType) {
+            case "controller":
+                if ((event.detail.data[1] >= 22) && (event.detail.data[1] <= 24)) {
+                    this.analogInputValues[event.detail.data[1] - 22] = event.detail.data[2];
+                }
+                break;
+            case "noteOn":
+                console.log("[noteOn] ", event.detail.data);
+                if ((event.detail.data[1] >= 60) && (event.detail.data[1] <= 63)) {
+                    this.digitalInputValues[event.detail.data[1] - 60] = event.detail.data[2];
+                }
+                break;
+            case "noteOff":
+                console.log("[noteOff] ", event.detail.data);
+                if ((e.data[1] >= 60) && (e.data[1] <= 63)) {
+                    this.digitalInputValues[e.data[1] - 60] = 0;
+                }
+                break;
+            }
+            var out={"analogInput": this.analogInputValues,
+                     "digitalInput": this.digitalInputValues};
+            self.fire("peppermicro-input-event:"+this.id, out);
+    },
+    getAnalogInputValues: function(idx) {
+        var out;
+        if(!(0<=parseInt(idx, 10) && parseInt(idx, 10)<4)) {
+            out=this.analogInputValues;
+        } else {
+            out=this.analogInputValues[idx];
+        }
+        return out;
+    },
+    gettDigitalInputValues: function(idx) {
+        var out;
+        if(!(0<=parseInt(idx, 10) && parseInt(idx, 10)<4)) {
+            out=this.diditalInputValues;
+        } else {
+            out=this.digitalInputValues[idx];
+        }
+        return out;
+    },
+    initAnalogInputValues: function() {
+        this.analogInputValues=[0, 0, 0, 0];
+    },
+    initDigitalInputValues: function() {
+        this.digitalInputValues=[0, 0, 0, 0];
+    },
+    attached: function() {
+        // used be a domReady
+        this.async(function() {
+        });
+    },     
+    setMode: function() {
+        var ccno=0x7a;//122
+        var value=this.mode;
+        if(this.midiout.checkOutputIdx()=="true") {
+            this.midiout.sendRawMessage([0xb0, ccno&0x7f, value&0x7f]);
+            console.info("peppermicro: setMode(" + this.mode + ")");
+        }
+    },
+    digitalOutput: function(pin, value) {
+        if(pin > 3) return false;
+        if(value<0) {
+            value=0
+        } 
+        if(value==0) {
+            this.midiout.sendRawMessage([0x80, 60+parseInt(pin, 10), 0]);
+        } else {
+            this.midiout.sendRawMessage([0x90, 60+parseInt(pin, 10), 0x7f]);
+        }
+        return true;
+    },
+    analogOutput: function(pin, value) {
+        if(pin > 3) return false;
+        if(value<0 || value>127) return false;
+        this.midiout.sendRawMessage([0xb0, 22+parseInt(pin, 10), value]);
+        return true;
+    }
+
+});
+</script>

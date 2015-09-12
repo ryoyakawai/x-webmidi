@@ -1,0 +1,249 @@
+<!-- x-webmidirequestaccess.html (2015/08/25) -->
+<!--
+Copyright 2014 Ryoya Kawai. All rights reserved.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+-->
+<link rel="import" href="../polymer/polymer.html">
+
+<link rel="import" href="./x-webmidiinput.html">
+<link rel="import" href="./x-webmidioutput.html">
+<dom-module id="x-webmidirequestaccess">
+  <style type="text/css"></style>
+  <template>
+  </template>
+</dom-module>
+<script type="text/javascript">
+Polymer({
+    is: "x-webmidirequestaccess",
+    properties: {
+        sysex: {
+            type: Boolean,
+            value: false
+        },
+        input: {
+            type: Boolean,
+            value: false
+        },
+        output: {
+            type: Boolean,
+            value: false
+        },
+        midi: {
+            type: Object,
+            value: {"inputs":new Array(), "outputs":new Array()}
+        },
+        itnl2Key: {
+            type: Array,
+            value: []
+        },
+        key2Itnl: {
+            type: Array,
+            value: []
+        }
+    },
+    ready: function() {
+        key={
+            "note": ["C", "D", "E", "F", "G", "A", "B"],
+            "order": ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"],
+        };
+        for(var i=24, j=0, number=1; i<=108; i++) {
+            this.itnl2Key[key["order"][j]+number]=i;
+            this.key2Itnl[i]=key["order"][j]+number;
+            j++;
+              if(j==key["order"].length) {
+                j=0; number++;
+            }
+        }
+        this.itnl2Key["A0"]=21,  this.key2Itnl[21]="A0";
+        this.itnl2Key["A#0"]=22, this.key2Itnl[22]="A#0";
+        this.itnl2Key["B0"]=23,  this.key2Itnl[23]="B0";
+        
+        this.requestMIDIAccess(this.sysex);
+        if(this.input===true) {
+            this.appendFileImport("input");
+        }
+        if(this.output===true) {
+              this.appendFileImport("output");
+        }
+    },
+    convertKey2Itnl: function(keyno) {
+        return this.key2Itnl[parseInt(keyno)];
+    },
+    convertItnl2Key: function(itnl) {
+        return this.itnl2Key[itnl];
+    },
+    requestMIDIAccess: function(sysex) {
+        if(typeof sysex==="undefined") {
+            sysex=false;
+        }
+        
+        navigator.requestMIDIAccess({sysex:sysex}).then(successCallback.bind(this), errorCallback.bind(this));
+        function successCallback(access) {
+            access.onstatechange=function(event){
+                var portList;
+                if(event.port.type=="input") portList=this.midi.inputs;
+                if(event.port.type=="output") portList=this.midi.outputs;
+                var exist=false, Idx=false;
+                var i=0;
+                for(var portIdx in portList) {
+                    if(portList[portIdx].id==event.port.id) {
+                        exist=true;
+                        portList[portIdx]=event.port;
+                        Idx=i;
+                    }
+                    if(exist==true) break;
+                    i++;
+                }
+                if(exist==false) {
+                    if(portList==false) portList=[];
+                    var Idx=0, ex_portIdx=0;
+                    for(var portIdx in portList) {
+                        if(typeof portList[Idx]=="undefined") {
+                            break;
+                        }
+                        Idx++;
+                    }
+                    portList[Idx]=event.port;
+                }
+                if(event.port.type=="input") this.midi.inputs=portList;
+                if(event.port.type=="output") this.midi.outputs=portList;
+                this.fire("x-webmidi:"+event.port.type+"-updated", {"idx": Idx, "member": (exist==true ? "old" : "new"), "port": event.port});
+            }.bind(this);
+                var inputIterator=access.inputs.values();
+                for(var o=inputIterator.next(); !o.done; o=inputIterator.next()) {
+                    if(this.midi.inputs.length==0) this.midi.inputs=[];
+                    this.midi.inputs.push(o.value);
+                }
+                
+                var outputIterator=access.outputs.values();
+                for(var o=outputIterator.next(); !o.done; o=outputIterator.next()) {
+                    if(this.midi.outputs===false) this.midi.outputs=[];
+                    this.midi.outputs.push(o.value);
+                }
+                
+                this.ready.input=true;
+                this.ready.output=true;
+            }
+            function errorCallback(msg) {
+                console.log("[ERROR] ", msg);
+                this.midi=false;
+            }
+        },
+        addAdditionalDevice: function(midiType, additionalDevice, elem, exSelected, autoSelect) {
+            var result={"autoselected": false, "idx":false};
+            switch(midiType) {
+                case "input":
+                    var idx=99999;
+                    this.midi.inputs[idx]=additionalDevice;
+                    result=this.addOptions(midiType, "add", {"idx": idx, "port": additionalDevice}, elem, exSelected, autoSelect);
+                    break;
+                case "output":
+                    var idx=99999;
+                    this.midi.outputs[idx]=additionalDevice;
+                    result=this.addOptions(midiType, "add", {"idx": idx, "port": additionalDevice}, elem, exSelected, autoSelect);
+                    break;
+            }
+            return result;
+        },
+        appendFileImport: function(type) {
+            /*
+            var href;
+            switch(type) {
+            case "input":
+            href="x-webmidiinput.html";
+            break;
+            case "output":
+            href="x-webmidioutput.html";
+            break;
+            }
+            var elem=document.createElement("link");
+            elem.rel="import";
+            elem.href=href;
+            document.body.appendChild(elem);
+             */
+        },
+        addOptions: function(midiType, updateType, detail, selectElem, exSelected, autoSelect) {
+            var ports, result={"autoselected": false, "idx":false};
+            var addIdx=detail.idx;
+            switch(midiType) {
+                case "output":
+                    ports=this.midi.outputs;
+                    break;
+                case "input":
+                    ports=this.midi.inputs;
+                    break;
+            }
+            var out;
+            switch(updateType) {
+                case "add":
+                    if(addIdx=="all") {
+                        var i=0
+                        for(var idx in ports) {
+                            out=appendOption(ports[idx].name, i, selectElem, autoSelect);
+                            if(out.autoselected===true) result=out;
+                            i++;
+                        }
+                    }
+                    else if(typeof addIdx=="number"){
+                        result=appendOption(detail.port.name, addIdx, selectElem, autoSelect);
+                    }
+                    break;
+                case "update":
+                    result=updateOption(ports[addIdx].state, addIdx, selectElem, exSelected);
+                break;
+            }
+            function appendOption(name, idx, selectElem, autoSelect) {
+                selectElem.appendChild((new Option(name, idx)));
+                var out=false, outIdx=false;
+                if(name==autoSelect) {
+                    var op_idx="";
+                    for(var i=0; i<selectElem.options.length; i++) {
+                        if(parseInt(selectElem.options[i].value, 10)==parseInt(idx, 10)) {
+                            op_idx=i;
+                            idx=selectElem.options[i].value;
+                            break;
+                        }
+                    }
+                    selectElem.selectedIndex=op_idx; 
+                    out=true; outIdx=idx;
+                };
+                return {"autoselected": out, "idx":outIdx}
+            }
+            function updateOption(updateType, idx, selectElem, exSelected) {
+                var out=false, outIdx=false;
+                var i=0;
+                for(var tmp_op_idx in selectElem.options) {
+                    if(selectElem.options[tmp_op_idx].value==idx) {
+                        if(updateType=="disconnected") {
+                            selectElem.options[tmp_op_idx].setAttribute("hidden", "hidden");
+                            if(selectElem.selectedIndex==tmp_op_idx) {
+                                selectElem.selectedIndex=0;
+                            }
+                        } else 
+                        if(updateType=="connected") {
+                            selectElem.options[tmp_op_idx].removeAttribute("hidden");
+                            if(exSelected==true) {
+                                selectElem.selectedIndex=i;
+                                out=true; outIdx=selectElem.options[tmp_op_idx].value;
+                            }
+                        }
+                    }
+                    i++;
+                }
+                return {"autoselected": out, "idx":outIdx}
+            }
+            return result;
+        }
+    });
+</script>
