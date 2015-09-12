@@ -1,0 +1,19 @@
+{
+  "name": "x-webmidi",
+  "version": "0.10.14",
+  "authors": [
+    "Ryoya Kawai"
+  ],
+  "description": "Web MIDI API Wrapper with Web Components(polymer)",
+  "license": "Apache2",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "polymer": "Polymer/polymer#^1.0.0"
+  }
+}
