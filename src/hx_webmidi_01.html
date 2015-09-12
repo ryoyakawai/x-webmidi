@@ -11,6 +11,7 @@
 
     input: <select id="midi-input"><option>SelectOne</option></select><span id="virtual-input"></span><br><br>
     output: <select id="midi-output"><option>SelectOne</option></select><span id="virtual-output"></span><br>
+    <br>
 
     <div id="msg" style="margin:30px;"></div>
 
@@ -75,15 +76,16 @@
         });
         function eventOut(event) {
             // MIDIメッセージを表示
-            for(var i=0, out=[]; i<event.data.length; i++) out.push(event.data[i].toString(16));
+            for(var i=0, out=[]; i<event.data.length; i++) out.push(("00"+event.data[i].toString(16)).substr(-2));
             var div_msg=document.getElementById("msg");
-            div_msg.innerHTML=out.join(" ")+"<br>" + div_msg.innerHTML;
+            var ex_msg=div_msg.innerHTML.split("<br>");
+            while(ex_msg.length>19) ex_msg.pop();
+            div_msg.innerHTML=out.join(" ")+"<br>" + ex_msg.join("<br>");
             
             if(parseInt(outputSelIdx)>=0) {
                 midi.outputs[outputSelIdx].send(event.data);
             }
         }
-
     }
     function errorCallback(msg) {
         console.log("[ERROR] ", msg);

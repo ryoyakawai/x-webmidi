@@ -14,10 +14,18 @@
     output: <x-webmidioutput id="midi-output" additionalid="wmlink" autoselect="GMPlayer(WebMIDILink)" autoreselect></x-webmidioutput>
     <br>
 
+    <div id="msg" style="margin:30px;"></div>
+
     <script type="text/javascript">
     var output=document.getElementById("midi-output");
     window.addEventListener("midiin-event:midi-input", function(event){
-        if(output.checkOutputIdx!="false") {
+        for(var i=0, out=[]; i<event.detail.data.length; i++) out.push(("00"+event.detail.data[i].toString(16)).substr(-2));
+        var div_msg=document.getElementById("msg");
+        var ex_msg=div_msg.innerHTML.split("<br>");
+        while(ex_msg.length>19) ex_msg.pop();
+        div_msg.innerHTML=out.join(" ")+"<br>" + ex_msg.join("<br>");
+
+        if(output.checkOutputIdx()!="false") {
             output.sendRawMessage(event.detail.data);
         }
     });
