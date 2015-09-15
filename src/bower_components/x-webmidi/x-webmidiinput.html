@@ -174,6 +174,7 @@ Polymer({
                 }
             }
         }
+        this.fire("midiinput-updated:"+this.id, {"inputIdx": this.inputIdx});
 
         // disp virtual input
         if(this.inputIdx!="false" && typeof inputs[Idx].virtual!="undefined") {

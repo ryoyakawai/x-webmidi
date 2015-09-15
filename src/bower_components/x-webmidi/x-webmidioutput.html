@@ -163,11 +163,11 @@ Polymer({
                 if(key==Idx) {
                     if(typeof outputs[key]!="undefined" && outputs[key]!==null) {
                         this.outputIdx=Idx; // set new output
-                        this.fire("midioutput-updated:"+this.id);
                     }
                 }
             }
         }
+        this.fire("midioutput-updated:"+this.id, {"outputIdx": this.outputIdx});
 
         // disp virtual output
         if(this.outputIdx!="false" && typeof outputs[Idx].virtual!="undefined") {

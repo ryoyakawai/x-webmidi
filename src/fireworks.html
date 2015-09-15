@@ -9,24 +9,19 @@
 
     <wm-webmidilink id="wmlink"></wm-webmidilink>
     <wm-pckeyboard id="pckeyboard"></wm-pckeyboard>
+    <wm-fireworks id="firework"></wm-fireworks>
 
     <x-webmidirequestaccess input output></x-webmidirequestaccess>
-    <wm-fireworks id="firework" mode="midi"></wm-fireworks>
     <br>
 
     input: <x-webmidiinput id="midi-input" additionalid="pckeyboard" autoselect="PC-Keyboard" autoreselect></x-webmidiinput><br>
     output: <x-webmidioutput id="midi-output" additionalid="wmlink" autoselect="GMPlayer(WebMIDILink)" autoreselect></x-webmidioutput>
-    <br>
-    <button id="fireon">fireon</button>
     <script>
     var fw=document.querySelector("#firework");
     var output=document.querySelector("#midi-output");
-    document.querySelector("#fireon").addEventListener("mousedown",function(event){
-        fw.fireon([0x90, 0x45, 0x7f]);
-    });
     window.addEventListener("midiin-event:midi-input", function(event){
         if(event.detail.data[0].toString(16).substr(0, 1)=="9") {
-            var out=fw.fireon(event.detail.data);
+            var out=fw.fireon("midi", event.detail.data);
             if(output.checkOutputIdx()!="false") {
                 if(out.status==true && out.type=="play") {
                     for(var i=0; i<out.data.length; i++) {
