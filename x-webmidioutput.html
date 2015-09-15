@@ -158,6 +158,7 @@ Polymer({
         var outputs=this.midiAccess.midi.outputs;
         if(Idx=="" || Idx=="false" || Idx===false) {
             this.outputIdx="false";
+            this.fire("midioutput-updated-notselected:"+this.id);
         } else {
             for(key in outputs) {
                 if(key==Idx) {
