@@ -5,14 +5,11 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
 -->
 <dom-module id="wm-webmidilink">
   <style>
-  #wmlink-info-area {
-    display:none;
-  }
   #wmlink-all-area {
     position:absolute;
     margin-top:2px;
     display:inline-block;
-    border:1px solid #37474F;
+    border:0px solid #37474F;
     vertical-align: middle;
     text-align:left;
     text-valigh:middle;
@@ -48,6 +45,7 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
     width:0px;
     height:0px;
     transition:0.5s;
+    margin:5px;
   }
   #target-synth {
     float:right;
@@ -199,7 +197,7 @@ Polymer({
                 this.$["wmlink-grab-area"].className=(this.$["wmlink-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
                 this.$["wmlink-grab-area"].className+=" midianimation";
                 this.$["wmlink-all-area"].className=(this.$["wmlink-all-area"].className.replace("stable", "")).replace(/^\s+|\s+$/g, "");
-                this.$["wmlink-all-area"].style.setProperty("border", "1px solid #303F9F");
+                this.$["wmlink-all-area"].style.setProperty("border", "0px solid #303F9F");
                 var self=this;
                 var exTimerId=timerId;
                 var timerId=setTimeout(function(){
@@ -208,7 +206,7 @@ Polymer({
                     self.$["wmlink-grab-area"].className=(self.$["wmlink-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
                     self.$["wmlink-all-area"].className=self.$["wmlink-all-area"].className.replace("stable", "");
                     if(self.windowOpen!==true) self.$["wmlink-all-area"].className+=" stable";
-                    self.$["wmlink-all-area"].style.setProperty("border", "1px solid #37474F");
+                    self.$["wmlink-all-area"].style.setProperty("border", "0px solid #37474F");
                 }, 200);
             }
         }.bind(this);
@@ -236,7 +234,8 @@ Polymer({
                     this.$["wmlink-all-area"].style.setProperty("z-index", self.zindex);
                     self.fire("updated:z-index", {"value":0});
 
-                    this.$["wmlink-all-area"].style.setProperty("border", "1px solid #37474F");
+
+                    this.$["wmlink-all-area"].style.setProperty("border", "0px solid #37474F");
                     this.$["wmlink-all-area"].style.setProperty("width", "25px");
                     this.$["wmlink-all-area"].style.setProperty("border-radius", "50%");
                     this.$["wmlink-all-area"].style.setProperty("height", "26px");
@@ -255,7 +254,8 @@ Polymer({
                     this.$["wmlink-all-area"].style.setProperty("z-index", self.zindex);
                     self.fire("updated:z-index", {"value":self.zindex});
 
-                    this.$["wmlink-all-area"].style.setProperty("border", "1px solid #37474F");
+
+                    this.$["wmlink-all-area"].style.setProperty("border", "0px solid #37474F");
                     this.$["wmlink-all-area"].style.setProperty("width", "100px");
                     this.$["wmlink-all-area"].style.setProperty("border-radius", "7px 7px 0px 0px");
                     this.$["wmlink-all-area"].style.setProperty("height", "0px");
@@ -264,12 +264,12 @@ Polymer({
                     this.$["wmlink-all-area"].className=this.$["wmlink-all-area"].className.replace("stable", "");
 
                     this.$["wmlink-grab-area"].style.setProperty("border-radius", "0%");
-                    this.$["wmlink-grab-area"].style.setProperty("width", "560px");
+                    this.$["wmlink-grab-area"].style.setProperty("width", "559px");
                     this.$["wmlink-grab-area"].style.setProperty("border-radius", "5px 5px 0px 0px");
                     this.$["wmlink-grab-area"].style.setProperty("box-shadow", "0 0 0 rgba(0,0,0,0), 0 0 0 rgba(0,0,0,0)");
  
                     this.$["target-synth"].style.setProperty("height", "300px");
-                    this.$["target-synth"].style.setProperty("width", "556px");
+                    this.$["target-synth"].style.setProperty("width", "558px");
                     this.$["target-synth"].style.setProperty("height", "400px");
                 }
                 self.windowOpen=!self.windowOpen;

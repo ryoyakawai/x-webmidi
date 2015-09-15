@@ -7,11 +7,12 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
   #pckey-info {
     display:none;
     transition:0.5s;
+    margin:5px;
   }
   #kb-all-area {
     position:absolute;
     display:inline-block;
-    border:1px solid #37474F;
+    border:0px solid #37474F;
     vertical-align: middle;
     text-align:left;
     text-valigh:middle;
@@ -293,7 +294,7 @@ Polymer({
                     self.$["kb-info-area"].style.setProperty("z-index", self.zindex);
                     self.fire("updated:z-index", {"value":0});
 
-                    self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+                    self.$["kb-all-area"].style.setProperty("border", "0px solid #37474F");
                     self.$["kb-grab-area"].style.setProperty("width", "26px");
                     self.$["kb-grab-area"].style.setProperty("border-radius", "50%");
                     if(self.$["kb-all-area"].className.match(/stable/)==null) self.$["kb-all-area"].className+=" stable";
@@ -313,7 +314,7 @@ Polymer({
                     self.$["kb-info-area"].style.setProperty("z-index", self.zindex);
                     self.fire("updated:z-index", {"value":self.zindex});
 
-                    self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+                    self.$["kb-all-area"].style.setProperty("border", "0px solid #37474F");
                     self.$["kb-grab-area"].style.setProperty("width", "540px");
                     self.$["kb-grab-area"].style.setProperty("border-radius", "3px 3px 0px 0px");
                     self.$["kb-all-area"].className=self.$["kb-all-area"].className.replace("stable", "");
@@ -378,7 +379,7 @@ Polymer({
         this.$["kb-grab-area"].className=(this.$["kb-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
         this.$["kb-grab-area"].className+=" midianimation";
         this.$["kb-all-area"].className=(this.$["kb-all-area"].className.replace("stable", "")).replace(/^\s+|\s+$/g, "");
-        this.$["kb-all-area"].style.setProperty("border", "1px solid #303F9F");
+        this.$["kb-all-area"].style.setProperty("border", "0px solid #303F9F");
         var exTimerId=timerId;
         var self=this;
         var timerId=setTimeout(function(){
@@ -387,7 +388,7 @@ Polymer({
             self.$["kb-grab-area"].className=(self.$["kb-grab-area"].className.replace("midianimation", "")).replace(/^\s+|\s+$/g, "");
             self.$["kb-all-area"].className=self.$["kb-all-area"].className.replace("stable", "");
             if(self.infoOpen!==true) self.$["kb-all-area"].className+=" stable";
-            self.$["kb-all-area"].style.setProperty("border", "1px solid #37474F");
+            self.$["kb-all-area"].style.setProperty("border", "0px solid #37474F");
         }, 200);
     },
     keyDownHandler: function(event){

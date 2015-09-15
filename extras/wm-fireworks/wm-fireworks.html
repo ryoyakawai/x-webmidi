@@ -177,11 +177,6 @@ Distributed under the MIT License (license terms are at http://opensource.org/li
 Polymer({
     is: "wm-fireworks",
     properties: {
-        mode: {
-            tyep: String,
-            value: null
-        },
-        
     },
     ready: function() {
         this.fireworksCount=0;
@@ -189,7 +184,11 @@ Polymer({
         this.isPlaying=0;
         this.playingMax=10;
     },
-    fireon: function(message) {
+    fireon: function(mode, message) {
+        if(typeof message=="undefined") {
+            message=mode;
+            mode="normal";
+        }
         if(this.isPlaying>this.playingMax) {
             console.info("[info] Exeeded max count.");
             return {"status": false };
@@ -201,7 +200,7 @@ Polymer({
         var fireColorType=("00"+Math.floor(8.9*Math.random())).substr(-2);
 
         var top_pos=0, left_pos=0;
-        switch(this.mode) {
+        switch(mode) {
             case "midi":
                 if(message[0].toString(16).substr(0, 1)=="9") {
                     pos_tmp=message[1]%12;
@@ -213,7 +212,7 @@ Polymer({
                     return {"status": true, "type":"stop"};
                 }
                 break;
-            case "":
+            case "normal":
                 default:
                 top_tmp=(100+aa*parseInt(Math.random()*100, 10));  // move top-bottom
                 left_tmp=(300+aa*parseInt(Math.random()*400, 10)); // move right-left
@@ -280,16 +279,18 @@ Polymer({
 
 
         // play sound
-        if(this.mode=="midi") {
+        if(mode=="midi") {
             var out=[
                 {"msg":[0xc9, 0x10], "timing":0},
                 {"msg":[0x99, 0x24, 0x33], "timing":0},
+                {"msg":[0x89, 0x24, 0x33], "timing":0+10},
             ];
             var note=[0x24, 0x29, 0x2b, 0x2d];
             for(var i=0; i<13; i++) {
                 var pnote=note[Math.floor((note.length-1)*Math.random())];
                 var timing=2500+parseInt(Math.random()*200, 10);
                 out.push({"msg":[0x99, pnote, 0x33], "timing":timing});
+                out.push({"msg":[0x89, pnote, 0x33], "timing":parseInt(timing)+10});
             }
             if(typeFireAfter=="1") {
                 out.push({"msg":[0xc1, 0x7e], "timing":0});
