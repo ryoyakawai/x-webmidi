@@ -1,0 +1,24 @@
+<!--
+Copyright (c) 2015 Ryoya Kawai. All rights reserved.
+Distributed under the MIT License (license terms are at http://opensource.org/licenses/MIT).
+-->
+<dom-module id="wm-smfplayer">
+  <style></style>
+  <template></template>
+</dom-module>
+<script type="text/javascript">
+Polymer({
+    is:"wm-smfplayer",
+    properties: {
+    },
+    ready: function() {
+    },
+    attached: function() {
+        // used be a domReady
+        this.windowOpen=false;
+        var self=this;
+        this.async(function() {
+        }.bind(this));
+    }
+});
+</script>
