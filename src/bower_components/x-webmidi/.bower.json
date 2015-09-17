@@ -1,6 +1,6 @@
 {
   "name": "x-webmidi",
-  "version": "0.10.17",
+  "version": "0.10.19",
   "authors": [
     "Ryoya Kawai"
   ],
@@ -17,14 +17,14 @@
     "polymer": "Polymer/polymer#^1.0.0"
   },
   "homepage": "https://github.com/ryoyakawai/x-webmidi",
-  "_release": "0.10.17",
+  "_release": "0.10.19",
   "_resolution": {
     "type": "version",
-    "tag": "0.10.17",
-    "commit": "78fac6e5a2794ce74a4569df60f89be08d77b28c"
+    "tag": "0.10.19",
+    "commit": "d597533b40289479ac45201311db9ff86bb7159e"
   },
   "_source": "git://github.com/ryoyakawai/x-webmidi.git",
-  "_target": "~0.10.17",
+  "_target": "~0.10.19",
   "_originalSource": "x-webmidi",
   "_direct": true
 }
