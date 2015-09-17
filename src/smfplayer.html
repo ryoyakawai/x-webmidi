@@ -1,0 +1,41 @@
+<html>
+  <head></head>
+  <body>
+    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
+    <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
+    <link rel="import" href="bower_components/polymer/polymer.html">
+    <link rel="import" href="bower_components/x-webmidi/extras/wm-webmidilink/wm-webmidilink.html">
+    <link rel="import" href="bower_components/x-webmidi/extras/wm-smfplayer/wm-smfplayer.html">
+    <x-webmidirequestaccess input output sysex></x-webmidirequestaccess>
+
+    <wm-webmidilink id="wmlink"></wm-webmidilink>
+    <wm-smfplayer id="smfplayer" midifile="contents/ys2_op_gm.mid"></wm-smfplayer>
+
+    output: <x-webmidioutput id="midi-output" autoreselect></x-webmidioutput>
+    <!--<x-webmidioutput id="midi-output" additionalid="wmlink" autoselect="GMPlayer(WebMIDILink)" autoreselect></x-webmidioutput>-->
+    <br>
+
+    <button id="startPlay">Start</button>
+    <button id="stopPlay">Stop</button> <br>
+    <button id="allSoundOff">All Sound Off</button>
+
+    <span style="position:absolute; bottom: 20px; right:20px; color:#999;">MIDI file is downloaded from <a href="http://poteto.sakura.ne.jp/music_ys2.html">here</a>. Thanks!!</span>
+    <div id="msg" style="margin:30px;"></div>
+
+    <script type="text/javascript">
+    var smfPlayer=document.getElementById("smfplayer");
+    document.getElementById("startPlay").addEventListener("mousedown", function(){
+        var output=document.getElementById("midi-output").getOutputDevice();
+        smfPlayer.startPlay(output);
+    });
+    document.getElementById("stopPlay").addEventListener("mousedown", function(){
+        smfPlayer.stopPlay();
+    });
+    document.getElementById("allSoundOff").addEventListener("mousedown", function(){
+        var output=document.getElementById("midi-output").getOutputDevice();
+        smfPlayer.allSoundOff();
+    });
+    </script>
+
+  </body>
+</html>
