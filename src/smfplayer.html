@@ -1,5 +1,7 @@
 <html>
-  <head>SMF Player</head>
+  <head>
+    <title>SMF Player</title>
+  </head>
   <body>
     <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
     <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
@@ -9,7 +11,7 @@
     <x-webmidirequestaccess input output sysex></x-webmidirequestaccess>
 
     <wm-webmidilink id="wmlink"></wm-webmidilink>
-    <wm-smfplayer id="smfplayer" midifile="contents/ys2_op_gm.mid"></wm-smfplayer>
+    <wm-smfplayer id="smfplayer" midifile="contents/ys2_op_gm.mid" latency="1200"></wm-smfplayer>
 
     output: <x-webmidioutput id="midi-output" additionalid="wmlink" autoselect="GMPlayer(WebMIDILink)" autoreselect></x-webmidioutput>
     <br>
