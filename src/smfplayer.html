@@ -14,18 +14,26 @@
     output: <x-webmidioutput id="midi-output" additionalid="wmlink" autoselect="GMPlayer(WebMIDILink)" autoreselect></x-webmidioutput>
     <br>
 
-    <button id="startPlay">Start</button>
-    <button id="stopPlay">Stop</button> <br>
-    <button id="allSoundOff">All Sound Off</button>
+    <button id="startPlay" disabled>Start</button>
+    <button id="stopPlay" disabled>Stop</button> <br>
+    <button id="allSoundOff" disabled>All Sound Off</button>
 
-    <span style="position:absolute; bottom: 20px; right:20px; color:#999;">MIDI file is downloaded from <a href="http://poteto.sakura.ne.jp/music_ys2.html">here</a>. Thanks!!</span>
+    <span style="position:absolute; bottom: 20px; right:20px; color:#999;">MIDI file is downloaded from <a href="http://poteto.sakura.ne.jp/music_ys2.html">here</a>. Thanks!!<br>Song: TO MAKE THE END OF BATTLE Ys2(c) Falcom 1988</span>
     <div id="msg" style="margin:30px;"></div>
 
     <script type="text/javascript">
+    var out_elem=document.getElementById("midi-output")
+    var output=null;
+    out_elem.addEventListener("midioutput-updated:midi-output", function(event){
+        output=out_elem.getOutputDevice();
+        document.getElementById("startPlay").removeAttribute("disabled");
+        document.getElementById("stopPlay").removeAttribute("disabled");
+        document.getElementById("allSoundOff").removeAttribute("disabled");
+    }, false);
+
     var smfPlayer=document.getElementById("smfplayer");
     document.getElementById("startPlay").addEventListener("mousedown", function(){
-        var output=document.getElementById("midi-output").getOutputDevice();
-        smfPlayer.startPlay(output);
+        if(output!=null) smfPlayer.startPlay(output);
     });
     document.getElementById("stopPlay").addEventListener("mousedown", function(){
         smfPlayer.stopPlay();
