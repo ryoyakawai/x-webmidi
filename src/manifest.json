@@ -1,0 +1,12 @@
+{
+  "lang": "ja",
+  "name": "SMF Player",
+  "short_name": "Web Music Developer Meetup",
+  "icons": [{
+        "src": "./images/webmidi-144x144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      }],
+  "start_url": "https://ryoyakawai.github.io/x-webmidi/src/smfplayer.html",
+  "display": "standalone"
+}
