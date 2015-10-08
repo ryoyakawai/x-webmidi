@@ -26,6 +26,7 @@
         div_msg.innerHTML=out.join(" ")+"<br>" + ex_msg.join("<br>");
 
         if(output.checkOutputIdx()!="false") {
+            event.detail.data[0]="0x"+(event.detail.data[0].toString(16)).substr(0,1)+"1";
             output.sendRawMessage(event.detail.data);
         }
     });
