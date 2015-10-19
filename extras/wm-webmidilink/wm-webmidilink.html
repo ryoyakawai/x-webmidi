@@ -120,6 +120,10 @@ Polymer({
             type: Number,
             value: 400
         },
+        linklevel: {
+            type: Number,
+            value: 0
+        }
     },
     ready: function() {
         this.startTiming=window.performance.now();
@@ -134,23 +138,30 @@ Polymer({
         this.ready=false;
 
         var self=this;
-
         var drag=false;
-
-        window.addEventListener("message", function(event){
-            var mode=event.data.split(",");
-            switch(mode[0]) {
-                case "link":
-                    this.fire("wm-webmidilink-ready");
-                    this.ready=true;
-                    this.$["wmlink-loading-image"].style.setProperty("opacity", 0);
-                    //this.$["wmlink-all-area"].className+=" stable";
-                    setTimeout(function(){
-                        this.$["wmlink-loading-image"].style.setProperty("display", "none");
-                    }.bind(this), 600);
-                    break;
-            }
-        }.bind(this), false);
+        if(this.linklevel>0) {
+            window.addEventListener("message", function(event){
+                var mode=event.data.split(",");
+                switch(mode[0]) {
+                    case "link":
+                        activateDisp.bind(this)();
+                        break;
+                }
+                
+            }.bind(this), false);
+        } 
+        else {
+            activateDisp.bind(this)();
+        }
+        function activateDisp() {
+            this.fire("wm-webmidilink-ready");
+            this.ready=true;
+            this.$["wmlink-loading-image"].style.setProperty("opacity", 0);
+            //this.$["wmlink-all-area"].className+=" stable";
+            setTimeout(function(){
+                this.$["wmlink-loading-image"].style.setProperty("display", "none");
+            }.bind(this), 600);
+        }
         
         var createOutputDevice=(function(){
             var MIDIOutput=function(synthname) {
