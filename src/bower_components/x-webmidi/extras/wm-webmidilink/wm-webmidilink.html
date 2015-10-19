@@ -127,6 +127,10 @@ Polymer({
         linklevel: {
             type: Number,
             value: 0
+        },
+        nogui: {
+            type: Boolean,
+            value: false
         }
     },
     ready: function() {
@@ -202,9 +206,11 @@ Polymer({
         }.bind(this);
 
         // eventListener for z-index
-        document.addEventListener("updated:z-index", function(event){
-            this.zindex=event.detail.value;
-        }.bind(this));
+        if(this.nogui===false) {
+            document.addEventListener("updated:z-index", function(event){
+                this.zindex=event.detail.value;
+            }.bind(this));
+        }
     },
     sendMIDILink: function (message) {
         this.$["target-synth"].contentWindow.postMessage(message.join(","), "*");
@@ -237,56 +243,58 @@ Polymer({
         this.windowOpen=false;
         var self=this;
         this.async(function() {
-            this.$["wmlink-grab-area"].addEventListener("mousedown", function(event){
-                if(self.windowOpen===true) {
-                    self.zindex=0;
-                    this.$["wmlink-all-area"].style.setProperty("z-index", self.zindex);
-                    self.fire("updated:z-index", {"value":0});
+           if(this.nogui===false) {
+                this.$["wmlink-grab-area"].addEventListener("mousedown", function(event){
+                    if(self.windowOpen===true) {
+                        self.zindex=0;
+                        this.$["wmlink-all-area"].style.setProperty("z-index", self.zindex);
+                        self.fire("updated:z-index", {"value":0});
 
 
-                    this.$["wmlink-all-area"].style.setProperty("border", "0px solid #37474F");
-                    this.$["wmlink-all-area"].style.setProperty("width", "25px");
-                    this.$["wmlink-all-area"].style.setProperty("border-radius", "50%");
-                    this.$["wmlink-all-area"].style.setProperty("height", "26px");
-                    this.$["wmlink-all-area"].style.setProperty("width", "26px");
-                    this.$["wmlink-all-area"].className+=" stable";
+                        this.$["wmlink-all-area"].style.setProperty("border", "0px solid #37474F");
+                        this.$["wmlink-all-area"].style.setProperty("width", "25px");
+                        this.$["wmlink-all-area"].style.setProperty("border-radius", "50%");
+                        this.$["wmlink-all-area"].style.setProperty("height", "26px");
+                        this.$["wmlink-all-area"].style.setProperty("width", "26px");
+                        this.$["wmlink-all-area"].className+=" stable";
 
-                    this.$["wmlink-grab-area"].style.setProperty("border-radius", "50%");
-                    this.$["wmlink-grab-area"].style.setProperty("width", "26px");
-                    this.$["wmlink-grab-area"].style.setProperty("box-shadow", "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)");
+                        this.$["wmlink-grab-area"].style.setProperty("border-radius", "50%");
+                        this.$["wmlink-grab-area"].style.setProperty("width", "26px");
+                        this.$["wmlink-grab-area"].style.setProperty("box-shadow", "0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23)");
 
-                    this.$["target-synth"].style.setProperty("height", "0px");
-                    this.$["target-synth"].style.setProperty("width", "0px");
-                    this.$["target-synth"].style.setProperty("border", "0px");
-                } else {
-                    self.zindex++;
-                    this.$["wmlink-all-area"].style.setProperty("z-index", self.zindex);
-                    self.fire("updated:z-index", {"value":self.zindex});
+                        this.$["target-synth"].style.setProperty("height", "0px");
+                        this.$["target-synth"].style.setProperty("width", "0px");
+                        this.$["target-synth"].style.setProperty("border", "0px");
+                    } else {
+                        self.zindex++;
+                        this.$["wmlink-all-area"].style.setProperty("z-index", self.zindex);
+                        self.fire("updated:z-index", {"value":self.zindex});
 
 
-                    this.$["wmlink-all-area"].style.setProperty("border", "0px solid #37474F");
-                    this.$["wmlink-all-area"].style.setProperty("width", "100px");
-                    this.$["wmlink-all-area"].style.setProperty("border-radius", "7px 7px 0px 0px");
-                    this.$["wmlink-all-area"].style.setProperty("height", "0px");
-                    this.$["wmlink-all-area"].style.setProperty("height", "426px");
-                    //this.$["wmlink-all-area"].style.setProperty("width", "559px");
-                    this.$["wmlink-all-area"].style.setProperty("width", this.width+"px");
-                    this.$["wmlink-all-area"].className=this.$["wmlink-all-area"].className.replace("stable", "");
+                        this.$["wmlink-all-area"].style.setProperty("border", "0px solid #37474F");
+                        this.$["wmlink-all-area"].style.setProperty("width", "100px");
+                        this.$["wmlink-all-area"].style.setProperty("border-radius", "7px 7px 0px 0px");
+                        this.$["wmlink-all-area"].style.setProperty("height", "0px");
+                        this.$["wmlink-all-area"].style.setProperty("height", "426px");
+                        //this.$["wmlink-all-area"].style.setProperty("width", "559px");
+                        this.$["wmlink-all-area"].style.setProperty("width", this.width+"px");
+                        this.$["wmlink-all-area"].className=this.$["wmlink-all-area"].className.replace("stable", "");
 
-                    this.$["wmlink-grab-area"].style.setProperty("border-radius", "0%");
-                    //this.$["wmlink-grab-area"].style.setProperty("width", "559px");
-                    this.$["wmlink-grab-area"].style.setProperty("width", this.width+"px");
-                    this.$["wmlink-grab-area"].style.setProperty("border-radius", "5px 5px 0px 0px");
-                    this.$["wmlink-grab-area"].style.setProperty("box-shadow", "0 0 0 rgba(0,0,0,0), 0 0 0 rgba(0,0,0,0)");
- 
-                    this.$["target-synth"].style.setProperty("height", "300px");
-                    //this.$["target-synth"].style.setProperty("width", "558px");
-                    //this.$["target-synth"].style.setProperty("height", "400px");
-                    this.$["target-synth"].style.setProperty("width", this.width+"px");
-                    this.$["target-synth"].style.setProperty("height", this.height+"px");
-                }
-                self.windowOpen=!self.windowOpen;
-            }.bind(this));
+                        this.$["wmlink-grab-area"].style.setProperty("border-radius", "0%");
+                        //this.$["wmlink-grab-area"].style.setProperty("width", "559px");
+                        this.$["wmlink-grab-area"].style.setProperty("width", this.width+"px");
+                        this.$["wmlink-grab-area"].style.setProperty("border-radius", "5px 5px 0px 0px");
+                        this.$["wmlink-grab-area"].style.setProperty("box-shadow", "0 0 0 rgba(0,0,0,0), 0 0 0 rgba(0,0,0,0)");
+                        
+                        this.$["target-synth"].style.setProperty("height", "300px");
+                        //this.$["target-synth"].style.setProperty("width", "558px");
+                        //this.$["target-synth"].style.setProperty("height", "400px");
+                        this.$["target-synth"].style.setProperty("width", this.width+"px");
+                        this.$["target-synth"].style.setProperty("height", this.height+"px");
+                    }
+                    self.windowOpen=!self.windowOpen;
+                }.bind(this));
+            }
         }.bind(this));
     }
 });
