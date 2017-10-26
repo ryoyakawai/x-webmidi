@@ -142,18 +142,19 @@ midiout.sendHRMessage("noteoff", 0, ["d4", 127], 1000);
 >
 > **IMPORTANT:** Parameter format of `param` are defined depends on `type` of message to send.
 >
->| type               | param                                                                            |
-| :------------------| :-------------------------------------------------------------------------------- |
-| noteon             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
-| noteoff            | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] |
-| programchange      | *(number)*                                                                        |
-| setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                        |
-| pitchbend          | *(number)*                                                                        |
-| sustain            | *(string)* [`on / off`]                                                           |
-| modulation         | *(number)*                                                                        |
-| allsoundoff        | `null`                                                                            |
-| resetallcontroller | `null`                                                                            |
-| allnoteoff         | `null`                                                                            |
+>
+| type               | param                                                                               | 
+| :------------------| :---------------------------------------------------------------------------------- | 
+| noteon             | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] | 
+| noteoff            | *(array)* [*(string)* note number / (string) int'l key format, *(number)* velocity] | 
+| programchange      | *(number)*                                                                          | 
+| setpitchbendrange  | *(array)* [*(number)* minimum value, *(number)* max value]                          | 
+| pitchbend          | *(number)*                                                                          | 
+| sustain            | *(string)* [`on / off`]                                                             | 
+| modulation         | *(number)*                                                                          | 
+| allsoundoff        | `null`                                                                              | 
+| resetallcontroller | `null`                                                                              | 
+| allnoteoff         | `null`                                                                              | 
 
 
 ## License
