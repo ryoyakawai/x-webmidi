@@ -82,7 +82,7 @@ $ cd x-webmidi;
 
 #### Add eventlistener to obtain MIDI message form selected MIDI input device.
 ```js
-window.addEventListener('midiin-event:foo-input', function(event) {
+window.addEventListener('midiin-event:foo-input', event => {
   // write what you want to do.
   console.log(event.detail.);
 }
@@ -109,20 +109,20 @@ window.addEventListener('midiin-event:foo-input', function(event) {
 #### To send MIDI message to selected MIDI device.
 **Send by Array format (same format as Web MIDI API):**
 ```js
-var midiout=document.getElementById("foo-output");
+let midiout=document.querySelector("#foo-output");
 midiout.sendRawMessage([0x90, 0x45, 0x7f]);
 ```
 **Send by Human-Readable format:**
 
 ```js
 // using int'l format
-var midiout=document.getElementById("foo-output");
+let midiout=document.querySelector("#foo-output");
 midiout.sendHRMessage("noteon", 0, ["D4", 127], 0);
 midiout.sendHRMessage("noteoff", 0, ["D4", 127], 1000);
 ```
 ```js
 // using note number format
-var midiout=document.getElementById("foo-output");
+let midiout=document.querySelector("#foo-output");
 midiout.sendHRMessage("noteon", 0, [62, 127], 0);
 midiout.sendHRMessage("noteoff", 0, [62, 127], 1000);
 
