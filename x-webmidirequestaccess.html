@@ -206,8 +206,8 @@ Polymer({
             function appendOption(name, idx, selectElem, autoSelect) {
                 selectElem.appendChild((new Option(name, idx)));
                 var out=false, outIdx=false;
-                //if(name==autoSelect) {
-                if(name.match(new RegExp(autoSelect))!=null) {
+                var regexp=new RegExp(autoSelect);
+                if(name.match(regexp)) {
                     var op_idx="";
                     for(var i=0; i<selectElem.options.length; i++) {
                         if(parseInt(selectElem.options[i].value, 10)==parseInt(idx, 10)) {
