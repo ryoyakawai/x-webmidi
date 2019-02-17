@@ -1,0 +1,30 @@
+<html>
+  <head>
+  </head>
+  <body>
+    INPUT:
+    <select id="midiin" class="select-midiin">
+      <option value="false">Not Selected</option>
+    </select>
+    <span id="virtual-input"></span>
+<br>
+    OUTPUT:
+    <select id="midiout" class="select-midiout">
+      <option value="false">Not Selected</option>
+    </select>
+    <span id="virtual-output"></span>
+    
+    <script type="module">
+     import { xWebMIDI } from "./xwebmidi.js";
+     (async function(){
+       const xwm = new xWebMIDI();
+       xwm.convertKey2Itnl(50);
+       console.log(xwm);
+       await xwm.requestMIDIAccess(true);
+       console.log(xwm);
+       xwm.initInput('midiin');
+       xwm.initOutput('midioutput');
+     }())
+    </script>
+  </body>
+</html>
