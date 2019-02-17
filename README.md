@@ -84,8 +84,8 @@ $ cd x-webmidi;
 ```js
 window.addEventListener('midiin-event:foo-input', event => {
   // write what you want to do.
-  console.log(event.detail.);
-}
+  console.log(event.detail);
+});
 ```
  - Format of event name: `midiin-event:<ID which corresponds with x-webmidiinput>`
  - Raw MIDI message from Web MIDI API is in `event.detail.data`.
