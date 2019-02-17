@@ -15,42 +15,42 @@ See the License for the specific language governing permissions and
 limitations under the License.
 -->
 <dom-module id="x-webmidioutput">
-  <style type="text/css">
-  .select-midiout {
-    font-family:arial;
-    color:#000;
-    overflow: hidden;
-    outline: none;
-    font-size:15px; /*-webkit-small-control;*/
-    -webkit-appearance: button;
-    -moz-appearance: button;
-    appearance: button;
-    -webkit-border-radius: 6px;
-    -moz-border-radius: 6px;
-    box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    background:#fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAABYCAYAAAAZZrIMAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gwMDjIbBk010QAAASBJREFUeNrt2D0uRGEYhuGHiUShodQolFQq5dQUVqCyATuQsAW2IAobUFrBbGBKBeWUIn6akxAiM86cnw/XlUw/ee9zkpknAQAAAAAAAAAAAAAAAAAA/pSFgr7LTpLrQu/0kmSY5O6/PzD7SV4L/Gx7l98dFhZnKMlXx4XEOZDie2c9xzmSYLqLnuKcOP3svzKvOo5z7uw/M0hy21Gcy8L+evwaS0lGLce5SbLo1PUtJxm3FGdUPQTMaSXJfcNxxlV8GrKWZNJQnIckq07avPUkj3PGmVSxaclmkueacZ6SbDhh+3ZrBtpyuu7sxfhZvFkXcONnj6Yt4MbPApzG+Fm8zwu48bMwHxdw42ehBtWbNHAKAAAAAAAAAAAAAAAo3BvDPY/9X9SQowAAAABJRU5ErkJggg==) no-repeat right center;
-    background-size: 22px 24px;
-    cursor: pointer;
-    vertical-align: middle;
-    user-select: none; /* CSS3 */
-    -moz-user-select: none; /* Firefox */
-    -webkit-user-select: none; /* Safari、Chromeなど */
-    
-    padding:5px 30px 5px 5px;
-    border-radius:2px;
-    border:0px solid #ddd;
-    margin:3px 3px;
-  }
-  .midiactive {
-    box-shadow: 0 1px 1px rgba(0,0,0,0.05), 0 1px 1px rgba(0,0,0,0.05); 
-  }
-  #virtual-output {
-    transition:0.5s;
-  }
-  </style>
   <template>
+    <style type="text/css">
+     .select-midiout {
+       font-family:arial;
+       color:#000;
+       overflow: hidden;
+       outline: none;
+       font-size:15px; /*-webkit-small-control;*/
+       -webkit-appearance: button;
+       -moz-appearance: button;
+       appearance: button;
+       -webkit-border-radius: 6px;
+       -moz-border-radius: 6px;
+       box-sizing: border-box;
+       -webkit-box-sizing: border-box;
+       -moz-box-sizing: border-box;
+       background:#fff url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGgAAABYCAYAAAAZZrIMAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAB3RJTUUH3gwMDjIbBk010QAAASBJREFUeNrt2D0uRGEYhuGHiUShodQolFQq5dQUVqCyATuQsAW2IAobUFrBbGBKBeWUIn6akxAiM86cnw/XlUw/ee9zkpknAQAAAAAAAAAAAAAAAAAA/pSFgr7LTpLrQu/0kmSY5O6/PzD7SV4L/Gx7l98dFhZnKMlXx4XEOZDie2c9xzmSYLqLnuKcOP3svzKvOo5z7uw/M0hy21Gcy8L+evwaS0lGLce5SbLo1PUtJxm3FGdUPQTMaSXJfcNxxlV8GrKWZNJQnIckq07avPUkj3PGmVSxaclmkueacZ6SbDhh+3ZrBtpyuu7sxfhZvFkXcONnj6Yt4MbPApzG+Fm8zwu48bMwHxdw42ehBtWbNHAKAAAAAAAAAAAAAAAo3BvDPY/9X9SQowAAAABJRU5ErkJggg==) no-repeat right center;
+       background-size: 22px 24px;
+       cursor: pointer;
+       vertical-align: middle;
+       user-select: none; /* CSS3 */
+       -moz-user-select: none; /* Firefox */
+       -webkit-user-select: none; /* Safari、Chromeなど */
+
+       padding:5px 30px 5px 5px;
+       border-radius:2px;
+       border:0px solid #ddd;
+       margin:3px 3px;
+     }
+     .midiactive {
+       box-shadow: 0 1px 1px rgba(0,0,0,0.05), 0 1px 1px rgba(0,0,0,0.05);
+     }
+     #virtual-output {
+       transition:0.5s;
+     }
+    </style>
     <select id="midiout" class="select-midiout" >
       <option value="false">Not Selected</option>
     </select>
