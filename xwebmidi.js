@@ -328,16 +328,20 @@ export class xWebMIDI {
     this.fire("midiinput-updated:"+this.id, {"inputIdx": this.inputIdx});
 
     // disp virtual input
+    console.log(inputs[Idx].virtual);
     if(this.inputIdx!="false" && typeof inputs[Idx].virtual!="undefined") {
-      this.$["virtual-input"].className=this.$["virtual-input"].className.replace("none", "");
+      //this.$["virtual-input"].className = this.$["virtual-input"].className.replace("none", "");
+      document.getElementById("virtual-input").className = document.getElementById("virtual-input").className.replace("none", "");
       setTimeout(function(){
         //this.$["virtual-input"].style.setProperty("opacity", 1);
         document.getElementById("virtual-input").style.setProperty("opacity", 1);
       }.bind(this),10);
-    } else  {
-      this.$["virtual-input"].style.setProperty("opacity", 0);
+    } else {
+      //this.$["virtual-input"].style.setProperty("opacity", 0);
+      document.getElementById("virtual-input").style.setProperty("opacity", 0);
       setTimeout(function(){
-        if(this.$["virtual-input"].className.match(/none/)==null) this.$["virtual-input"].className+=" none";
+        //if(this.$["virtual-input"].className.match(/none/)==null) this.$["virtual-input"].className+=" none";
+        if(document.getElementById("virtual-input").className.match(/none/)==null) document.getElementById("virtual-input").className += " none";
       }.bind(this),600);
     }
   }
