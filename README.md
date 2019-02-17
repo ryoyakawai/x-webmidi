@@ -49,7 +49,7 @@ $ cd x-webmidi;
 ```
 ### include and import
 ```html
-<script src="path/to/webcomponents.js"></script>
+<script src="path/to/webcomponents-loader.js"></script>
 <link rel="import" href="x-webmidirequestaccess.html">
 <x-webmidirequestaccess sysex="true" input="true" output="true"></x-webmidirequestaccess>
 ```
