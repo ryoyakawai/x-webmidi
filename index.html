@@ -16,15 +16,15 @@
     
     <script type="module">
      import { xWebMIDI } from "./xwebmidi.js";
-     (async function(){
+     (async () => {
        const xwm = new xWebMIDI();
        xwm.convertKey2Itnl(50);
        console.log(xwm);
        await xwm.requestMIDIAccess(true);
        console.log(xwm);
        xwm.initInput('midiin');
-       xwm.initOutput('midioutput');
-     }())
+       xwm.initOutput('midiout');
+     })();
     </script>
   </body>
 </html>

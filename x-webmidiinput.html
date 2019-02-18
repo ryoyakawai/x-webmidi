@@ -113,7 +113,8 @@ Polymer({
                     var elem=self.$["midiin"];
                     var selected=false
                     switch(detail.member) {
-                        case "new":
+                      case "new":
+                        console.log(detail);
                             result=self.midiAccess.addOptions("input", "add", detail, elem, selected, self.autoselect);
                             break;
                         case "old":
