@@ -22,6 +22,15 @@
        await xwm.requestMIDIAccess(true);
        xwm.initInput('midiin');
        xwm.initOutput('midiout');
+
+       window.addEventListener('midiin-event:midiin', event => {
+         // write what you want to do.
+
+         //let midiout = document.querySelector("#midiout");
+         console.log(event.detail.data);
+         event.detail.data[0] += 0x01
+         xwm.sendRawMessage(event.detail.data)
+       });
      })();
     </script>
   </body>
