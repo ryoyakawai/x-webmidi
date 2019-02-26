@@ -19,9 +19,7 @@
      (async () => {
        const xwm = new xWebMIDI();
        xwm.convertKey2Itnl(50);
-       console.log(xwm);
        await xwm.requestMIDIAccess(true);
-       console.log(xwm);
        xwm.initInput('midiin');
        xwm.initOutput('midiout');
      })();

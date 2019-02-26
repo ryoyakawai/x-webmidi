@@ -50,7 +50,8 @@ export class xWebMIDI {
     switch(type) {
     case 'debug-test':
       for(let key in message) {
-        console.log('[DEBUG-TEST] (' + key + ') ' + message[key]);
+        console.log('[DEBUG-TEST] (' + key + ') ');
+        console.log(message[key]);
       }
       break;
     }
@@ -78,13 +79,11 @@ export class xWebMIDI {
   successCallback(access) {
     this.console_log('debug-test', [access]);
     this.midiAccess = access;
-    this.midiAccess.ready = {
+    //this.midiAccess.ready = {
+    this.ready = {
       input: true,
       output: true
     };
-    if(typeof this.midiAccess.addOptions == "undefined") {
-      this.midiAccess.addOptions = this.addOptions.bind(this);
-    }
     access.onstatechange = function(event){
       let portList;
       if(event.port.type == 'input') portList = this.midi.inputs;
@@ -101,7 +100,7 @@ export class xWebMIDI {
             id: portIdx
           };
           exist = true; Idx = i; // port is existed before: OLD
-          portList[portIdx]=event.port;
+          portList[portIdx] = event.port;
         }
         if(port_exists.status === true) break;
         i++;
@@ -110,7 +109,7 @@ export class xWebMIDI {
       Idx = 0;
       let ex_portIdx = 0;
       if(exist == false) {
-        if(portList == false) portList=[];
+        if(portList == false) portList = [];
         for(let portIdx in portList) {
           if(typeof portList[Idx] == "undefined") {
             break;
@@ -166,7 +165,7 @@ export class xWebMIDI {
       result = this.addOptions.bind(this)(midiType, 'add', { idx: idx, port: additionalDevice }, elemId, exSelected, autoSelect);
       break;
     case 'output':
-      this.midi.outputs[idx]=additionalDevice;
+      this.midi.outputs[idx] = additionalDevice;
       result = this.addOptions.bind(this)(midiType, 'add', { idx: idx, port: additionalDevice }, elemId, exSelected, autoSelect);
       break;
     }
@@ -270,7 +269,8 @@ export class xWebMIDI {
       var result = { autoselected: false, idx: false };
       //var mididom=document.getElementsByTagName("x-webmidirequestaccess");
       var mididom = document.getElementById(elemId);
-      if(self.midiAccess.ready.input == true) {
+      //if(self.midiAccess.ready.input == true) {
+      if(self.ready.input == true) {
         self.console_log('debug-test', ['>>>> EVENT ADDED: IPUT <<<<']);
         //console.log('>>> EVENT ADDED: INPUT'); // debug
         clearInterval(timerId);
@@ -288,6 +288,8 @@ export class xWebMIDI {
         document.getElementById(elemId).addEventListener("change", function(event){
           self.setMIDIINDevice.bind(self)(event.target);
         });
+
+        //////////////////////////
         document.getElementById(elemId).addEventListener('x-webmidi:input-updated', function(event) {
           let result = { autoselected: false, idx: false };
           let port = event.detail.port;
@@ -296,7 +298,8 @@ export class xWebMIDI {
           let selected = false;
           switch(detail.member) {
           case 'new':
-            result = self.midiAccess.addOptions('input', 'add', detail, elemId, selected, self.autoselect);
+            //result = self.midiAccess.addOptions('input', 'add', detail, elemId, selected, self.autoselect);
+            result = self.addOptions('input', 'add', detail, elemId, selected, self.autoselect);
             break;
           case 'old':
             if(self.autoreselect == false && port.state == "disconnected") {
@@ -309,7 +312,8 @@ export class xWebMIDI {
                || detail.port.name == self.autoselect) {
               selected=true;
             }
-            result = self.midiAccess.addOptions("input", "update", detail, elemId, selected, self.autoselect);
+            //result = self.midiAccess.addOptions("input", "update", detail, elemId, selected, self.autoselect);
+            result = self.addOptions("input", "update", detail, elemId, selected, self.autoselect);
             break;
           }
           if(result.autoselected === true) {
@@ -322,11 +326,15 @@ export class xWebMIDI {
             self.fire.bind(self)("midiin-autoselected:" + self.id, {"idx": result.idx}, 'input');
           }
         });
+        //////////////////////////
+
+
         // add aditional input
         if(self.additionalid != "") {
           var virtualElem = document.getElementById(self.additionalid);
           var additionalInput = virtualElem.getInput();
-          var result = self.midiAccess.addAdditionalDevice("input", additionalInput, elemId, "", self.autoselect);
+          //var result = self.midiAccess.addAdditionalDevice("input", additionalInput, elemId, "", self.autoselect);
+          var result = self.addAdditionalDevice("input", additionalInput, elemId, "", self.autoselect);
           //self.$["virtual-input"].appendChild(virtualElem.getElement());
           document.getElementById("virtual-input").appendChild(virtualElem.getElement());
           if(result.autoselected === true) {
@@ -391,20 +399,22 @@ export class xWebMIDI {
       }.bind(this),600);
     }
   }
+
   // for input
   onMIDIMessage(event){
     var d16 = [];
     var p_d16 = this.parseMIDIMessage(event.data);
     p_d16.device = this.midi.inputs[this.inputIdx];
     p_d16.device.Idx = this.inputIdx;
-
+    console.log(this.inputIdx);
     for(var i=0; i<event.data.length; i++) {
       d16.push("0x"+("0"+event.data[i].toString(16)).slice(-2));
     }
     //
     // [NEED TO THINK] informing that that the Midimessage is recieved in input
     //
-    if(p_d16.type!="notObject") this.fire.bind(this)("midiin-event:"+this.id, p_d16, 'input');
+    //if(p_d16.type!="notObject") this.fire.bind(this)("midiin-event:"+this.id, p_d16, 'input');
+    if(p_d16.type!="notObject") this.fire.bind(this)("midiin-event:"+this.inputIdx, p_d16, 'input');
     this.updateInputIndicator.bind(this)();
   }
   // for input
@@ -432,20 +442,22 @@ export class xWebMIDI {
       var result = { autoselected: false, idx: false };
       //var mididom=document.getElementsByTagName("x-webmidirequestaccess");
       var mididom = document.getElementById(elemId);
-      if(self.midiAccess.ready.input == true) {
+      //if(self.midiAccess.ready.input == true) {
+      if(self.ready.input == true) {
         clearInterval(timerId);
-        result = self.midiAccess.addOptions("output", "add", {"idx": "all"}, elemId, null, self.autoselect);
+        //result = self.midiAccess.addOptions("output", "add", {"idx": "all"}, elemId, null, self.autoselect);
+        result = self.addOptions("output", "add", {"idx": "all"}, elemId, null, self.autoselect);
         if(result.autoselected===true) {
-          // fire setMIDIINDevice
+          // fire setMIDIOUTDevice
           var target={ value: result.idx };
-          self.setMIDIINDevice.bind(self)(target);
+          self.setMIDIOUTDevice.bind(self)(target);
           //
           // [NEED TO THINK]
           //
           self.fire("midiout-autoselected:output-port", { idx : result.idx }, 'output');
         }
         document.getElementById(elemId).addEventListener("change", function(event){
-          self.setMIDIINDevice.bind(self)(event.target);
+          self.setMIDIOUTDevice.bind(self)(event.target);
         });
         document.getElementById(elemId).addEventListener("x-webmidi:output-updated", function(event){
           var result = {autoselected: false, idx:false };
@@ -454,7 +466,8 @@ export class xWebMIDI {
           var selected = false;
           switch(detail.member) {
           case "new":
-            result = self.midiAccess.addOptions("output", "add", detail, elemId, selected, self.autoselect);
+            //result = self.midiAccess.addOptions("output", "add", detail, elemId, selected, self.autoselect);
+            result = self.addOptions("output", "add", detail, elemId, selected, self.autoselect);
             break;
           case "old":
             if(self.autoreselect == false && port.state == "disconnected") {
@@ -467,13 +480,14 @@ export class xWebMIDI {
                || detail.port.name==self.autoselect) {
               selected=true;
             }
-            result=self.midiAccess.addOptions("output", "update", detail, elemId, selected, self.autoselect);
+            //result=self.midiAccess.addOptions("output", "update", detail, elemId, selected, self.autoselect);
+            result=self.addOptions("output", "update", detail, elemId, selected, self.autoselect);
             break;
           }
           if(result.autoselected===true) {
-            // fire setMIDIINDevice
+            // fire setMIDIOUTDevice
             var target = { value: result.idx };
-            self.setMIDIINDevice.bind(self)(target);
+            self.setMIDIOUTDevice.bind(self)(target);
             self.fire.bind(self)("midiout-autoselected:"+self.id, {"idx": result.idx}, 'output');
           }
         });
@@ -481,22 +495,26 @@ export class xWebMIDI {
         if(self.additionalid!="") {
           var virtualElem = document.getElementById(self.additionalid);
           var additionalInput=virtualElem.getInput();
-          var result = self.midiAccess.addAdditionalDevice("output", additionalInput, elemId, "", self.autoselect);
+          //var result = self.midiAccess.addAdditionalDevice("output", additionalInput, elemId, "", self.autoselect);
+          var result = self.addAdditionalDevice("output", additionalInput, elemId, "", self.autoselect);
           document.getElementById("virtual-output").appendChild(virtualElem.getElement());
           if(result.autoselected === true) {
-            // fire setMIDIINDevice
+            // fire setMIDIOUTDevice
             var target = { value: result.idx };
-            self.setMIDIINDevice.bind(self)(target);
+            self.setMIDIOUTDevice.bind(self)(target);
             self.fire.bind(this)("midiout-autoselected:" + self.id, {idx: result.idx}, 'output');
           }
         }
       }
     }, 100);
   }
+
   // for output
   setMIDIOUTDevice(target) {
-    var Idx=target.value;
-    var outputs=this.midiAccess.midi.outputs;
+    var Idx = target.value;
+    console.log(this.midi);
+    //var outputs = this.midiAccess.midi.outputs;
+    var outputs = this.midi.outputs;
     if(Idx=="" || Idx=="false" || Idx===false) {
       this.outputIdx="false";
     } else {
@@ -513,14 +531,18 @@ export class xWebMIDI {
 
     // disp virtual output
     if(this.outputIdx!="false" && typeof outputs[Idx].virtual!="undefined") {
-      this.$["virtual-output"].className=this.$["virtual-output"].className.replace("none", "");
+      document.getElementById("virtual-output").className = document.getElementById("virtual-output").className.replace("none", "");
+      //this.$["virtual-output"].className=this.$["virtual-output"].className.replace("none", "");
       setTimeout(function(){
-        this.$["virtual-output"].style.setProperty("opacity", 1);
+        document.getElementById("virtual-output").style.setProperty("opacity", 1);
+        //this.$["virtual-output"].style.setProperty("opacity", 1);
       }.bind(this), 10);
     } else  {
-      this.$["virtual-output"].style.setProperty("opacity", 0);
+      document.getElementById("virtual-output").style.setProperty("opacity", 0);
+      //this.$["virtual-output"].style.setProperty("opacity", 0);
       setTimeout(function(){
-        if(this.$["virtual-output"].className.match(/none/)==null) this.$["virtual-output"].className+=" none";
+        //if(this.$["virtual-output"].className.match(/none/)==null) this.$["virtual-output"].className+=" none";
+        if(document.getElementById("virtual-output").className.match(/none/)==null) document.getElementById("virtual-output").className+=" none";
       }.bind(this), 600);
     }
   }
@@ -577,7 +599,8 @@ export class xWebMIDI {
         return;
       }
       if(typeof param[0]=="string") {
-        param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
+        //param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
+        param[0]=this.convertItnl2Key(param[0].toUpperCase());
       }
       var key=param[0];
       if(param[0]!=parseInt(param[0])) {
@@ -592,7 +615,8 @@ export class xWebMIDI {
         return;
       }
       if(typeof param[0]=="string") {
-        param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
+        //param[0]=this.midiAccess.convertItnl2Key(param[0].toUpperCase());
+        param[0]=this.convertItnl2Key(param[0].toUpperCase());
       }
       var key=param[0];
       if(param[0]!=parseInt(param[0])) {
@@ -674,7 +698,7 @@ export class xWebMIDI {
       }
       let eventTypeByte = msg[0].toString(16);
       event.raw = msg;
-      
+
       if(eventTypeByte.substr(0,1) == "f") {
         // System Common Event & System Realtime
         switch(eventTypeByte) {
