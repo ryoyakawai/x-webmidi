@@ -129,7 +129,6 @@ export class xWebMIDI {
       //
       // [NEED TO THINK] informing to update port in frontend(the select tag on DOM)
       //
-      console.log("!!!!!!!!!!!", event);
       this.fire.bind(this)(
         'x-webmidi:' + event.port.type + '-updated',
         { idx: Idx, member: (exist == true ? 'old' : 'new' ), port: event.port },
@@ -536,7 +535,6 @@ export class xWebMIDI {
         }
       }
     }
-    console.log("!!!!!!!!!!!!", this.midi.outputs[this.outputIdx], this.midi.outputs[this.outputIdx].name);
     // [NEED TO THINK] infroming frontend that port is updated(added/updated/removed)
     //this.fire.bind(this)("midioutput-updated:"+this.id, {"outputIdx": this.outputIdx}, 'output');
     //////this.fire.bind(this)("midioutput-updated:" + this.targetDomId.output, { outputIdx: this.outputIdx}, 'output');
