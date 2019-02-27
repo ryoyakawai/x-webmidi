@@ -18,7 +18,6 @@
      import { xWebMIDI } from "./xwebmidi.js";
      (async () => {
        const xwm = new xWebMIDI();
-       xwm.convertKey2Itnl(50);
        await xwm.requestMIDIAccess(true);
        xwm.initInput('midiin');
        xwm.initOutput('midiout');
