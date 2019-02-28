@@ -7,7 +7,6 @@ export class xWebMIDI {
     this.midi = { inputs: new Array(), outputs: new Array() };
     this.midiAccess = {};
     this.ready = { input: false, output: false };
-    this.timerId = { input: 0, output: 0 };
     this.autoselect = true;
     this.autoreselect = true;
     this.additionalid = "";
@@ -17,6 +16,8 @@ export class xWebMIDI {
     this.pfmNow = 0;
     this.pitchBendRange = { min:0, max:16384, center:8192 }; // Apple DLS Synth
     this.targetDomId = { input: null, output: null };
+    this.activeTimerId = { input: 0, output: 0 };
+    this.activeClassName = { input: 'xwebmidi-port-active', output: 'xwebmidi-port-active' };
 
     this.itnl2Key = [];
     this.key2Itnl = [];
@@ -235,8 +236,10 @@ export class xWebMIDI {
    * for MIDI INPUT Port
    *
    **/
-  initInput(elemId) {
+  initInput(elemId, activeClassName) {
     this.targetDomId.input = elemId;
+    if(typeof activeClassName!= "undefined") this.activeClassName.input = activeClassName;
+
     document.getElementById(elemId).addEventListener("change", function(event){
       this.setMIDIINDevice.bind(this)(event.target);
     }.bind(this));
@@ -248,28 +251,6 @@ export class xWebMIDI {
       let target = { value :result.idx };
       this.setMIDIINDevice.bind(this)(target);
     }
-/*
-    // virtual input
-    // add aditional input
-    if(self.additionalid != "") {
-      let virtualElem = document.getElementById(self.additionalid);
-      let additionalInput = virtualElem.getInput();
-      //let result = self.midiAccess.addAdditionalDevice("input", additionalInput, elemId, "", self.autoselect);
-      let result = self.addAdditionalDevice("input", additionalInput, elemId, "", self.autoselect);
-      //self.$["virtual-input"].appendChild(virtualElem.getElement());
-      document.getElementById("virtual-input").appendChild(virtualElem.getElement());
-      if(result.autoselected === true) {
-        // fire setMIDIINDevice
-        let target = { value:result.idx };
-        self.setMIDIINDevice.bind(self)(target);
-        //
-        // [NEED TO THINK]
-        //
-        //self.fire.bind(self)("midiin-autoselected:"+self.id, {"idx": result.idx}, 'input');
-        self.fire.bind(self)("midiin-autoselected:"+self.targetDomId.input, {"idx": result.idx}, 'input');
-      }
-    }
-*/
   }
   async setMIDIINDevice(target){
     let Idx = target.value;
@@ -293,15 +274,6 @@ export class xWebMIDI {
           }
         }
       }
-    }
-    if(this.inputIdx!="false" && typeof inputs[Idx].virtual!="undefined") {
-      document.getElementById("virtual-input").className = document.getElementById("virtual-input").className.replace("none", "");
-      await this.sleep(10);
-      document.getElementById("virtual-input").style.setProperty("opacity", 1);
-    } else {
-      document.getElementById("virtual-input").style.setProperty("opacity", 0);
-      await this.sleep(600);
-      if(document.getElementById("virtual-input").className.match(/none/)==null) document.getElementById("virtual-input").className += " none";
     }
   }
   inputUpdated(event) {
@@ -334,18 +306,17 @@ export class xWebMIDI {
       this.setMIDIINDevice.bind(this)(target);
     }
   }
-  updateInputIndicator() {
+  async updateInputIndicator() {
     // indicator
-/*
-    if(this.$["midiin"].className.match("midiactive") == null) {
-      this.$["midiin"].className=this.$["midiin"].className.replace(/^\s+|\s+$/g, "")+" midiactive";
-    }
-    let exTimerId = this.timerId.input;
-    this.timerId.input = setTimeout(function() {
-      clearTimeout(exTimerId);
-      this.$["midiin"].className=this.$["midiin"].className.replace("midiactive", "").replace(/^\s+|\s+$/g, "");
-    }.bind(this), 300);
-*/
+    let target = document.getElementById(this.targetDomId.input);
+    window.clearTimeout(this.activeTimerId.input);
+    target.classList.remove(this.activeClassName.input);
+    await this.sleep(5);
+    target.classList.add(this.activeClassName.input);
+    this.activeTimerId.input = window.setTimeout(() => {
+      target.classList.remove(this.activeClassName.input);
+      this.activeTimerId.input = 0;
+    }, 600);
   }
   onMIDIMessage(event){
     let d16 = [];
@@ -365,8 +336,6 @@ export class xWebMIDI {
     event.detail = values;
     event.initEvent(event_name, true, true);
     target.dispatchEvent(event);
-    //var err = new Error();
-    //console.log('[FIRED] ' + event_name, values, target, err.stack);
   }
 
 
@@ -375,8 +344,9 @@ export class xWebMIDI {
    * for MIDI OUTPUT Port
    *
    **/
-  initOutput(elemId) {
+  initOutput(elemId, activeClassName) {
     this.targetDomId.output = elemId;
+    if(typeof activeClassName!= "undefined") this.activeClassName.output = activeClassName;
 
     document.getElementById(elemId).addEventListener("change", function(event){
       this.setMIDIOUTDevice.bind(this)(event.target);
@@ -390,22 +360,6 @@ export class xWebMIDI {
       let target={ value: result.idx };
       this.setMIDIOUTDevice.bind(this)(target);
     }
-/*
-    // virtual output
-    // add aditional output
-    if(this.additionalid!="") {
-      let virtualElem = document.getElementById(this.additionalid);
-      let additionalOutput=virtualElem.getOutput();
-      let result = this.addAdditionalDevice("output", additionalOutput, elemId, "", this.autoselect);
-      document.getElementById("virtual-output").appendChild(virtualElem.getElement());
-      if(result.autoselected === true) {
-        // fire setMIDIOUTDevice
-        let target = { value: result.idx };
-        this.setMIDIOUTDevice.bind(this)(target);
-        this.fire.bind(this)("midiout-autoselected:" + this.targetDomId.output, {idx: result.idx}, 'output');
-      }
-    }
-*/
   }
   async setMIDIOUTDevice(target) {
     let Idx = target.value;
@@ -421,16 +375,6 @@ export class xWebMIDI {
           }
         }
       }
-    }
-    // disp virtual output
-    if(this.outputIdx!="false" && typeof outputs[Idx].virtual!="undefined") {
-      document.getElementById("virtual-output").className = document.getElementById("virtual-output").className.replace("none", "");
-      await this.sleep(10);
-      document.getElementById("virtual-output").style.setProperty("opacity", 1);
-    } else  {
-      document.getElementById("virtual-output").style.setProperty("opacity", 0);
-      await this.sleep(600);
-      if(document.getElementById("virtual-output").className.match(/none/)==null) document.getElementById("virtual-output").className+=" none";
     }
   }
   outputUpdated(event) {
@@ -473,18 +417,17 @@ export class xWebMIDI {
     return status;
   }
   // for output
-  updateOutputIndicator() {
+  async updateOutputIndicator() {
     // indicator
-/*
-    if(this.$["midiout"].className.match("midiactive")==null) {
-      this.$["midiout"].className=this.$["midiout"].className.replace(/^\s+|\s+$/g, "")+" midiactive";
-    }
-    let exTimerId = this.timerId.output;
-    this.timerId.output = setTimeout(function(){
-      clearTimeout(exTimerId);
-      this.$["midiout"].className=this.$["midiout"].className.replace("midiactive", "").replace(/^\s+|\s+$/g, "");
-    }.bind(this), 300);
-*/
+    let target = document.getElementById(this.targetDomId.output);
+    window.clearTimeout(this.activeTimerId.output);
+    target.classList.remove(this.activeClassName.output);
+    await this.sleep(10);
+    target.classList.add(this.activeClassName.output);
+    this.activeTimerId.output = window.setTimeout(() => {
+      target.classList.remove(this.activeClassName.output);
+      this.activeTimerId.output = 0;
+    }, 1000);
   }
   sendRawMessage(msg, timestamp) {
     if(this.checkOutputIdx()=="false") {
@@ -495,9 +438,6 @@ export class xWebMIDI {
     }
     this.initializePerformanceNow();
     let sendTimestamp = this.pfmNow+timestamp;
-    if(this.midi.outputs[this.outputIdx].virtual==true) {
-      sendTimestamp = timestamp;
-    }
     this.midi.outputs[this.outputIdx].send(msg, sendTimestamp);
 
     // indicator
@@ -593,9 +533,6 @@ export class xWebMIDI {
     if(msg!=false) {
       this.initializePerformanceNow();
       let sendTimestamp=this.pfmNow+timestamp;
-      if(this.midi.outputs[this.outputIdx].virtual==true) {
-        sendTimestamp=timestamp;
-      }
       this.midi.outputs[this.outputIdx].send(msg, sendTimestamp);
       // indicator
       this.updateOutputIndicator.bind(this)();
