@@ -438,11 +438,6 @@ export class xWebMIDI {
     }
     this.initializePerformanceNow();
     let sendTimestamp = this.pfmNow+timestamp;
-/*
-    if(this.midi.outputs[this.outputIdx].virtual==true) {
-      sendTimestamp = timestamp;
-    }
-*/
     this.midi.outputs[this.outputIdx].send(msg, sendTimestamp);
 
     // indicator
@@ -538,11 +533,6 @@ export class xWebMIDI {
     if(msg!=false) {
       this.initializePerformanceNow();
       let sendTimestamp=this.pfmNow+timestamp;
-/*
-      if(this.midi.outputs[this.outputIdx].virtual==true) {
-        sendTimestamp=timestamp;
-      }
-*/
       this.midi.outputs[this.outputIdx].send(msg, sendTimestamp);
       // indicator
       this.updateOutputIndicator.bind(this)();
