@@ -36,6 +36,24 @@ export class xWebMIDI {
     this.itnl2Key["A0"]=21,  this.key2Itnl[21]="A0";
     this.itnl2Key["A#0"]=22, this.key2Itnl[22]="A#0";
     this.itnl2Key["B0"]=23,  this.key2Itnl[23]="B0";
+
+    this.addLinkStyleSheet();
+  }
+  addLinkStyleSheet() {
+    let head_link = document.head.getElementsByTagName("link");
+    let isFound = false;
+    for(let i in head_link) {
+      if(head_link[i].rel == "stylesheet") {
+        isFound = true;
+        break;
+      }
+    }
+    if(isFound == false) {
+      let link_rel_css = document.createElement("link");
+      link_rel_css.rel = "stylesheet";
+      link_rel_css.href = "./xwebmidi.css";
+      document.head.appendChild(link_rel_css);
+    }
   }
   initializePerformanceNow() {
     this.pfmNow = window.performance.now();
@@ -119,8 +137,15 @@ export class xWebMIDI {
       }
     }
     if(port_exists.status == false) {
-      portList.push(event.port);
-      port_exists.id = portList.length - 1;
+      let index_max = 0;
+      for(let key in portList) {
+        if(key < 99999) {
+          index_max = key;
+        }
+      };
+      console.log(index_max);
+      portList[index_max] = event.port;
+      port_exists.id = index_max;
     }
 
     this.midi[event.port.type + "s"] = portList;
@@ -134,6 +159,11 @@ export class xWebMIDI {
       this.outputUpdated({detail: value_detail});
       break;
     }
+  }
+  setSoftwareOutputDeveice(additionalDevice, additionalDeviceName, elemId, exSelected, autoSelect) {
+    let _additionalDevice = additionalDevice;
+    _additionalDevice.name = additionalDeviceName;
+    return this.addAdditionalDevice('output', _additionalDevice, elemId, exSelected, autoSelect);
   }
   addAdditionalDevice(midiType, additionalDevice, elemId, exSelected, autoSelect) {
     let result = { autoselected: false, idx: false };
@@ -152,7 +182,7 @@ export class xWebMIDI {
   }
   addOptions(midiType, updateType, detail, selectElemId, exSelected, autoSelect) {
     let elem = document.getElementById(selectElemId);
-    let ports, result = {autoselected: false, idx:false};
+    let ports, result = { autoselected: false, idx:false };
     let addIdx = detail.idx;
     let err = new Error();
 
@@ -168,9 +198,8 @@ export class xWebMIDI {
     switch(updateType) {
     case 'add':
       if(addIdx == 'all') {
-        if (midiType == "input") {
-        }
-        let i=0;
+        if (midiType == "input") { }
+        let i = 0;
         for(let idx in ports) {
           out = this._appendOption.bind(this)(ports[idx].name, i, selectElemId, autoSelect);
           if(out.autoselected === true) result = out;
@@ -419,7 +448,6 @@ export class xWebMIDI {
   }
   async setMIDIOUTDevice(target) {
     let Idx = target.value;
-    //let outputs = this.midiAccess.midi.outputs;
     let outputs = this.midi.outputs;
     if(Idx == "" || Idx == "false" || Idx === false) {
       this.outputIdx="false";
