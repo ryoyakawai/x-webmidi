@@ -15,63 +15,63 @@
  **/
 
 document.getElementById("midiMsgB").addEventListener("click", function(event){
-    var midiin=document.getElementById("input-port-01");
-    var msg=(document.getElementById("midiMsg").value).split(" ");
-    var ret=midiin.parseMIDIMessage([parseInt(msg[0]), parseInt(msg[1]), parseInt(msg[2])]);
-    var disp=document.getElementById("result");
-    var out=[];
-    out.push("[Type] "+ret.type);
-    out.push("[subType] "+ret.property.subType);
-    if(ret.type=="channel") {
-        out.push("[channel] "+ret.property.channel);
-        out.push("[noteNum] "+ret.property.noteNumber);
-        if(typeof ret.property.frequency!="undefined") out.push("[frequency] "+ret.property.frequency);
-        out.push("[velocity] "+ret.property.velocity);
-        out.push("[key] "+ret.property.itnl);
-        out.push("[velocity] "+ret.property.velocity);
-    }
-    out.push("[raw] "+ret.property.raw.join(" "));
+  var midiin=document.getElementById("input-port-01");
+  var msg=(document.getElementById("midiMsg").value).split(" ");
+  var ret=midiin.parseMIDIMessage([parseInt(msg[0]), parseInt(msg[1]), parseInt(msg[2])]);
+  var disp=document.getElementById("result");
+  var out=[];
+  out.push("[Type] "+ret.type);
+  out.push("[subType] "+ret.property.subType);
+  if(ret.type=="channel") {
+    out.push("[channel] "+ret.property.channel);
+    out.push("[noteNum] "+ret.property.noteNumber);
+    if(typeof ret.property.frequency!="undefined") out.push("[frequency] "+ret.property.frequency);
+    out.push("[velocity] "+ret.property.velocity);
+    out.push("[key] "+ret.property.itnl);
+    out.push("[velocity] "+ret.property.velocity);
+  }
+  out.push("[raw] "+ret.property.raw.join(" "));
 
-    disp.innerText=out.join("\n");
+  disp.innerText=out.join("\n");
 });
 
 var voice=[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
 window.addEventListener("midioutput-updated:output-port-01", function(){
-    var midiout=document.getElementById("output-port-01");
-    
-    // display control-area
-        var elem=document.getElementById("controlarea");
-    elem.style.setProperty("display", "block");
-    elem.style.setProperty("visibility", "visible");
-    elem.style.setProperty("opacity", "1");
-    elem.style.removeProperty("margin-top");
-    
-    elem=document.querySelector(".select-device");
-    elem.style.setProperty("opacity", "0");
-    setTimeout(function(){
-        document.querySelector(".select-device").style.setProperty("display", "none");
-    }, 600);
-    
-    elem=document.querySelector(".cover");
-    elem.style.setProperty("display", "none");
+  var midiout=document.getElementById("output-port-01");
 
-    // update programchange name
+  // display control-area
+  var elem=document.getElementById("controlarea");
+  elem.style.setProperty("display", "block");
+  elem.style.setProperty("visibility", "visible");
+  elem.style.setProperty("opacity", "1");
+  elem.style.removeProperty("margin-top");
+
+  elem=document.querySelector(".select-device");
+  elem.style.setProperty("opacity", "0");
+  setTimeout(function(){
+    document.querySelector(".select-device").style.setProperty("display", "none");
+  }, 600);
+
+  elem=document.querySelector(".cover");
+  elem.style.setProperty("display", "none");
+
+  // update programchange name
+  updateProgramChange();
+
+  // virtual keyboard
+  var midiout=document.getElementById("output-port-01");
+  var fkey=document.getElementById("flatkey");
+  fkey.setMIDIAccess(midiout.midiAccess);
+  if(midiout.checkOutputIdx!="false") {
+    fkey.setMidiDevice(midiout.getOutputDevice());
+  }
+  document.getElementById("changeChValue").addEventListener("change", function(event){
+    var ch=(parseInt(event.target.value)).toString(16);
+    fkey.setChannel(ch);
+    document.getElementById("prgChange").value=voice[parseInt("0x"+ch)];
     updateProgramChange();
-    
-    // virtual keyboard
-    var midiout=document.getElementById("output-port-01");
-    var fkey=document.getElementById("flatkey");
-    fkey.setMIDIAccess(midiout.midiAccess);
-    if(midiout.checkOutputIdx!="false") {
-        fkey.setMidiDevice(midiout.getOutputDevice());
-    }
-    document.getElementById("changeChValue").addEventListener("change", function(event){
-        var ch=(parseInt(event.target.value)).toString(16);
-        fkey.setChannel(ch);
-        document.getElementById("prgChange").value=voice[parseInt("0x"+ch)];
-        updateProgramChange();
-    });
-    });
+  });
+});
 
 // for fireTriText
 document.getElementById("fireTri").addEventListener("click", function() {
@@ -79,7 +79,7 @@ document.getElementById("fireTri").addEventListener("click", function() {
     var ch=(parseInt(document.getElementById("changeChValue").value)-1).toString(16);
 
     midiout.sendHRMessage("programchange", ch, 12);
-    
+
     midiout.sendHRMessage("noteon", ch, ["D4", 127], 0);
     midiout.sendHRMessage("noteoff", ch, ["D4", 0], 120);
 

@@ -4,16 +4,12 @@
     <meta charset="utf-8">
     <title>x-webmidi Demo | powered by polymer</title>
     <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./xwebmidi.css">
     <style type="text/css">
     body{ margin:20px; font-family:Helvetica; font-size:0.85em; }
     </style>
   </head>
   <body>
-    <script src="bower_components/webcomponentsjs/webcomponents.js"></script>
-    <link rel="import" href="bower_components/x-webmidi/x-webmidirequestaccess.html">
-    <link rel="import" href="components/wm-flatkey/wm-flatkey.html">
-
-    <x-webmidirequestaccess sysex input output></x-webmidirequestaccess>
 
     <div class="main-container">
     <h1>x-webmidi Demo</h1>
@@ -23,69 +19,71 @@
       <div id="parseMIDIMsg">To test parse MIDI message</div>
       <input id="midiMsg" size="50" style="border-radius: 4px;" value="0x90 0x4f 0x7f"><input id="midiMsgB" type="button" value="Parse MIDI Message">
       <div id="result" style="background-color:#efefef; border: 1px solid rgb(175, 175, 175); border-top-left-radius: 3px; border-top-right-radius: 3px; border-bottom-right-radius: 3px; border-bottom-left-radius: 3px; height: 200px; width: 400px; word-wrap: break-word; overflow: auto; font-family: monospace;" "="">(Result Area)</div>
-
+<!--
       <link rel="import" href="./bower_components/x-webmidi/extras/wm-nsx1text/wm-nsx1text.html">
       <input id="text" value="あいうえおかきくけこさしすせそたちつてと">
       <wm-nsx1text id="evy1" type="evy1"></wm-nsx1text>
       <wm-nsx1text id="poke39" type="poke39"></wm-nsx1text>
       <button id="39text">get39SysEx</button>
       <button id="1text">get1SysEx</button>
+-->
       <script>
-      document.getElementById("39text").addEventListener("click", function(event){
-          var text=document.getElementById("text").value;
-          var out=document.getElementById("poke39").convertText2SysEx(text);
-          var midiout=document.getElementById("output-port-01");
-          console.log(out.sysEx, midiout);
-          for(var i=0; i<out.sysEx.length; i++) {
-              midiout.sendRawMessage(out.sysEx[i], 0);
-          }
-          playTone(text.length);
-      });
-      document.getElementById("1text").addEventListener("click", function(event){
-          var text=document.getElementById("text").value;
-          var out=document.getElementById("evy1").convertText2SysEx(text);
-          var midiout=document.getElementById("output-port-01");
-          for(var i=0; i<out.sysEx.length; i++) {
-              midiout.sendRawMessage(out.sysEx[i], 0);
-              console.log(out.sysEx[i]);
-          }
-          playTone(text.length);
-      });
-      function playTone(count) {
-          var interval=400; // (ms)
-          var noteNo=69; // A4
-          var midiout=document.getElementById("output-port-01");
-          for(var i=0; i<count; i++) {
-              midiout.sendRawMessage([0x90, "0x"+(noteNo+i).toString(16), 0x7f], interval*i);
-              midiout.sendRawMessage([0x80, "0x"+(noteNo+i).toString(16), 0x7f], interval*(i+1));
-          }  
-      }
+
+/*
+         document.getElementById("39text").addEventListener("click", function(event){
+           var text=document.getElementById("text").value;
+           var out=document.getElementById("poke39").convertText2SysEx(text);
+           var midiout=document.getElementById("output-port-01");
+           console.log(out.sysEx, midiout);
+           for(var i=0; i<out.sysEx.length; i++) {
+             midiout.sendRawMessage(out.sysEx[i], 0);
+           }
+           playTone(text.length);
+         });
+         document.getElementById("1text").addEventListener("click", function(event){
+           var text=document.getElementById("text").value;
+           var out=document.getElementById("evy1").convertText2SysEx(text);
+           var midiout=document.getElementById("output-port-01");
+           for(var i=0; i<out.sysEx.length; i++) {
+             midiout.sendRawMessage(out.sysEx[i], 0);
+             console.log(out.sysEx[i]);
+           }
+           playTone(text.length);
+         });
+         function playTone(count) {
+           var interval=400; // (ms)
+           var noteNo=69; // A4
+           var midiout=document.getElementById("output-port-01");
+           for(var i=0; i<count; i++) {
+             midiout.sendRawMessage([0x90, "0x"+(noteNo+i).toString(16), 0x7f], interval*i);
+             midiout.sendRawMessage([0x80, "0x"+(noteNo+i).toString(16), 0x7f], interval*(i+1));
+           }
+         }
+*/
       </script>
 <!--
 -->
-
-
       <h2 id="tosendmidi">[TO SEND MIDI MESSAGE]</h2>
       <h3 id="devicesText" style="margin: 0px;">[Routing Diagram]</h3>
       <div><img src="./images/02.png"></div>
       <br>
 
       <h3 id="devicesText" style="margin: 0px;">[Select your device]</h3>
-      <div>input 01: <x-webmidiinput id="input-port-01"></x-webmidiinput> <span id="midiinput-event-01"></span></div>
-      <div>input 02: <x-webmidiinput id="input-port-02"></x-webmidiinput> <span id="midiinput-event-02"></span></div>
-      <div>output: <x-webmidioutput id="output-port-01"></x-webmidioutput></div>
+      <div>input 01: <select id="input-port-01" class="xwebmidi-select-midi"><option value="false">Not Selected</option></select></div>
+      <div>input 02: <select id="input-port-02" class="xwebmidi-select-midi"><option value="false">Not Selected</option></select></div>
+      <div>output: <select id="output-port-01" class="xwebmidi-select-midi"><option value="false">Not Selected</option></select></div>
       <br>
 
 
-      <div id="controlarea"> 
+      <div id="controlarea">
         <div>Pass through Message from input to output.</div>
         <div><input type="checkbox" id="through-message"> through MIDI message from input to output.</div>
         <br>
 
         <div id="fireTriText">Listen to this sound.</div>
-        <div><button id="fireTri">Fire Tritone</button></div>    
+        <div><button id="fireTri">Fire Tritone</button></div>
         <br>
-        
+
         <h3 id="prgChangeText" style="margin: 0px;">[Play sound with ProgramChange]</h3>
         <div id="prgChangeText01" >Select a voice to try lestening sound with your favorite voice!!</div>
         <div id="control">MIDI Ch: <span id="changeCh"><input id="changeChValue" type="number" min="1" max="16" style="width: 40px;" value="1"></span></div>
@@ -101,7 +99,7 @@
         <span id="sendRaw"><input id="sendRaw" type="button" value="Fire MIDI (sendRaw())"></span>
         <br>
         <br>
-        
+
         <div id="prgChangeText02">Play with virtual MIDI keybord</div>
         <div class="div-flatkey"><wm-flatkey id="flatkey" octave="2"></wm-flatkey></div>
       </div>
@@ -115,50 +113,60 @@
 
     <script src="js/voiceList.js"></script>
     <script src="js/app.js"></script>
-    <script type="text/javascript">
-    </script>
 
-    <script type="text/javascript">
-    window.addEventListener('midiin-event:input-port-01', function(event) {
-        if(document.getElementById("through-message").checked===true) {
-            var output1=document.getElementById("output-port-01");
-            var ch=document.getElementById("changeChValue").value-1;
-            event.detail.data[0]="0x"+event.detail.data[0].toString(16).substr(0,1)+(parseInt(ch)).toString(16);
-            output1.sendRawMessage(event.detail.data);
-        }
+    <script type="module">
+     import { xWebMIDI } from "./xwebmidi.js";
+     (async () => {
+       const xwm01 = new xWebMIDI();
+       await xwm01.requestMIDIAccess(true);
+       xwm01.initInput('input-port-01', 'xwebmidi-port-active');
+       xwm01.initOutput('output-port-01', 'xwebmidi-port-active');
 
-        if(event.detail.subType=="noteOn" || event.detail.subType=="noteOff") {
-            var elem=document.getElementById("midiinput-event-01");
-            elem.innerText="[input:"+event.detail.property.subType +" note:0x"+ event.detail.property.noteNumber.toString(16)+"("+event.detail.property.itnl+")) velocity:0x"+  event.detail.property.velocity.toString(16)+"]";
-            setTimeout(function(){ elem.innerText="";}, 1000);
-        }
-        console.log("[input-port-01] ", event.detail);
-    });
+       const xwm02 = new xWebMIDI();
+       await xwm02.requestMIDIAccess(true);
+       xwm02.initInput('input-port-02', 'xwebmidi-port-active');
 
-    window.addEventListener('midiin-event:input-port-02', function(event) {
-        if(document.getElementById("through-message").checked===true) {
-            var output1=document.getElementById("output-port-01");
-            var ch=document.getElementById("changeChValue").value-1;
-            event.detail.data[0]="0x"+event.detail.data[0].toString(16).substr(0,1)+(parseInt(ch)).toString(16);
-            output1.sendRawMessage(event.detail.data);
-        }
+       window.addEventListener('midiin-event:input-port-01', function(event) {
+         if(document.getElementById("through-message").checked===true) {
+           var output1=document.getElementById("output-port-01");
+           var ch=document.getElementById("changeChValue").value-1;
+           event.detail.data[0]="0x"+event.detail.data[0].toString(16).substr(0,1)+(parseInt(ch)).toString(16);
+           xwm01.sendRawMessage(event.detail.data);
+         }
 
-        if(event.detail.subType=="noteOn" || event.detail.subType=="noteOff") {
-            var elem=document.getElementById("midiinput-event-02");
-            elem.innerText="[input:"+event.detail.property.subType +" note:0x"+ event.detail.property.noteNumber.toString(16)+"("+event.detail.property.itnl+")) velocity:0x"+  event.detail.property.velocity.toString(16)+"]";
-            setTimeout(function(){ elem.innerText="";}, 1000);
-        }
-        console.log("[input-port-02]", event.detail);
-    });
-    </script>
+         if(event.detail.subType=="noteOn" || event.detail.subType=="noteOff") {
+           var elem=document.getElementById("midiinput-event-01");
+           elem.innerText="[input:"+event.detail.property.subType +" note:0x"+ event.detail.property.noteNumber.toString(16)+"("+event.detail.property.itnl+")) velocity:0x"+  event.detail.property.velocity.toString(16)+"]";
+           setTimeout(function(){ elem.innerText="";}, 1000);
+         }
+         console.log("[input-port-01] ", event.detail);
+       });
+
+       window.addEventListener('midiin-event:input-port-02', function(event) {
+         if(document.getElementById("through-message").checked===true) {
+           var output1=document.getElementById("output-port-01");
+           var ch=document.getElementById("changeChValue").value-1;
+           event.detail.data[0]="0x"+event.detail.data[0].toString(16).substr(0,1)+(parseInt(ch)).toString(16);
+           xwm01.sendRawMessage(event.detail.data);
+         }
+
+         if(event.detail.subType=="noteOn" || event.detail.subType=="noteOff") {
+           var elem=document.getElementById("midiinput-event-02");
+           elem.innerText="[input:"+event.detail.property.subType +" note:0x"+ event.detail.property.noteNumber.toString(16)+"("+event.detail.property.itnl+")) velocity:0x"+  event.detail.property.velocity.toString(16)+"]";
+           setTimeout(function(){ elem.innerText="";}, 1000);
+         }
+         console.log("[input-port-02]", event.detail);
+       });
+     })();
+   </script>
 
     <!-- Google Analytics -->
     <script>
-    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-        (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-                             m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+       (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+                              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
                              })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-    
+
     ga('create', 'UA-35804975-1', 'auto');
     ga('send', 'pageview');
     </script>
