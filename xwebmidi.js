@@ -189,45 +189,57 @@ export class xWebMIDI {
   // only used by addOptions()
   _appendOption(name, idx, selectElemId, autoSelect) {
     let selectElem = document.getElementById(selectElemId);
-    selectElem.appendChild((new Option(name, idx)));
-    let autoselect = false, selectedIdx = false;
-    if(name.match(new RegExp(autoSelect)) != null) {
-      let op_idx="";
-      for(let i in selectElem.options) {
-        if(parseInt(selectElem.options[i].value, 10) == parseInt(idx, 10)) {
-          op_idx = i;
-          idx = selectElem.options[i].value;
-          break;
+    let ret = false;
+    if(selectElem == null) {
+      console.log('[INPUT] Not set inputport.');
+    } else {
+      selectElem.appendChild((new Option(name, idx)));
+      let autoselect = false, selectedIdx = false;
+      if(name.match(new RegExp(autoSelect)) != null) {
+        let op_idx="";
+        for(let i in selectElem.options) {
+          if(parseInt(selectElem.options[i].value, 10) == parseInt(idx, 10)) {
+            op_idx = i;
+            idx = selectElem.options[i].value;
+            break;
+          }
         }
-      }
-      selectElem.selectedIndex = op_idx;
-      autoselect = true; selectedIdx = idx;
-    };
-    return { autoselected: autoselect, idx: selectedIdx };
+        selectElem.selectedIndex = op_idx;
+        autoselect = true; selectedIdx = idx;
+      };
+      ret = { autoselected: autoselect, idx: selectedIdx };
+    }
+    return ret;
   }
   // only used by addOptions()
   _updateOption(updateType, idx, selectElemId, exSelected) {
     let selectElem = document.getElementById(selectElemId);
-    let autoselect = false, selectedIdx = false;
-    let i = 0;
-    for(let tmp_op_idx in selectElem.options) {
-      if(selectElem.options[tmp_op_idx].value==idx) {
-        if(updateType=="disconnected") {
-          selectElem.options[tmp_op_idx].setAttribute("hidden", "hidden");
-          if(selectElem.selectedIndex==tmp_op_idx) {
-            selectElem.selectedIndex=0;
-          }
-        } else if(updateType=="connected") {
-          selectElem.options[tmp_op_idx].removeAttribute("hidden");
-          if(exSelected == true) {
-            selectElem.selectedIndex=i;
-            autoselect = true; selectedIdx=selectElem.options[tmp_op_idx].value;
+    let ret = false;
+    if(selectElem == null) {
+      console.log('[INPUT] Not set inputport.');
+    } else {
+      let autoselect = false, selectedIdx = false;
+      let i = 0;
+      for(let tmp_op_idx in selectElem.options) {
+        if(selectElem.options[tmp_op_idx].value==idx) {
+          if(updateType=="disconnected") {
+            selectElem.options[tmp_op_idx].setAttribute("hidden", "hidden");
+            if(selectElem.selectedIndex==tmp_op_idx) {
+              selectElem.selectedIndex=0;
+            }
+          } else if(updateType=="connected") {
+            selectElem.options[tmp_op_idx].removeAttribute("hidden");
+            if(exSelected == true) {
+              selectElem.selectedIndex=i;
+              autoselect = true; selectedIdx=selectElem.options[tmp_op_idx].value;
+            }
           }
         }
+        i++;
       }
-      i++;
+      ret = { autoselected: autoselect, idx: selectedIdx };
     }
-    return {autoselected: autoselect, idx: selectedIdx};
+    return ret;
   }
 
 
@@ -236,7 +248,16 @@ export class xWebMIDI {
    * for MIDI INPUT Port
    *
    **/
-  initInput(elemId, activeClassName) {
+  initInput(elemId='', activeClassName) {
+    if(elemId == '') {
+      console.error('[ERROR] initInput(elemId, activeClassName) elemId is required to specify to init.');
+      return;
+    }
+    if(document.getElementById(elemId) == null) {
+      console.error('[ERROR] initInput(elemId, activeClassName) :: Specified elemId is not defined in the DOM');
+      return;
+    }
+
     this.targetDomId.input = elemId;
     if(typeof activeClassName!= "undefined") this.activeClassName.input = activeClassName;
 
@@ -246,6 +267,19 @@ export class xWebMIDI {
 
     let result = { autoselected: false, idx: false };
     let mididom = document.getElementById(elemId);
+
+    // add 'not selected' option automatically
+    let options = mididom.getElementsByTagName("option");
+    let not_selected_find = false;
+    for(let i=0; i<options.length; i++) {
+      if(options[i].value == "false") {
+        not_selected_find = true;
+      }
+    }
+    if(!not_selected_find) {
+      mididom.appendChild((new Option("Not Selected", "false")));
+    }
+
     result = this.addOptions('input', 'add', { idx: 'all' }, elemId, null, this.autoselect);
     if(result.autoselected === true) {
       let target = { value :result.idx };
@@ -344,7 +378,16 @@ export class xWebMIDI {
    * for MIDI OUTPUT Port
    *
    **/
-  initOutput(elemId, activeClassName) {
+  initOutput(elemId='', activeClassName) {
+    if(elemId == '') {
+      console.error('[ERROR] initOutput(elemId, activeClassName) :: elemId is required to specify to init.');
+      return;
+    }
+    if(document.getElementById(elemId) == null) {
+      console.error('[ERROR] initOutput(elemId, activeClassName) :: Specified elemId is not difined in the DOM');
+      return;
+    }
+
     this.targetDomId.output = elemId;
     if(typeof activeClassName!= "undefined") this.activeClassName.output = activeClassName;
 
@@ -354,6 +397,19 @@ export class xWebMIDI {
 
     let result = { autoselected: false, idx: false };
     let mididom = document.getElementById(elemId);
+
+    // add 'not selected' option automatically
+    let options = mididom.getElementsByTagName("option");
+    let not_selected_find = false;
+    for(let i=0; i<options.length; i++) {
+      if(options[i].value == "false") {
+        not_selected_find = true;
+      }
+    }
+    if(!not_selected_find) {
+      mididom.appendChild((new Option("Not Selected", "false")));
+    }
+
     result = this.addOptions("output", "add", {"idx": "all"}, elemId, null, this.autoselect);
     if(result.autoselected===true) {
       // fire setMIDIOUTDevice
@@ -411,7 +467,7 @@ export class xWebMIDI {
   checkOutputIdx() {
     let status = "true";
     if(this.outputIdx === "false") {
-      console.log("output port is NOT selected.");
+      console.error("[ERROR] output port is NOT selected.");
       status = "false";
     }
     return status;
@@ -429,17 +485,28 @@ export class xWebMIDI {
       this.activeTimerId.output = 0;
     }, 1000);
   }
+  sendRawMessage2(msg, time) {
+    if(this.checkOutputIdx()=="false") {
+      return;
+    }
+    if(typeof time === "undefined") {
+      time = 0;
+    }
+    //console.log(msg, time);
+    this.midi.outputs[this.outputIdx].send(msg, time);
+    // indicator
+    this.updateOutputIndicator.bind(this)();
+  }
   sendRawMessage(msg, timestamp) {
     if(this.checkOutputIdx()=="false") {
       return;
     }
     if(typeof timestamp==="undefined") {
-      timestamp=0;
+      timestamp = 0;
     }
     this.initializePerformanceNow();
-    let sendTimestamp = this.pfmNow+timestamp;
+    let sendTimestamp = this.pfmNow + timestamp;
     this.midi.outputs[this.outputIdx].send(msg, sendTimestamp);
-
     // indicator
     this.updateOutputIndicator.bind(this)();
   }
