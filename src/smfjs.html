@@ -1,0 +1,77 @@
+<html>
+  <head>
+  </head>
+  <body>
+    <div>output 01: <select id="output-port-01" class="xwebmidi-select-midi"></select></div>
+    <div>
+      <button id="start">Start</button>
+      <button id="stop">Stop</button>
+      <button id="allsoundoff">AllSoundOff</button>
+    </div>
+    <!--button id="testwas">Set WebAudioSynth</button><br-->
+    <button id="testbutton">TEST Button</button>
+    <script src="https://g200kg.github.io/webaudio-tinysynth/webaudio-tinysynth.js"></script>
+
+    <script type="module">
+     import { SmfPlayer } from './smfplayer.js';
+     import { xWebMIDI } from "./xwebmidi.js";
+
+     (async () => {
+       class DummyOut {
+         constructor() {
+           //this.synth = new WebAudioTinySynth({quality:0, useReverb:0});
+         }
+         send(event, time) {
+           //this.synth.send(event, time/1000)
+           //xwm01.sendRawMessage2(event, time/1000);
+           xwm01.sendRawMessage2(event);
+         }
+       }
+
+       const xwm01 = new xWebMIDI();
+       await xwm01.requestMIDIAccess(true);
+       xwm01.initOutput('output-port-01', 'xwebmidi-port-active');
+       let content_url = '';
+       content_url = './contents/test/lupin012.mid';
+       //content_url = './contents/midi_test_00.mid';
+       //content_url = './contents/test/ciao.mid';
+       //content_url = './contents/test/RaidersOfTheLostArk.mid';
+       //content_url = './contents/ys2_op_gm.mid';
+
+       let player = new SmfPlayer();
+
+         let synth = new WebAudioTinySynth({voices:64});
+         xwm01.setSoftwareOutputDeveice(synth, 'g200kg-tiny', 'output-port-01', false, false);
+
+       //document.getElementById("testwas").addEventListener("mousedown", (event) => {
+       //  let synth = new WebAudioTinySynth({voices:64});
+       //  xwm01.setSoftwareOutputDeveice(synth, 'g200kg-tiny', 'output-port-01', false, false);
+       //});
+
+       document.getElementById("start").addEventListener("mousedown", async (event) => {
+         let dummy_out = new DummyOut()
+         player.startPlay(content_url, dummy_out, 1000);
+       });
+       document.getElementById("stop").addEventListener("mousedown", (event) => {
+         player.stopPlay();
+       });
+       document.getElementById("allsoundoff").addEventListener("mousedown", (event) => {
+         player.allSoundOff();
+       });
+
+       document.getElementById("testbutton").addEventListener("mousedown", async (event) => {
+         //let synth = new WebAudioTinySynth();
+         //await synth.actx.resume();
+         //xwm01.sendRawMessage2([0x91, 0x4d, 0x70], 3000);
+         //xwm01.sendRawMessage2([0x81, 0x4d, 0x70], 5000);
+         synth.send([0x90, 0x4d, 0x60], 0)
+         synth.send([0x80, 0x4d, 0x00], 2)
+         synth.send([0x90, 0x4f, 0x60], 2)
+         synth.send([0x80, 0x4f, 0x00], 4)
+       });
+
+     })();
+
+    </script>
+  </body>
+</html>
