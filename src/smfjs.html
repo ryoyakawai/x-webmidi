@@ -4,6 +4,7 @@
   <body>
     <div>output 01: <select id="output-port-01" class="xwebmidi-select-midi"></select></div>
     <div>
+      <button id="start0">Start0</button>
       <button id="start">Start</button>
       <button id="stop">Stop</button>
       <button id="allsoundoff">AllSoundOff</button>
@@ -50,7 +51,11 @@
 
        document.getElementById("start").addEventListener("mousedown", async (event) => {
          let dummy_out = new DummyOut()
-         player.startPlay(content_url, dummy_out, 1000);
+         player.startPlay2(content_url, dummy_out, 1000);
+       });
+       document.getElementById("start0").addEventListener("mousedown", async (event) => {
+//         let dummy_out = new DummyOut()
+//         player.startPlay(content_url, dummy_out, 1000);
        });
        document.getElementById("stop").addEventListener("mousedown", (event) => {
          player.stopPlay();

@@ -20,9 +20,6 @@ export class SmfPlayer {
   allSoundOff() {
     this.smfPlayerCore.allSoundOff();
   }
-  stopPlay2() {
-    this.smfPlayerCore.nowPlaying = false;
-  }
   async startPlay2(url, output, latency = 0) {
     let midi_binary = await this.setGetMidiFile(url);
     this.parsedMidi = this.smfParser.parse(midi_binary);
@@ -30,8 +27,7 @@ export class SmfPlayer {
 
     this.smfPlayerCore.allSoundOff();
     //this.smfPlayerCore.startPlay();
-    this.smfPlayerCore.nowPlaying = true;
-    this.smfPlayerCore.startPlay2();
+    this.smfPlayerCore.startPlay2(latency); // latency
   }
   async startPlay(url, output, latency = 0) {
     let midi_binary = await this.setGetMidiFile(url);
@@ -79,14 +75,11 @@ class SmfPlayerCore {
     this.rsrv=[];
     this.midiFile = null;
     this.latency = 1000; // (msec)
-    this.preroll = 100;
 
     this.trackStates = [];
     this.beatsPerMinute = 120;
-    this.ticksToTime = 0;
     this.ticksPerBeat = null;
     this.channelCount = 16;
-    this.timerId2 = 0;
     this.timerId = 0;
     this.deltaTiming = 0;
     this.nextEventInfo = null;
@@ -95,16 +88,17 @@ class SmfPlayerCore {
     this.nowPlaying = false;
     this.position = 0;
 
+    this.lastSendTiming = 0;
+
     this.eventTime = 0;
     this.startTime = 0;
-    this.interval = 1;
+    this.interval = 0;
 
     this.forwading = false;
     this.duration = 0;
     this._handlingEvents = false;
     this.eventNo = 0;
     this.posMoving = false;
-
   }
   init(midiFile, latency, eventNo, output) {
     this.mOut = output;
@@ -197,21 +191,19 @@ class SmfPlayerCore {
           this.trackStates[i].ticksToNextEvent -= ticksToNextEvent;
         }
       }
-      var beatsToNextEvent = ticksToNextEvent / this.ticksPerBeat;
-      var secondsToNextEvent = beatsToNextEvent / ( this.beatsPerMinute / 60);
       this.nextEventInfo = {
-        ticksToEvent: ticksToNextEvent,
-        event: nextEvent,
-        track: nextEventTrack,
-        secondsToNextEvent: secondsToNextEvent
+        'ticksToEvent': ticksToNextEvent,
+        'event': nextEvent,
+        'track': nextEventTrack
       };
+      var beatsToNextEvent = ticksToNextEvent / this.ticksPerBeat;
+      var secondsToNextEvent = beatsToNextEvent / (this.beatsPerMinute / 60);
     }
     else {
       this.nextEventInfo = null;
       this.samplesToNextEvent = null;
       this.finished = true;
     }
-    return this.nextEventInfo;
   }
   __getNextEvent() {
     this.eventNo += 1;
@@ -257,131 +249,6 @@ class SmfPlayerCore {
       this.finished = true;
     }
   }
-  _handleEvent2() {
-    this.timerId2 = setInterval( _ => {
-      let value = this._getNextEvent();
-      let msgSent = false;
-      if(this.nowPlaying == false) {
-        clearInterval(this.timerId2);
-      } else {
-        let doLoop = true;
-        do {
-          if(value == null) {
-            this.nowPlaying = false;
-            break;
-          }
-          if( this.position <  window.performance.now() - this.startTime ) {
-            console.log(this.position, window.performance.now() - this.startTime);
-            if(checkMessage.bind(this)(value.event)) {
-              this._sendToDevice(value.event.raw, this.startTime + this.position + this.preroll);
-            }
-            value = this._getNextEvent();
-            this.position += 4 * 1000 * value.secondsToNextEvent;
-          } else {
-            doLoop = false;
-          }
-        } while(doLoop)
-      }
-    }, 100);
-/*
-    //////////////////////////////////
-    // add absolite timestamp, and send msaage a little bit faster
-    let rightNow = window.performance.now();
-    //console.log(rightNow, this.startTime + this.eventTime, rightNow - this.startTime - this.eventTime);
-    let time_of_diff = rightNow - this.startTime - this.eventTime; // in msec
-    let time_to_play = this.startTime + this.eventTime; // in msec
-    if((this.startTime + this.eventTime ) <= rightNow) {
-      if(this.finished == true)  {
-        this.allSoundOff();
-        return;
-      }
-      var event = this.nextEventInfo.event;
-      this.deltaTiming = this.nextEventInfo.ticksToEvent;
-      this.eventTime += this.deltaTiming * this.interval;
-
-      if(checkMessage.bind(this)(event)) {
-        //this._sendToDevice(event.raw, this.eventTime);
-        //this._sendToDevice(event.raw);
-        this._sendToDevice(event.raw, 100 + (time_to_play)/1000);
-        //this._sendToDevice(event.raw, 5 + time_of_diff/1000);
-      }
-
-      // Original
-      this._getNextEvent();
-      if(this.nextEventInfo!=null) {
-        var nEvent = this.nextEventInfo.event;
-        // Recursion
-        if(nEvent.deltaTime==0 && this.finished===false) {
-          clearInterval(this.timerId);
-          this._handleEvent();
-        }
-        if(this.finished==false) {
-          this.startPlay();
-        }
-      }
-    }
-*/
-    function checkMessage(event) {
-      switch(event.type) {
-      case "meta":
-        if(event.subtype == "setTempo") {
-          console.info("[Change Tempo] ", ~~(60000000/event.microsecondsPerBeat));
-          console.info("[Change Interval] ", (event.microsecondsPerBeat/1000)/this.ticksPerBeat, event.microsecondsPerBeat);
-          this.interval = (event.microsecondsPerBeat/1000)/this.ticksPerBeat;
-          clearTimeout(this.timerId);
-          if(this.finished == false) {
-            this.startPlay();
-          }
-        }
-        else {
-          console.info("[meta] " + event.subtype + " : " + event.text + " : "
-                       + event.key + " : " + event.scale + " : " + this.eventTime);
-        }
-        break;
-      case "channel":
-      case "sysEx":
-      case "dividedSysEx":
-        var sendFl=true;
-        if(event.type=="sysEx") {
-          var gsSysEx=[0xF0, 0x41, 0x10, 0x42, 0x12];
-          if(event.raw.slice(0, gsSysEx.length).join(" ") == gsSysEx.join(" ")) {
-            sendFl=false;
-            for(var i=0, out=[], msg=event.raw; i<msg.length; i++) out.push(msg[i].toString(16));
-            console.info("[Skip GS SYSEX] ", out.join(" "));
-          }
-        }
-
-        // for dividedSysEx
-        if(event.type=="sysEx") {
-          if(event.raw[0] == 0xf0 && event.raw[event.raw.length-1]!=0xf7) {
-            this.rsrv = event.raw;
-            sendFl = false;
-          }
-        }
-        if(event.type == "dividedSysEx") {
-          event.raw.shift();
-          console.log(event.raw, this.rsrv);
-          Array.prototype.push.apply(this.rsrv, event.raw);
-          if(this.rsrv[this.rsrv.length-1] == 0xf7) {
-            event.raw = this.rsrv;
-            this.rsrv = [];
-          }
-          else {
-            sendFl = false;
-          }
-        }
-        /*
-        if(sendFl === true) {
-          //this._sendToDevice(event.raw, this.startTime + this.eventTime);
-          this._sendToDevice(event.raw, this.startTime + this.position);
-        }
-        */
-        break;
-      }
-      this.eventTime += this.interval;
-      return sendFl;
-    }
-  }
   _handleEvent() {
     // add absolite timestamp, and send msaage a little bit faster
     let rightNow = window.performance.now();
@@ -422,11 +289,9 @@ class SmfPlayerCore {
       switch(event.type) {
       case "meta":
         if(event.subtype == "setTempo") {
-          console.info("[Change Tempo] ", 60 / (event.microsecondsPerBeat / 1000000));
+          console.info("[Change Tempo] ", ~~(60000000/event.microsecondsPerBeat));
           console.info("[Change Interval] ", (event.microsecondsPerBeat/1000)/this.ticksPerBeat, event.microsecondsPerBeat);
-          this.beatsPerMinute = 60 / (event.microsecondsPerBeat / 1000000);
-          this.interval = (event.microsecondsPerBeat /1000) / this.ticksPerBeat;
-          this.ticksToTime = 60 / this.beatPerMinutes / this.interval;
+          this.interval = (event.microsecondsPerBeat/1000)/this.ticksPerBeat;
           clearTimeout(this.timerId);
           if(this.finished == false) {
             this.startPlay();
@@ -503,14 +368,11 @@ class SmfPlayerCore {
 */
     this.mOut.send(msg, time);
   }
-  startPlay2(latency=0) {
-    this._initStartPlay(latency);
+
+  startPlay2() {
     this._handleEvent2.bind(this)();
   }
-  _initStartPlay(latency=0) {
-    this.setStartTime(latency); // in msec
-    this.setGM();
-  }
+
   startPlay() {
     clearInterval(this.timerId);
     if(this.startTime==0) {
@@ -550,8 +412,8 @@ class SmfPlayerCore {
     this.finished=status;
     clearInterval(this.timerId);
   }
-  setStartTime(latency=0) { // in msec
-    this.startTime = window.performance.now() + latency;
+  setStartTime() {
+    this.startTime = window.performance.now();
     this.eventTime = 0;
     console.log("[setStartTime]", this.startTime);
   }
