@@ -258,31 +258,26 @@ class SmfPlayerCore {
     }
   }
   _handleEvent2() {
+    let interval = 10;
+    let now = this.startTime;
     this.timerId2 = setInterval( _ => {
+      now += interval;
+      //console.log(now);
       let value = this._getNextEvent();
       let msgSent = false;
       if(this.nowPlaying == false) {
         clearInterval(this.timerId2);
       } else {
         let doLoop = true;
-        do {
-          if(value == null) {
-            this.nowPlaying = false;
-            break;
+        while( value.secondsToNextEvent < 100 ) {
+          if(checkMessage.bind(this)(value.event)) {
+            this._sendToDevice(value.event.raw, now + value.secondsToNextEvent + this.preroll);
           }
-          if( this.position <  window.performance.now() - this.startTime ) {
-            console.log(this.position, window.performance.now() - this.startTime);
-            if(checkMessage.bind(this)(value.event)) {
-              this._sendToDevice(value.event.raw, this.startTime + this.position + this.preroll);
-            }
-            value = this._getNextEvent();
-            this.position += 4 * 1000 * value.secondsToNextEvent;
-          } else {
-            doLoop = false;
-          }
-        } while(doLoop)
+          value = this._getNextEvent();
+          this.position += 1000 * value.secondsToNextEvent;
+        }
       }
-    }, 100);
+    }, interval);
 /*
     //////////////////////////////////
     // add absolite timestamp, and send msaage a little bit faster
@@ -400,7 +395,7 @@ class SmfPlayerCore {
       if(checkMessage.bind(this)(event)) {
         //this._sendToDevice(event.raw, this.eventTime);
         //this._sendToDevice(event.raw);
-        this._sendToDevice(event.raw, 100 + (time_to_play)/1000);
+        ////this._sendToDevice(event.raw, 100 + (time_to_play)/1000);
         //this._sendToDevice(event.raw, 5 + time_of_diff/1000);
       }
 
