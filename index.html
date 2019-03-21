@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="./xwebmidi.css">
+  </head>
+  <body>
+    INPUT:
+    <select id="midiin" class="xwebmidi-select-midi">
+      <option value="false">Not Selected</option>
+    </select>
+    <br>
+    OUTPUT:
+    <select id="midiout" class="xwebmidi-select-midi">
+      <option value="false">Not Selected</option>
+    </select>
+
+    <script type="module">
+     import { xWebMIDI } from "./xwebmidi.js";
+     (async () => {
+       const xwm = new xWebMIDI();
+       await xwm.requestMIDIAccess(true);
+       xwm.initInput('midiin');
+       xwm.initOutput('midiout');
+
+       window.addEventListener('midiin-event:midiin', event => {
+         console.log(event.detail.data);
+         event.detail.data[0] += 0x01
+         xwm.sendRawMessage(event.detail.data)
+       });
+     })();
+    </script>
+  </body>
+</html>
