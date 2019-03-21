@@ -197,13 +197,14 @@ class SmfPlayerCore {
           this.trackStates[i].ticksToNextEvent -= ticksToNextEvent;
         }
       }
-      var beatsToNextEvent = ticksToNextEvent / this.ticksPerBeat;
-      var secondsToNextEvent = beatsToNextEvent / ( this.beatsPerMinute / 60);
+      let beatsToNextEvent = ticksToNextEvent / this.ticksPerBeat;
+      let mSecondsToNextEvent = 1000 * beatsToNextEvent / ( this.beatsPerMinute / 60);
       this.nextEventInfo = {
         ticksToEvent: ticksToNextEvent,
         event: nextEvent,
         track: nextEventTrack,
-        secondsToNextEvent: secondsToNextEvent
+        mSecondsToNextEvent: mSecondsToNextEvent == null ? 0 : mSecondsToNextEvent,
+        beatsToNextEvent: beatsToNextEvent == null ? 0 : beatsToNextEvent
       };
     }
     else {
@@ -259,26 +260,33 @@ class SmfPlayerCore {
   }
   _handleEvent2() {
     let interval = 10;
-    let now = this.startTime;
+    let now = window.performance.now();
     this.timerId2 = setInterval( _ => {
-      now += interval;
-      //console.log(now);
+      now = window.performance.now();
       let value = this._getNextEvent();
-      let msgSent = false;
+      if(value == null) {
+        this.nowPlaying = false;
+      }
       if(this.nowPlaying == false) {
         clearInterval(this.timerId2);
       } else {
-        let doLoop = true;
-        while( value.secondsToNextEvent < 100 ) {
-          if(checkMessage.bind(this)(value.event)) {
-            this._sendToDevice(value.event.raw, now + value.secondsToNextEvent + this.preroll);
-          }
+        var bps = this.beatsPerMinute / ( 60 * 1000 );
+        this.position += bps * value.event.deltaTime;
+        this._sendToDevice(value.event.raw, bps * value.event.deltaTime);
+        if(checkMessage.bind(this)(value.event)) { }
+        while(value.mSecondsToNextEvent < interval) {
           value = this._getNextEvent();
-          this.position += 1000 * value.secondsToNextEvent;
+          if(value == null) {
+            this.nowPlaying = false;
+            break;
+          } else {
+            this.position += bps * value.event.deltaTime;
+            this._sendToDevice(value.event.raw, bps * value.event.deltaTime);
+          }
         }
       }
     }, interval);
-/*
+    /*
     //////////////////////////////////
     // add absolite timestamp, and send msaage a little bit faster
     let rightNow = window.performance.now();
@@ -321,7 +329,7 @@ class SmfPlayerCore {
       case "meta":
         if(event.subtype == "setTempo") {
           console.info("[Change Tempo] ", ~~(60000000/event.microsecondsPerBeat));
-          console.info("[Change Interval] ", (event.microsecondsPerBeat/1000)/this.ticksPerBeat, event.microsecondsPerBeat);
+          console.info("[Change Interval] ", (event.microsecondsPerBeat/1000) / this.ticksPerBeat, event.microsecondsPerBeat);
           this.interval = (event.microsecondsPerBeat/1000)/this.ticksPerBeat;
           clearTimeout(this.timerId);
           if(this.finished == false) {
@@ -546,7 +554,7 @@ class SmfPlayerCore {
     clearInterval(this.timerId);
   }
   setStartTime(latency=0) { // in msec
-    this.startTime = window.performance.now() + latency;
+    this.startTime = window.performance.now();
     this.eventTime = 0;
     console.log("[setStartTime]", this.startTime);
   }

@@ -25,7 +25,8 @@
          send(event, time) {
            //this.synth.send(event, time/1000)
            //xwm01.sendRawMessage2(event, time/1000);
-           xwm01.sendRawMessage2(event);
+           console.log(time, synth.actx.currentTime + time, synth.actx.currentTime);
+           xwm01.sendRawMessage2(event, synth.actx.currentTime + time);
          }
        }
 
@@ -41,8 +42,9 @@
 
        let player = new SmfPlayer();
 
-         let synth = new WebAudioTinySynth({voices:64});
-         xwm01.setSoftwareOutputDeveice(synth, 'g200kg-tiny', 'output-port-01', false, false);
+       let synth = new WebAudioTinySynth({voices:64});
+       xwm01.setSoftwareOutputDeveice(synth, 'g200kg-tiny', 'output-port-01', false, false);
+       console.log(synth.actx);
 
        //document.getElementById("testwas").addEventListener("mousedown", (event) => {
        //  let synth = new WebAudioTinySynth({voices:64});
